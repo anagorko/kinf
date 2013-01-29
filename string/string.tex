@@ -1,0 +1,113 @@
+\documentclass[a4paper, 11pt]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{url}
+
+\newcounter{zad}
+\newcounter{pkt}
+
+\newcommand{\zad}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad.} }
+\newcommand{\zadgw}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad$^*$.} }
+\newcommand{\pkt}{\vspace{1mm}\stepcounter{pkt}\alph{pkt}) }
+
+\begin{document}
+
+\title{Przetwarzanie tekstu. Klasa {\tt string}.}
+\subtitle{Kółko Informatyczne szkoły Żagle}
+\date{7 września 2012}
+\maketitle
+
+\section*{W pigułce}
+
+{\tt string, [], .length()}, kody ASCII, tablice indeksowane znakami (kubełki)
+
+\section*{Ćwiczenia na zajęcia i do domu}
+
+\zad Napisz program, który pyta użytkownika o imię i na podstawie ostatniej litery imienia zgaduje jego płeć.
+
+\zad Napisz program sprawdzający hasło (hasłem jest oczywiście "mellon").
+
+\zad Napisz program szyfrujący tekst szyfrem Cezara.
+
+\zad Napisz program, który zamienia wielkość liter w tekście (małe na wielkie, wielkie na małe - alfabet angielski).
+
+\zad Napisz program zliczający samogłoski (łączna liczba).
+
+\zad Napisz program zliczający samogłoski (każdą osobno).
+
+\zad Napisz program wypisujący najczęściej występującą w tekście literę.
+
+\zad Napisz program zamieniający samogłoski na literę z.
+
+\zad Napisz program wypisujący każde słowo tekstu od tyłu.
+
+%\zadgw Jak wyżej, ale nie odwracając zbitek "{}cz, sz, rz, ch, dź, dzi, si, ci".
+
+\zad Napisz program zamieniający kolejność liter wewnątrz wyrazu, ale nie zmieniający pierwszej i ostatniej litery.
+
+%\zadgw Jak wyżej, ale nie rozbijając zbitek "{}cz, sz, rz, ch, dź, dzi, si, ci".
+
+\zad Napisz program sprawdzający, czy podane słowo jest palindromem (odp.: TAK lub NIE).
+
+\zad Napisz program znajdujący i wypisujący wszystkie liczby z tekstu.
+
+\zad Napisz program zwiększający daną liczbę o jeden (liczba może mieć do 1000 cyfr, układ dziesiętny).
+
+\vspace{5mm}
+\begin{center}
+{\bf Podczas zajęć upewnijcie się, że będziecie w domu umieli wykonać wszystkie ćwiczenia!}
+\end{center}
+
+\section*{Do poczytania}
+
+Ze strony
+
+\vspace{5mm}
+\url{http://cpp0x.pl/kursy/Kurs-C++/Poziom-3/346}
+\vspace{5mm}
+
+\noindent
+przeczytajcie lekcje
+
+\begin{enumerate}
+\item[23.] Zmienne przechowujące tekst,
+\item[26.] Wczytywanie tekstu - standardowy strumień wejścia,
+\end{enumerate}
+
+\noindent
+i zróbcie ćwiczenia, które znajdziecie na końcu każdej z nich.
+
+\section*{I Konkurs Szkolny, 7-13 września 2012}
+
+%Sortowanie biżuterii (I OIG)
+%Naszyjniki (III OIG)
+%Bałagan i Stonki (PA 05.2002)
+
+\noindent
+Treści siedmiu zadań konkursowych znajdziecie pod adresem
+
+\vspace{5mm}
+\url{http://z1.sioportal.dasie.mimuw.edu.pl/index.php}
+
+\vspace{5mm}
+\noindent
+Wszystkie zadania pochodzą z konkursów z zeszłych lat (PA i OIG).
+Rozwiązania można wysyłać do godz. 19:59:59, 13 września. O godzinie 20:00:00 zostanie opublikowany ranking. Zadania możecie wykonywać w parach (programista + matematyk).
+
+\vspace{5mm}
+\begin{center}
+{\bf Udział w konkursie jest obowiązkowy :)}
+\end{center}
+
+%Kamil (PA 2003)
+%Dysleksja [B] (PA 2007)
+%Jasio (PA 2005)
+%Szyfr (III OIG) dobre
+%Imiona mrówek (PA 05.2002)
+%Statystyki (III OIG) dobre
+%Zliczacz liter (kubełki) (I OIG)
+
+
+\end{document}
