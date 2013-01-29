@@ -1,0 +1,143 @@
+\documentclass[a4paper,10pt]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+\usepackage[polish]{babel}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset { %
+    language=C++,
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\small\ttfamily
+}
+
+\newcounter{seria}
+\newcounter{zad}
+\newcounter{pkt}
+\newcounter{totalcount}
+
+\newcommand{\df}{\vspace{4mm}\noindent{\bf Definicja.} }
+\newcommand{\wsk}{\vspace{4mm}\noindent{\bf Wskazówka.} }
+
+\newcommand{\zad}{\stepcounter{totalcount}\vspace{4mm}\noindent\setcounter{pkt}{0}\refstepcounter{zad}{\bf \Roman{seria}.\thezad.} }
+\newcommand{\zadgw}{\vspace{4mm}\noindent\setcounter{pkt}{0}\refstepcounter{zad}{\bf \thezad$^*$.} }
+\newcommand{\pkt}{\vspace{1mm}\stepcounter{pkt}\alph{pkt}) }
+
+\newcommand{\reset}{\setcounter{zad}{0}\setcounter{pkt}{0}\stepcounter{seria}}
+
+\begin{document}
+
+\vspace*{-1cm}
+\pagestyle{myheadings}
+\markright{{\tiny Kółko Matematyczno-Informatyczne Szkoły żagle \hfill Styczeń 2013}}
+
+\reset
+\section*{Grupa starsza. Sito Erastotenesa}
+
+\zad Na jakie pytanie odpowiada poniższy program? ({\tt n} to liczba typu {\tt int})
+\begin{lstlisting}
+int d = 2;
+while (d * d <= n) {
+	if (n % d == 0) break;
+	d++;
+}
+if (d * d <= n) {
+	cout << "nie" << endl;
+} else {
+	cout << "tak" << endl;
+}
+\end{lstlisting}
+
+\noindent
+Ile maksymalnie obrotów pętli wykona powyższy algorytm?
+
+\zad Sito Erastotenesa to algorytm pozwalający szybko wyznaczyć liczby pierwsze z przedziału od $1$ do $n$ (szybko, to znaczy w czasie proporcjonalnym do $n \log \log n$. Iteracyjne wykorzystanie poprzedniej funkcji dałoby algorytm
+o złożoności proporcjonalnej do $n \sqrt{n}$. Dla $n = 10^6$ mamy $\log \log n < 1$ a $\sqrt{n} = 1000$). 
+
+\vspace{3mm}
+Schemat algorytmu (sito Erastotenesa)
+
+\begin{enumerate}
+\item Utwórz tablicę {\tt bool p[n+1]} i wypełń ją wartościami {\tt true}.
+\item { \tt p[0] = false; p[1] = false; }
+\item { \tt d = 2; }
+\item Dopóki {\tt d * d <= n} wykonuj następujące operacje
+  \begin{enumerate}
+  \item Dla {\tt k = 2, 3, $\ldots$} dopóki {\tt k * d <= n} podstawiaj {\tt p[k * d]  = false;}
+  \item Znajdź następne d takie, że {\tt d*d <= n} i {\tt p[d] == true} 
+  \end{enumerate}
+\item Wypisz wszystkie liczby {\tt i}, dla których {\tt p[i] == true}.
+\end{enumerate}
+
+Algorytm ten wypisze wszystkie liczby pierwsze pomiędzy $2$ a $n$. Wyjaśnij jego działanie i zaimplementuj go.
+
+\zad Napisz dwa programy, które obliczają ile jest liczb pierwszych od $2$ do $8000000$:
+
+\pkt pierwszy wykorzystujący pierwszą metodę.
+
+\pkt drugi wykorzystujący sito Erastotenesa.
+
+\vspace{2mm}
+Sprawdź czasy działania obydwu programów. Na moim komputerze jest to odpowiednio $5,21$ i $0,15$ sekundy.
+  Oba algorytmy podają wynik $539777$.
+
+\vspace{4mm}\noindent
+{\bf Prawo Murphy'ego}
+
+\vspace{2mm}
+Jeżeli wydaje się, że wszystko działa dobrze, to z pewnością musiałeś coś przeoczyć.
+
+\newpage
+\begin{center}Szukanie dzielników\end{center}
+\begin{lstlisting}
+  int n; cin >> n;
+
+  int ile = 0;
+
+  for (int i = 2; i <= n; i++) {
+    int d = 2;
+    while (d * d <= i) {
+      if (i % d == 0) break;
+      d++;
+    }
+    if (d * d > i) { ile++;}
+  }
+
+  cout << ile << endl;
+\end{lstlisting}
+
+\vspace{5mm}
+\begin{center}Sito Erastotenesa\end{center}
+\begin{lstlisting}
+  int n;  cin >> n;
+
+  bool p[n+1];
+
+  for (int i = 0; i <= n; i++) { p[i] = true; }
+
+  p[0] = false; p[1] = false;
+
+  int d = 2;
+
+  while (d * d <= n) {
+    for (int k = 2; d * k <= n; k++) {
+      p[d * k] = false;
+    }
+
+    do {
+      d++;
+    } while (d * d <= n && p[d] == false);
+  }
+
+  int ile = 0;
+  for (int i = 0; i <= n; i++) {
+    if (p[i]) {
+      ile++;
+    }
+  }
+  cout << ile << endl;
+\end{lstlisting}
+
+\end{document}
