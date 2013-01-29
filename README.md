@@ -14,9 +14,13 @@ znajdziesz poniżej.
 Instalacja allegro5 w Ubuntu
 -----
 
+Na podstawie http://wiki.allegro.cc/index.php?title=Install_Allegro5_From_Git/Linux/Debian
+
 > sudo apt-get install build-essential git cmake xorg-dev libgl1-mesa-dev libgl
 >
-> sudo apt-get install libpng-dev libcurl4-nss-dev libfreetype6-dev libjpeg-dev
+> sudo apt-get install libpng-dev libcurl4-nss-dev libfreetype6-dev libjpeg-dev 
+libvorbis-dev libopenal-dev libphysfs-dev libgtk2.0-dev libasound-dev libpulse-dev 
+libflac-dev libdumb1-dev
 >
 > sudo apt-get install exuberant-ctags dvi2ps dvipdfmx latex2html pando
 
