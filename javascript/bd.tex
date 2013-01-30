@@ -1,0 +1,65 @@
+\documentclass[a4paper, pdftex]{amsart}
+
+\usepackage[latin2]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+
+\begin{document}
+
+\thispagestyle{empty}
+\noindent{\Large Kó³ko Informatyczne, 10 lutego 2011}
+
+\vspace{5mm}\noindent
+Zaczniemy od nastêpuj±cej zawarto¶ci pliku {\tt .js}:
+
+\begin{verbatim}
+
+var nic  = "black";
+var ziemia = "brown";
+var kamien = "gray";
+
+var stany = Array( nic, ziemia, kamien );
+                                        
+function setupBoard()
+{        
+}
+                        
+function calculateNewState(x,y)
+{
+        var teraz = cellState(x,y);
+        var pozniej;
+
+        // tu bedziemy wpisywac kod
+
+        return pozniej;
+}
+\end{verbatim}
+
+\vspace{5mm}\noindent
+Zamiast przepisywaæ, mo¿esz skopiowaæ ten kod ze strony
+
+\vspace{2mm}
+\url{http://www.mimuw.edu.pl/~amn/ki/10lutego/bd.html}
+
+\vspace{5mm}
+Po za³adowaniu pliku {\tt.html} (tego, co poprzednio) powinna pojawiæ siê czarna plansza. 
+  Klikaj±c na ni± powinno byæ mo¿na zmieniæ kolory na br±zowy (ziemia) i szary (kamieñ). 
+  Sprawd¼ to!
+  
+\vspace{2mm}
+{\bf  Nasz cel na dzi¶
+  to implementacja fizyki kamieni.}
+ 
+\vspace{2mm}
+Osi±gniemy to etapami:
+
+\begin{enumerate}
+\item Spadanie kamieni w dó³ (³atwe).
+\item Toczenie siê kamieni w lewo-dó³ (trochê mniej ³atwe).
+\item Toczenie siê kamieni w prawo-dó³ (wcale nie ³atwe).
+\end{enumerate}
+
+Nie zaczynaj implementowaæ nastêpnego etapu, je¿eli nie dzia³a Ci wsze¶niejszy. Najpierw
+ wszystko omówimy przy tablicy.
+ 
+\end{document}

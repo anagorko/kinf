@@ -1,0 +1,335 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+<!--
+	Created in 2005 by Carl Fredrik Abelson. Licensed under 
+	GNU General Public License (GPL). This simulation is 
+	written entirely in DHTML and JavaScript. It has been 
+	tested on Internet Explorer 5+ and Mozilla Firefox.	Drop 
+	me a line on abelson@ieee.org and tell me what you think 
+	of it.
+-->
+
+
+	<title>Gra w życie</title>
+	<style>
+		body {
+			background-color: ghostwhite;
+			font-family: Arial;
+			font-size: 9pt;
+		}
+		h1 {
+			font-family: Arial;
+			font-size: 24pt;
+		}
+		small {
+			font-family: Arial;
+			font-size: 8pt;
+			font-style: italic;
+		}
+		button {
+			width: 80px;
+			height: 23px;
+			font-size: 8pt;
+		}
+		button.small {
+			width: 40px;
+			height: 23px;
+			margin-left: 10px;
+		}
+		td.cell {
+			width: 15px;
+			height: 15px;
+			font-size: 6px;
+			background-color: lightsteelblue;
+		}
+		#generation {
+			font-family: Arial;
+			font-size: 20pt;
+			font-style: italic;
+			color: black;
+			padding-left: 20px;
+			padding-right: 20px;
+		}
+		#container_rules {
+			font-size: 8pt; 
+			border: 1px solid lightsteelblue; 
+			padding: 3px; 
+			margin-bottom: 10px;
+		}
+	</style>
+	<script>
+		var auto = false;
+		var showing_rules = false;
+		var city;
+		var newcity;
+		var changed;
+
+var width = 48;
+var height = 20;
+var lifecycle = 1;
+var gen = 0;
+
+	</script>
+	<script type="text/javascript" src="life-wirus.js">
+	</script>
+	<script>
+		function setCellState(x,y,state)
+		{
+			if (x < 0 || x >= width || y < 0 || y >= height) return;
+
+			var arena = document.getElementById("playarea");
+			var cells = arena.rows[y].cells;
+			var cell = cells[x];
+
+			cell.style.backgroundColor = state;
+			city[cell.x][cell.y] = state;
+		}
+
+		function cellState(x, y)
+		{
+			var state = false;
+			if ((x >= 0) && (x < width) && (y >= 0) && (y < height)) {
+				state = city[x][y];
+			} else {
+				state = stany[0];
+			}
+			return state;
+		}
+
+		function window_onload()
+		{
+			document.getElementById("textfield_width").value = width;
+			document.getElementById("textfield_height").value = height;
+			resetGame();
+			document.getElementById("button_dim").disabled = auto;
+			document.getElementById("textfield_width").disabled = auto;
+			document.getElementById("textfield_height").disabled = auto;
+			document.getElementById("button_clear").disabled = auto;
+			document.getElementById("button_step").disabled = auto;
+		}
+		function resetGame()
+		{
+			auto = false;
+			gen = 0;
+			createModel();
+			createBoard();
+			nameStartStopButton();
+			printStatus();
+		}
+		function nameStartStopButton()
+		{
+			var btn = document.getElementById("button_auto");
+			if (auto) {
+				btn.innerHTML = "Stop";
+				btn.title = "Stop the automatic generation movement";
+			} else {
+				btn.innerHTML = "Auto";
+				btn.title = "Start automatic generation movement";
+			}
+		}
+		function printStatus()
+		{
+			var generation = document.getElementById("generation");
+			generation.innerHTML = gen;
+		}
+		function toggleGameState()
+		{
+			auto = !(auto);
+			nameStartStopButton();
+			document.getElementById("button_dim").disabled = auto;
+			document.getElementById("textfield_width").disabled = auto;
+			document.getElementById("textfield_height").disabled = auto;
+			document.getElementById("button_clear").disabled = auto;
+			document.getElementById("button_step").disabled = auto;
+			if (auto) {
+				step();
+			}
+		}
+		function setDimension()
+		{
+			width = document.getElementById("textfield_width").value;
+			height = document.getElementById("textfield_height").value;
+			resetGame();
+		}
+		function oneStep()
+		{
+			auto = false;
+			step();
+		}
+		function toggleCell(e)
+		{
+			var cell;
+			try {
+				cell = e.target;	//getting the event source in Mozilla Firefox
+			} catch (e) {
+				cell = window.event.srcElement;	//getting the event source in MSIE
+			}
+
+			var teraz = city[cell.x][cell.y];
+
+			for (i = 0; i < stany.length; i++) {
+				if (stany[i] == teraz) {
+					i = i + 1; break;
+				}
+			}
+			if (i == stany.length) { i = 0; }
+
+			cell.style.backgroundColor = stany[i];
+			city[cell.x][cell.y] = stany[i];
+		}
+		function showRules()
+		{
+			var rules = document.getElementById("container_rules");
+			if (showing_rules) {
+				rules.style.display = "none";
+				showing_rules = false;
+			} else {
+				rules.style.display = "block";
+				showing_rules = true;
+			}
+		}
+		function createModel()
+		{
+			city = new Array(width);
+			newcity = new Array(width);
+			changed = new Array(width);
+			for (var x = 0; x < width; x++) {
+				city[x] = new Array(height);
+				newcity[x] = new Array(height);
+				changed[x] = new Array(height);
+				for (var y = 0; y < height; y++) {
+					city[x][y] = stany[0];
+					newcity[x][y] = stany[0];
+					changed[x][y] = false;
+				}
+			}
+		}
+		function createBoard()
+		{
+			//delete all rows
+			var arena = document.getElementById("playarea");
+			var number_rows = arena.rows.length;
+			for (var y = 0; y < number_rows; y++) {
+				arena.deleteRow(-1);
+			}
+
+			// add all rows
+			for (var y = 0; y < height; y++) {
+				var row = arena.insertRow(-1);
+				for (var x = 0; x < width; x++) {
+					var cell = row.insertCell(-1);
+					cell.className = "cell";
+					cell.innerHTML = "&nbsp;";
+					cell.style.backgroundColor = stany[0];
+					cell.x = x;
+					cell.y = y;
+					cell.onclick = toggleCell;
+				}
+			}
+			gen = 0;
+
+			setupBoard();
+		}
+		function step()
+		{
+			gen++;
+			_calculateNewState();
+			renderBoard();
+			printStatus();
+			if (auto) {
+				setTimeout("step();", 100 * lifecycle);
+			}
+		}
+		function _calculateNewState()
+		{
+			resetTemps();
+			for (var y = 0; y < height; y++) {
+				for (var x = 0; x < width; x++) {
+					var alive_now = city[x][y];
+					var alive_then = calculateNewState(x,y);
+
+					newcity[x][y] = alive_then;
+					changed[x][y] = (alive_now != alive_then);
+				}
+			}
+			updateCity();
+		}
+		function updateCity()
+		{
+			for (var x = 0; x < width; x++) {
+				for (var y = 0; y < height; y++) {
+					city[x][y] = newcity[x][y];
+				}
+			}
+		}
+		function resetTemps()
+		{
+			for (var x = 0; x < width; x++) {
+				for (var y = 0; y < height; y++) {
+					newcity[x][y] = stany[0];
+					changed[x][y] = false;
+				}
+			}
+		}
+		function renderBoard()
+		{
+			var arena = document.getElementById("playarea");
+			for (var y = 0; y < height; y++) {
+				var cells = arena.rows[y].cells;
+				for (var x = 0; x < width; x++) {
+					if (changed[x][y]) {
+						cells[x].style.backgroundColor = city[x][y];
+					}
+				}
+			}
+		}
+	</script>
+</head><body onload="window_onload();">
+	<div>
+		Plansza <input value="20" disabled="disabled" size="3" id="textfield_width" title="Width" type="text"> x <input value="20" disabled="disabled" size="3" id="textfield_height" title="Height" type="text"> <button disabled="disabled" id="button_dim" class="small" onclick="setDimension();">Zmień</button>
+&nbsp; &nbsp; &nbsp;
+
+			<button disabled="disabled" onclick="resetGame();" id="button_clear" title="Clear the board and reset the generation number">Reset</button>&nbsp;
+			<button disabled="disabled" onclick="oneStep();" id="button_step" title="Show the next generation">Krok</button>&nbsp;
+			<button title="Start automatic generation movement" onclick="toggleGameState();" id="button_auto">Auto</button>&nbsp;
+	</div>
+
+	<br>
+
+	<table>
+	<tbody><tr valign="top">
+		<td>
+			<table id="playarea" title="Kliknij na pole, żeby zmienić stan komórki." border="1" cellpadding="1" cellspacing="0">
+			<tbody><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr><tr><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td><td class="cell">&nbsp;</td></tr></tbody></table>
+
+			<br>
+
+
+		</td>
+		<td>
+			<div id="generation" title="The generation number that is being displayed">0</div>
+		</td>
+		<td>
+			<div id="container_rules" style="display: none;">
+				<div>
+					<b>Rules for Game of Life:</b>
+				</div>
+				<ol>
+					<li>Any live cell with fewer than two neighbors dies of loneliness.</li>
+					<li>Any live cell with more than three neighbors dies of crowding.</li>
+					<li>Any dead cell with exactly three neighbors comes to life.</li>
+					<li>Any live cell with two or three neighbors lives, unchanged, to the next generation.</li>
+				</ol>
+				<div>All births and deaths occur simultaineously. Read more about Game of Life in <a href="http://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Wikipedia</a>.</div>
+			</div>
+		</td>
+	</tr>
+	</tbody></table>
+
+	<hr noshade="noshade" size="3" width="100%">
+	<small>
+		Created in 2005 by Carl Fredrik Abelson. Licensed under <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License (GPL)</a>.<br>
+		Changed in 2011 by Żagle.
+	</small>
+</body></html>

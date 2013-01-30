@@ -1,0 +1,145 @@
+\documentclass[a4paper]{amsart}
+
+\usepackage{graphicx}
+\usepackage[latin2]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+
+\newcounter{zad}
+\newcounter{pkt}
+
+\newcommand{\zad}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad.} }
+\newcommand{\zadgw}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad$^*$} }
+\newcommand{\pkt}{\vspace{1mm}\stepcounter{pkt}\alph{pkt}) }
+
+\newcommand{\js}{{\tt js}}
+
+\addtolength{\textheight}{4cm}
+
+\begin{document}
+\thispagestyle{empty}
+\vspace*{-25mm}
+\noindent{\Large Kó³ko Informatyczne, 3 lutego 2011}
+
+\vspace{5mm}
+Komputer mo¿na uruchomiæ dopiero {\bf po} w³o¿eniu pendrive'a. Po uruchomieniu linuxa na pulpicie znajdziesz katalog {\tt life} a w nim pliki {\tt life.js} i {\tt life.html}. Oba nale¿y otworzyæ. Rozwi±zanie zadania wpisuje siê w pliku {\tt life.js} a testuje w przegl±darce prze³adowuj±c plik {\tt life.html}.
+
+\vspace{5mm}
+\noindent{\bf\large Javascript - ¶ci±gawka}
+
+\vspace{2mm}\noindent{\large Arytmetyka }
+
+$+, -, *, /, (, )$
+
+\vspace{2mm}\noindent{\large Wyra¿enia logiczne }
+
+$==, !=, <, <=, >, >=, \&\&, ||$
+
+\vspace{2mm}\noindent{\large  Instrukcje }
+
+Podstawienie: $x = 1;$
+
+Instrukcja warunkowa: if (...) \{ ... \} else \{ ... \}
+
+\vspace{5mm}
+\noindent{\bf\large Automaty komórkowe}
+
+\vspace{5mm}\noindent{\large Przyk³ad: Regu³y klasycznej Gry w ¯ycie}
+
+\vspace{3mm}
+\begin{verbatim}
+var nic  = "black";
+var komorka = "blue";        
+
+function calculateNewState(x,y)
+{
+        var teraz = cellState(x,y);
+        var pozniej;
+
+        if (teraz == nic) {
+                if (licz(x,y,komorka) == 3) {
+                        pozniej = komorka;
+                } else {
+                        pozniej = nic;
+                }
+        }
+        if (teraz == komorka) {
+                if (licz(x,y,komorka) == 2 || licz(x,y,komorka) == 3) {
+                        pozniej = komorka;
+                } else {
+                        pozniej = nic;
+                }
+        }
+
+        return pozniej;
+}
+
+\end{verbatim}
+
+\vspace{5mm}
+\noindent{\bf\large  Zadanie}
+
+\zad Zmodyfikuj regu³y klasycznej Gry w ¯ycie (w pliku {\tt life.js}) tak, ¿eby:
+
+\pkt Komórka rodzi³a siê na pustym polu, gdy ma {\bf 3} lub {\bf 6} s±siadów a prze¿ywa³a jedynie je¶li
+  ma {\bf 2} lub {\bf 3} s±siadów (regu³a ,,\emph{highlife}'').
+
+\pkt Komórka rodzi³a siê na pustym polu, gdy ma {\bf 3} s±siadów a prze¿ywa³a jedynie je¶li
+  ma {\bf 1,2,3,4} lub {\bf 5} s±siadów (regu³a ,,\emph{amazing}'').
+
+\pkt Komórka rodzi³a siê na pustym polu, gdy ma {\bf1,3,5} lub {\bf 7} s±siadów i prze¿ywa³a jedynie je¶li ma {\bf 1,3,5} lub {\bf 7} s±siadów (regu³a ,,\emph{replicator}'').
+
+\newpage\thispagestyle{empty}
+\noindent{\large  Przyk³ad: Regu³y zmodyfikowanej Gry w ¯ycie }
+
+\vspace{3mm}
+\begin{verbatim}
+var nic  = "black";
+var komorka = "blue";        
+var wirus = "red";
+var leukocyt = "white";
+
+function calculateNewState(x,y)
+{
+        var teraz = cellState(x,y);
+        var pozniej;
+
+        if (teraz == nic) {
+                if (licz(x,y,komorka) == 3) {
+                        pozniej = komorka;
+                } else {
+                        pozniej = nic;
+                }
+        }
+        if (teraz == komorka) {
+                if (licz(x,y,wirus) > 0) {
+                        pozniej = wirus;
+                } else if (licz(x,y,komorka) == 2 || licz(x,y,komorka) == 3) {
+                        pozniej = komorka;
+                } else {
+                        pozniej = nic;
+                }
+        }
+        if (teraz == wirus) {
+                if (licz(x,y,leukocyt) > 0) {
+                        pozniej = leukocyt;
+                } else {
+                        pozniej = wirus;
+                }
+        }
+        if (teraz == leukocyt) {
+                if (licz(x,y,wirus) > 0) {
+                        pozniej = nic;
+                } else {
+                        pozniej = leukocyt;
+                }
+        }
+
+        return pozniej;
+}
+
+\end{verbatim}
+
+
+
+\end{document}

@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>Test z Matematyki</title>
+     <meta http-equiv="content-type" content="text/html;charset=utf-8">
+   </head>
+   <body>
+   <pre>
+&lt;html>
+  &lt;head>
+    &lt;title>Test z Matematyki&lt;/title>
+     &lt;meta http-equiv="content-type" content="text/html;charset=cp1250">
+   &lt;/head>
+   &lt;body>
+     &lt;script type="text/javascript">
+	w = 0;
+	
+	o = prompt("Jaki jest następny wyraz ciągu 1,1,2,3,5,8,13?", "");
+	
+	if (o == 21) {
+	  w = w + 1;
+	}
+	
+	o = prompt("Ile trójkątów równobocznych można utworzyć z sześciu zapałek?", "");
+	
+	if (o == 6) {
+	  w = w + 1;
+	}
+
+	o = prompt("Ile jest równe 341*275? Możesz pomylić się o 10.", "");
+	
+	if (o <= 341 * 275 + 10 && o >= 341 * 275 - 10) {
+	  w = w + 1;
+	}
+	
+	document.write("Uzyskałeś " + w);
+	
+	if (w == 0) { document.write(" punktów."); }
+	if (w == 1) { document.write(" punkt."); }
+	if (w >= 2) { document.write(" punkty."); }
+     &lt;/script>
+  &lt;/body>
+&lt;/html>  
+    </pre>
+  </body>
+</html>  

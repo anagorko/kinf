@@ -1,0 +1,143 @@
+\documentclass[a4paper, 10pt, pdftex]{amsart}
+
+\usepackage{graphicx}
+\usepackage[latin2]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+
+\newcounter{zad}
+\newcounter{pkt}
+
+\newcommand{\zad}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad.} }
+\newcommand{\zadgw}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad$^*$} }
+\newcommand{\pkt}{\vspace{1mm}\stepcounter{pkt}\alph{pkt}) }
+
+\newcommand{\js}{{\tt js}}
+
+\addtolength{\textheight}{4cm}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\vspace*{-8mm}
+\noindent{\Large Kó³ko Informatyczne, 27 stycznia 2011}
+
+\vspace{2mm}
+
+\noindent{\large {\bf Instrukcja} {\tt if ( ... ) \{ ... \} else \{ ... \} }
+
+\vspace{5mm}
+\noindent
+{\bf Wyra¿enia logiczne}
+
+\begin{enumerate}
+\item {\tt ==} równo¶æ
+\item {\tt !=} ró¿ne
+\item {\tt >=} wiêksze równe
+\item {\tt >} wiêksze
+\item {\tt <} mniejsze
+\item {\tt <=} mniejsze równe
+\item {\tt \&\&} "i"
+\item {\tt ||} "lub"
+\item {\tt !} zaprzeczenie
+\end{enumerate}
+
+\vspace{2mm}\noindent
+{\bf Przyk³ad.} Wyra¿enie logiczne "{\tt x != 7}" jest prawdziwe je¿eli x jest ró¿ne od $7$.
+
+\vspace{2mm}\noindent
+{\bf Przyk³ad.} Wyra¿enie logiczne "{\tt x >  0 \&\& x < 10}" jest prawdziwe gdy x jest wiêksze  od zera i mniejsze od dziesiêciu.
+
+\vspace{2mm}\noindent
+{\bf Przyk³ad.} Wyra¿enie logiczne "{\tt !(x >  0 \&\& x < 10)}" jest prawdziwe je¿eli poprzednie jest
+nieprawdziwe, tzn. wtedy gdy x jest
+  mniejsze b±d¼ równe $0$ lub x jest wiêksze b±d¼ równe $10$.
+
+\vspace{3mm}\noindent
+{\bf Instrukcje warunkowe}
+
+\zad Co wypisze program:
+\vspace{1mm}
+\begin{verbatim}
+var t = 7;
+if (t < 0) { 
+  document.write("Jest mróz.");
+} else {
+  document.write("Jest odwil¿.");
+}
+\end{verbatim}
+
+\zad Co wypisze poni¿szy program dla $t = 2$, $t = 10$, $t = 15$ i $t = 35$?
+
+\begin{verbatim}
+if (t < 5) { 
+  document.write("Za³ó¿ czapkê. ");
+} else if (t > 30) {
+  document.write("Za³ó¿ kapelusz s³oneczny. ");
+}
+if (t > 20) {
+  document.write("Za³ó¿ t-shirt.");
+else if (t  <= 20 && t > 10) {
+  document.write("Za³ó¿ sweter.");
+} else {
+  document.write("Za³ó¿ kurtkê.");
+}
+
+\end{verbatim}
+
+\zad Na nastêpnej stronie wydrukowany jest program przeprowadzaj±cy test z matematyki.
+Stwórz podobny test ze swojego ulubionego przedmiotu.
+
+
+
+\newpage\thispagestyle{empty}
+\noindent
+\begin{verbatim}
+<html>
+  <head>
+    <title>Test z Matematyki</title>
+     <meta http-equiv="content-type" content="text/html;charset=cp1250">
+   </head>
+   <body>
+     <script type="text/javascript">
+	w = 0;
+	
+	o = prompt("Jaki jest nastêpny wyraz ci±gu 1,1,2,3,5,8,13?", "");
+	
+	if (o == 21) {
+	  w = w + 1;
+	}
+	
+	o = prompt("Ile trójk±tów równobocznych mo¿na utworzyæ z sze¶ciu zapa³ek?", "");
+	
+	if (o == 6) {
+	  w = w + 1;
+	}
+
+	o = prompt("Ile jest równe 341*275? Mo¿esz pomyliæ siê o 10.", "");
+	
+	if (o <= 341 * 275 + 10 && o >= 341 * 275 - 10) {
+	  w = w + 1;
+	}
+	
+	document.write("Uzyska³e¶ " + w);
+	
+	if (w == 0) { document.write(" punktów."); }
+	if (w == 1) { document.write(" punkt."); }
+	if (w >= 2) { document.write(" punkty."); }
+     </script>
+  </body>
+</html>  
+\end{verbatim}
+
+\vspace{1cm}
+Kod tego programu mo¿na skopiowaæ ze strony
+
+\vspace{3mm}
+\hspace{5mm}\url{http://www.mimuw.edu.pl/~amn/ki/test.html}
+\vspace{3mm}
+
+(co oszczêdzi nieco przepisywania)
+
+\end{document}

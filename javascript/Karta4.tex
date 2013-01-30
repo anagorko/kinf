@@ -1,0 +1,103 @@
+\documentclass[a4paper, 10pt, pdftex]{amsart}
+
+\usepackage{graphicx}
+\usepackage[latin2]{inputenc}
+\usepackage[T1]{fontenc}
+
+\newcounter{zad}
+\newcounter{pkt}
+
+\newcommand{\zad}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad.} }
+\newcommand{\zadgw}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad$^*$} }
+\newcommand{\pkt}{\vspace{1mm}\stepcounter{pkt}\alph{pkt}) }
+
+\newcommand{\js}{{\tt js}}
+
+\addtolength{\textheight}{4cm}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\vspace*{-28mm}
+{\Large Informatyka, 10 X 2011}
+
+\vspace{2mm}
+
+{\large Temat: \bf Wyrażenia I}
+
+\vspace{5mm}
+
+Skrypty będziemy wpisywać w znaczniku {\tt <script>} wg szablonu:
+
+\vspace{1mm}
+\begin{verbatim}
+<html>
+  <head>
+    <title>Kółko Informatyczne</title>
+     <meta http-equiv="content-type" content="text/html;charset=cp1250">
+   </head>
+   <body>
+     <script type="text/javascript">
+       // tu wpisujemy skrypt
+     </script>
+  </body>
+</html>  
+\end{verbatim}
+
+\vspace{2mm}
+\noindent Zadania z poprzedniego tygodnia:
+
+\zad Zapisz w \js{} wyrażenie \[ 3 \frac{2^2 + \frac{1}{2}}{9} \]
+
+\zad Zapisz pełn± instrukcję \js{} zapisuj±c± w dokumencie warto¶ć powyższego wyrażenia.
+
+\zad Masz na lokacie $1000$ złotych. Oprocentowanie wynosi $5,2\%$ rocznie. Podatek
+  od odsetek to $19\%$. Kapitalizacja odsetek - co miesi±c.
+  
+\pkt Zapisz (za pomoc± wyrażenia arytmetycznego) ile na lokacie będzie po miesi±cu.
+
+\pkt Zapisz to wyrażenie w \js.
+
+\pkt Ile będzie na lokacie po dwóch miesi±cach, wiedz±c że po miesi±cu było $1003$zł i $51$gr?
+
+\pkt Ile będzie po miesi±cu, jeżeli na pocz±tku było $1700$zł?
+
+\zad Co robi następuj±cy program? (sprawdĽ na komputerze!)
+
+\vspace{2mm}
+\begin{quote}
+\begin{verbatim}
+  <script>
+    x = 1000;
+    y = x + x * 0.052 * 0.81  / 12;
+    z = y + y * 52 / 1000 * 81 / 100 / 12;
+    document.write(z);
+  </script>
+\end{verbatim}
+\end{quote}
+
+\zad Zapisz następuj±ce wyrażenia w \js.
+
+\pkt $(2x - 3y) : 2$
+
+\pkt $x + 2 - (y+1) : 2$
+
+\pkt $(2 + 5) \cdot 105\% \cdot \frac{1}{12}$
+
+\zad Zapisz pełen program w \js{} wypisuj±cy warto¶ć wyrażenia $(3(x+4) - 7) : 2$ dla $x = 1$.
+
+\zadgw Za pomoc± instrukcji
+
+\begin{quote}
+\begin{verbatim}
+x = parseInt(prompt("Podaj kwotę", "1000"));
+\end{verbatim}
+\end{quote}
+można zapytać użytkownika o kwotę, od której chce policzyć odsetki.
+Napisz program, który obliczy ile będzie na lokacie po trzech miesi±cach dla kwoty podanej
+  przez użytkownika.
+
+\zadgw Napisz (analogicznie jak w zadaniu 4) program obliczaj±cy odsetki po sze¶ciu miesi±cach.
+
+\end{document}

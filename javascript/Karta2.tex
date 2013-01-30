@@ -1,0 +1,101 @@
+\documentclass[a4paper, 11pt]{amsart}
+
+\usepackage{colortbl}
+\usepackage[latin2]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{url}
+\sloppy
+
+\definecolor{black}{rgb}{0,0,0}
+\renewcommand{\c}{\cellcolor{black}\color{white}\tiny}
+\newcommand{\s}{\cellcolor[gray]{0.8}\tiny}
+\renewcommand{\t}{\tiny}
+
+\begin{document}
+
+\thispagestyle{empty}\vspace*{-20mm}
+{\large\bf Conway's Game of Life}
+\vspace{5mm}
+
+Imiê i nazwisko: ................................................. \ \ \ \ 
+Klasa: ............. 
+
+\vspace{2mm}
+Login:\ \ \ \ \ \ \ \ \ \ \ \ \ \  .................................................
+
+\vspace{8mm}
+Po zalogowaniu otwórz pliki {\tt life.html} i {\tt life.js} z katalogu {\tt Life/}.
+
+\vspace{5mm}\noindent
+{\bf Zadania. }
+
+\vspace{5mm}\noindent{\bf 1. } Znajd¼ ciekaw± formê ¿ycia i zmodyfikuj funkcjê {\em setupBoard()} 
+tak, by  gra zaczyna³a siê od znalezionej formy.
+
+\vspace{5mm}\noindent{\bf 2. } Gra Conway'a rozgrywana jest wed³ug regu³y {\bf 23/3}. Zmodyfikuj funkcjê {\em calculateNewState(x,y)} tak, by gra by³a rozgrywana wed³ug regu³:
+
+\vspace{5mm}
+
+\begin{enumerate}
+\item Highlife {\bf 23/36}. \ \ \ [zagle1, zagle5]
+\item Coral {\bf 45678/3} \ \ \ [zagle2, zagle6].
+\item Amazing {\bf 12345/3}. \ \ \ [zagle3, zagle7]
+\item Replicator {\bf 1357/1357}. \ \ \ [zagle4, zagle8]
+\end{enumerate}
+
+\newpage\thispagestyle{empty}
+
+\begin{verbatim}
+            
+var dead  = 0;
+var alive = 1;      
+
+function setupBoard()
+{
+      setCellState(1,0,alive); setCellState(2,1,alive);
+      setCellState(0,2,alive); setCellState(1,2,alive);
+      setCellState(2,2,alive);
+}
+            
+function numberOfNeighbors(x, y)
+{
+      var n = 0;
+      if (cellState(x-1, y-1) == alive)      n++;
+      if (cellState(x-1, y) == alive)        n++;
+      if (cellState(x-1, y+1) == alive)      n++;
+      if (cellState(x, y-1) == alive)        n++;
+      if (cellState(x, y+1) == alive)        n++;
+      if (cellState(x+1, y-1) == alive)      n++;
+      if (cellState(x+1, y) == alive)        n++;
+      if (cellState(x+1, y+1) == alive)      n++;
+      return n;
+}
+                  
+function calculateNewState(x,y)
+{
+      var now = cellState(x,y);
+      var then;      
+      var neighbors = numberOfNeighbors(x, y);
+
+      if (now == alive) {
+            if (neighbors < 2 || neighbors > 3) { 
+                  then = dead; 
+            } else {
+                  then = alive;
+            }
+      }
+      if (now == dead) {
+            if (neighbors == 3) {
+                  then = alive;
+            } else {
+                  then = dead;
+            }
+      }
+
+      return then;
+}
+
+\end{verbatim}
+
+\end{document}
