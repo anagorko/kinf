@@ -1,0 +1,73 @@
+\documentclass[11pt,a4paper,pdftex]{amsart}
+
+\usepackage[latin2]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+
+\newcounter{zad}
+\newcounter{pkt}
+
+\newcommand{\zad}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad.} }
+\newcommand{\zadgw}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad$^*$} }
+\newcommand{\pkt}{\vspace{1mm}\stepcounter{pkt}\alph{pkt}) }
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\noindent{\large Kó³ko Informatyczne, 24 stycznia 2011, $15^{30} - 17^{30}$.}
+\vspace{5mm}
+
+\noindent{\Large \bf Liczby Ko³owe. Implementacja}
+\vspace{5mm}
+
+{\em Ko³ow± liczb± pierwsz±} nazywamy tak± liczbê pierwsz±, która po przeniesieniu na pocz±tek dowolnej liczby cyfr z koñca pozostaje liczb± pierwsz±. Przyk³adowo, $1193$ jest ko³ow± liczb± pierwsz±, bo liczby $1193$, $3119$ (przeniesiona ostatnia cyfra), $9311$ (przeniesione dwie ostatnie cyfry) i $1931$ (przeniesione trzy cyfry) s± pierwsze (choæ np. $1139 = 17 \cdot 67$ nie jest pierwsza).
+
+\vspace{5mm}
+\noindent{\bf Zadanie}
+\vspace{1mm}
+
+Napisz program, który wyznaczy wszystkie liczby ko³owe $\leq 10^{9}$.
+
+Uwaga: $10^9 < 2^{30}$.
+
+\vspace{3mm}
+Dostêpna pamiêæ: $32$MB. Szczodry limit czasu: $10$s.
+
+\vspace{5mm}
+\noindent{\bf }
+\vspace{1mm}
+
+{\bf 1.} Napisz funkcjê sprawdzaj±c±, czy dana liczba $\leq 10^9$ jest pierwsza.
+
+\vspace{1mm}
+{\bf 2.} Czy mo¿na przyspieszyæ dzia³anie tej funkcji wiedz±c, ¿e bêdzie ona wywo³ywana wielokrotnie
+  dla ró¿nych liczb $\leq 10^9$?
+  
+\vspace{1mm}
+{\bf 3.} Napisz funkcjê przenosz±c± ostatni± cyfrê liczby na jej pocz±tek (zastanów siê, co siê dzieje w przypadku zera).
+
+\vspace{1mm}
+{\bf 4.} Liczba $11593$ jest pierwsza. Czy jest ko³ow± liczb± pierwsz±?
+
+\vspace{5mm}
+\noindent{\bf Zadania pomocnicze}
+\vspace{1mm}
+
+\zad Zaprojektuj strukturê danych do reprezentacji:
+
+\pkt liczb naturalnych $\leq 10^{100}$.
+
+\pkt liczb ca³kowitych o module $\leq 10^{100}$.
+
+\pkt u³amków dziesiêtnych, do stu miejsc przed i po przecinku.
+
+\zad Napisz funkcjê dodaj±c± dwie liczby reprezentowane jak w poprzednim zadaniu.
+
+\zad Napisz funkcjê generuj±c± wszystkie liczby $\leq 9$ cyfrowe o cyfrach ze zbioru $\{ 1,3,7, 9 \}$.
+
+\pkt iteracyjnie (w pêtli).
+
+\pkt rekurencyjnie.
+
+\end{document}

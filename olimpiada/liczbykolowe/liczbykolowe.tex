@@ -1,0 +1,46 @@
+\documentclass[11pt,a4paper,pdftex]{amsart}
+
+\usepackage[latin2]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\noindent{\large Kó³ko Informatyczne, 17 stycznia 2011, $15^{30} - 17^{30}$.}
+\vspace{5mm}
+
+\noindent{\Large \bf Liczby Ko³owe}
+\vspace{5mm}
+
+{\em Ko³ow± liczb± pierwsz±} nazywamy tak± liczbê pierwsz±, która po przeniesieniu na pocz±tek dowolnej liczby cyfr z koñca pozostaje liczb± pierwsz±. Przyk³adowo, $1193$ jest ko³ow± liczb± pierwsz±, bo liczby $1193$, $3119$ (przeniesiona ostatnia cyfra), $9311$ (przeniesione dwie ostatnie cyfry) i $1931$ (przeniesione trzy cyfry) s± pierwsze (choæ np. $1139 = 17 \cdot 67$ nie jest pierwsza).
+
+\vspace{5mm}
+\noindent{\bf Zadanie}
+\vspace{1mm}
+
+Napisz program, który wyznaczy wszystkie liczby ko³owe $\leq 10^{9}$.
+
+Uwaga: $10^9 < 2^{30}$.
+
+\vspace{3mm}
+Dostêpna pamiêæ: $32$MB. Szczodry limit czasu: $10$s.
+
+\vspace{5mm}
+\noindent{\bf Zadania pomocnicze}
+\vspace{1mm}
+
+{\bf 1.} Napisz funkcjê sprawdzaj±c±, czy dana liczba $\leq 10^9$ jest pierwsza.
+
+\vspace{1mm}
+{\bf 2.} Czy mo¿na przyspieszyæ dzia³anie tej funkcji wiedz±c, ¿e bêdzie ona wywo³ywana wielokrotnie
+  dla ró¿nych liczb $\leq 10^9$?
+  
+\vspace{1mm}
+{\bf 3.} Napisz funkcjê przenosz±c± ostatni± cyfrê liczby na jej pocz±tek (zastanów siê, co siê dzieje w przypadku zera).
+
+\vspace{1mm}
+{\bf 4.} Liczba $11593$ jest pierwsza. Czy jest ko³ow± liczb± pierwsz±?
+
+\end{document}
