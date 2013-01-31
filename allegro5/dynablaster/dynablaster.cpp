@@ -760,6 +760,18 @@ int main(int argc, char ** argv)
     if (wybuchl[1]) {
         cout << "wybuchl gracz nr 1" << endl;
     }
+
+    while(true)
+    {
+        ALLEGRO_EVENT ev;
+        al_wait_for_event(event_queue, &ev);
+
+        if (ev.type == ALLEGRO_EVENT_KEY_UP) {
+            if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+                break;
+            }
+        }
+    }
     
     return 0;
 }
