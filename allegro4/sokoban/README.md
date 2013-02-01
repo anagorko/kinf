@@ -1,2 +1,1 @@
-Tu niedługo znajdzie się kod sokobana i grafika do niego.
-
+Kod do sokobana jest w sokoban.cpp
