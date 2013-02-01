@@ -1,2 +1,2 @@
-Tu kiedyś znajdzie się kod sokobana z zeszłego roku.
+Tu niedługo znajdzie się kod sokobana i grafika do niego.
 
