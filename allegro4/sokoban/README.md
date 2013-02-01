@@ -1,2 +1,2 @@
-Tu kiedyś znajdzie się kod sokobana z zeszłego roku.
+Tu kiedyś znajdzie się mój kod sokobana.\
 
