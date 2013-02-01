@@ -1,3 +1,3 @@
-TROLOLOLOLOLOLOLO, nie ma kodu :)
+TROLOLOLOLOLOLOLO, nie ma tutaj kodu :)
 
 
