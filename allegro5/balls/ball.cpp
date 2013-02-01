@@ -27,13 +27,19 @@ const int screen_h = 562;   // wysokość ekranu (screen height)
 // Zmienne
 //
 
+float x, y, dx, dy;
+const int r = 40;
+
 //
 // Rysowanie planszy
 //
 
 void rysuj_plansze()
 {
-    al_clear_to_color(al_map_rgb(0,0,0));
+      al_clear_to_color(al_map_rgb(0,0,0));
+      for (int i = r; i > 0; i--) {
+		al_draw_filled_circle(x, y, i, al_map_rgb(255-i*5,0,0));
+      }
 }
 
 //
@@ -42,6 +48,11 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
+
+      if (x + dx > screen_w - r || x + dx < r) { dx = -dx; }
+      if (y + dy > screen_h - r || y + dy < r) { dy = -dy; }
+      
+      x = x + dx; y = y + dy;
 }
 
 //
@@ -108,6 +119,9 @@ int init()
   
     al_flip_display();  
     al_start_timer(timer);
+
+    x = screen_w / 2; y = screen_h / 2;
+    dx = 10; dy = 10;
 
     return 0;
 }
