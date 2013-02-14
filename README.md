@@ -8,7 +8,7 @@ raz powinieneś skopiować pliki za pomocą polecenia
 
 ## Wiki
 
-Większość materiałów znajduje się w [wiki](wiki). Tutaj znajdziesz kody źródłowe i rozwiązania zadań
+Większość materiałów znajduje się w [wiki](https://github.com/anagorko/kinf/wiki). Tutaj znajdziesz kody źródłowe i rozwiązania zadań
   napisane przez uczestników.
 
 ## Instalacja biblioteki Allegro
