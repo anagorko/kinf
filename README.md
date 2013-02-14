@@ -1,13 +1,15 @@
-kinf
+kinf: Kółko Informatyczne Szkoły Żagle
 ====
-
-Kółko Informatyczne Szkoły Żagle
 
 Na tej stronie znajdziesz repozytorium plików z naszego kółka. Jeżeli jesteś tu pierwszy
 raz powinieneś skopiować pliki za pomocą polecenia
 
 >git clone https://github.com/anagorko/kinf.git
 
+## Wiki
+
+Większość materiałów znajduje się w [wiki](wiki). Tutaj znajdziesz kody źródłowe i rozwiązania zadań
+  napisane przez uczestników.
 
 ## Instalacja biblioteki Allegro
 
