@@ -8,5 +8,7 @@ raz powinieneś skopiować pliki za pomocą polecenia
 
 >git clone https://github.com/anagorko/kinf.git
 
-a następnie zainstalować bibliotekę allegro 5.0. Instrukcje instalacji w Ubuntu
-znajdziesz w katalogu [allegro5/](allegro5/).
+
+## Instalacja biblioteki Allegro
+
+Instrukcję instalacji Allegro 5 w Ubuntu znajdziesz w katalogu [allegro5/](allegro5/).
