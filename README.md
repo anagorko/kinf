@@ -6,6 +6,8 @@ raz powinieneś skopiować pliki za pomocą polecenia
 
 >git clone https://github.com/anagorko/kinf.git
 
+Dokładniejsze informacje jak korzystać z git-a znajdziesz na [naszej stronie w wiki](https://github.com/anagorko/kinf/wiki/Jak-używać-git-a%3F).
+
 ## Wiki
 
 Większość materiałów znajduje się w [wiki](https://github.com/anagorko/kinf/wiki). Tutaj znajdziesz kody źródłowe i rozwiązania zadań
