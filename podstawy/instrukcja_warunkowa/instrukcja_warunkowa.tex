@@ -1,0 +1,129 @@
+\documentclass[a4paper, 10pt, pdftex]{amsart}
+
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+\usepackage{cmbright}
+
+\newcounter{zad}
+\newcounter{pkt}
+
+\newcommand{\zad}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad.} }
+\newcommand{\zadgw}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad$^*$} }
+\newcommand{\pkt}{\vspace{1mm}\stepcounter{pkt}\alph{pkt}) }
+
+\newcommand{\js}{{\tt js}}
+
+\addtolength{\textheight}{4cm}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\vspace*{-8mm}
+\noindent{\Large\bf Instrukcja warunkowa}
+
+\vspace{2mm}
+
+\noindent{\large {\bf Instrukcja} {\tt if ( ... ) \{ ... \} else \{ ... \} }
+
+\vspace{5mm}
+\noindent
+{\bf Wyrażenia logiczne}
+
+\begin{enumerate}
+\item {\tt ==} równość
+\item {\tt !=} różne
+\item {\tt >=} większe równe
+\item {\tt >} większe
+\item {\tt <} mniejsze
+\item {\tt <=} mniejsze równe
+\item {\tt \&\&} "i"
+\item {\tt ||} "lub"
+\item {\tt !} zaprzeczenie
+\end{enumerate}
+
+\vspace{2mm}\noindent
+{\bf Przykład.} Wyrażenie logiczne "{\tt x != 7}" jest prawdziwe jeżeli x jest różne od $7$.
+
+\vspace{2mm}\noindent
+{\bf Przykład.} Wyrażenie logiczne "{\tt x >  0 \&\& x < 10}" jest prawdziwe gdy x jest większe  od zera i mniejsze od dziesięciu.
+
+\vspace{2mm}\noindent
+{\bf Przykład.} Wyrażenie logiczne "{\tt !(x >  0 \&\& x < 10)}" jest prawdziwe jeżeli poprzednie jest
+nieprawdziwe, tzn. wtedy gdy x jest
+  mniejsze bądź równe $0$ lub x jest większe bądź równe $10$.
+
+\vspace{3mm}\noindent
+{\bf Instrukcje warunkowe}
+
+\zad Co wypisze program:
+\vspace{1mm}
+\begin{verbatim}
+int t = 7;
+if (t < 0) { 
+  cout << "Jest mróz.");
+} else {
+  cout << "Jest odwilż.";
+}
+\end{verbatim}
+
+\zad Co wypisze poniższy program dla $t = 2$, $t = 10$, $t = 15$ i $t = 35$?
+
+\begin{verbatim}
+if (t < 5) { 
+  cout << "Załóż czapkę. ";
+} else if (t > 30) {
+  cout << "Załóż kapelusz słoneczny. ";
+}
+if (t > 20) {
+  cout << "Załóż t-shirt.";
+else if (t  <= 20 && t > 10) {
+  cout << "Załóż sweter.";
+} else {
+  cout << "Załóż kurtkę.";
+}
+
+\end{verbatim}
+
+
+\newpage\thispagestyle{empty}
+
+\zad Poniższy program przeprowadza test z matematyki.
+Stwórz podobny test ze swojego ulubionego przedmiotu.
+
+\vspace{5mm}
+\begin{verbatim}
+	int w = 0; // wynik
+	int o; // odpowiedź
+	
+	cout << "Jaki jest następny wyraz ciągu 1,1,2,3,5,8,13?";
+	cin >> o;
+	
+	if (o == 21) {
+	  w = w + 1;
+	}
+	
+	cout << "Ile trójkątów równobocznych można utworzyć z sześciu zapałek?";
+	cin >> o;
+	
+	if (o >= 4) {
+	  w = w + 1;
+	}
+
+	cout << "Ile jest równe 341*275? Możesz pomylić się o 10.";
+	cin >> o;
+	
+	if (o <= 341 * 275 + 10 && o >= 341 * 275 - 10) {
+	  w = w + 1;
+	}
+	
+	cout << "Uzyskałeś " << w << " punkt";
+	
+	if (w == 0) { cout << "ów."; }
+	if (w == 1) { cout << "."; }
+	if (w >= 2) { cout << "y."; }
+\end{verbatim}
+
+\end{document}
