@@ -1,0 +1,170 @@
+\documentclass[a4paper, 10pt, pdftex, dvipsnames]{scrartcl}
+
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+\usepackage{cmbright}
+\usepackage[polish]{babel}
+\usepackage{tikz}
+
+\newcounter{zad}
+\newcounter{pkt}
+
+\newcommand{\zad}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad.} }
+\newcommand{\zadgw}{\vspace{4mm}\noindent\setcounter{pkt}{0}\stepcounter{zad}{\bf \thezad$^*$} }
+\newcommand{\pkt}{\vspace{1mm}\stepcounter{pkt}\alph{pkt}) }
+
+\newcommand{\js}{{\tt js}}
+
+\addtolength{\textheight}{4cm}
+
+
+\tikzstyle{wired}=[draw=gray!30, line width=0.15mm]
+\tikzstyle{number}=[anchor=center, color=white]
+% Sectors are numbered 0-19 counterclockwise from the top.
+
+% \strip{color}{sector}{outer_radius}{inner_radius}
+\newcommand{\strip}[4]{
+    \filldraw[#1, wired]
+      ({18 *  #2}      :                   #3) arc
+      ({18 *  #2}      : {18 * (#2 + 1)} : #3) --
+      ({18 * (#2 + 1)} :                   #4) arc
+      ({18 * (#2 + 1)} : {18 *  #2}      : #4) -- cycle;
+}
+
+% \sector{color}{sector}{radius}
+\newcommand{\sector}[3]{
+    \filldraw[#1, wired]
+      (0, 0) --
+      ({18 * #2} :                   #3) arc
+      ({18 * #2} : {18 * (#2 + 1)} : #3) -- cycle;
+}
+
+\begin{document}
+
+\section*{Pętle - 7 XII 2012}
+
+\subsection*{Przypomnienie}
+
+,,Wykonaj'' na kartce program:
+
+\begin{verbatim}
+  int a = 1;
+  for (int i = 1; i <= 4; i++) {
+    if ((i % 2) == 0) {
+      a = a * i;
+    } else {
+      a = a + i;
+    }
+  }
+  cout << "a = " << a << endl;
+\end{verbatim}
+
+\subsection*{Szyfr Cezara}
+
+Jest to szyfr za pomocą którego Juliusz Cezar szyfrował swoje listy do Cycerona. Jako ciekawostkę można podać, że szyfr ten był podobno używany jeszcze w 1915 roku w armii rosyjskiej, gdyż tylko tak prosty szyfr wydawał się zrozumiały dla sztabowców\footnote{\url{http://www.kryptografia.com/algorytmy/cezar.html}}.
+
+\vspace{2mm}\noindent
+{\bf Wersja podstawowa:} Każdą literę tekstu jawnego zamieniamy na literę przesuniętą o 3 miejsca w prawo. I tak literę A szyfrujemy jako literę D, literę B jako E itd. W przypadku litery Z wybieramy literę C. W celu odszyfrowania tekst powtarzamy operację tym razem przesuwając litery o 3 pozycje w lewo.
+
+\begin{center}
+% 81 degrees = 4.5 sectors.
+% The rotation leaves 20 at the top.
+\begin{tikzpicture}[rotate=81, scale=.14]
+
+  % These are the official dartboard dimensions as per BDO's regulations.
+
+  % The whole board's background.
+  \fill[black] (0, 0) circle (225.5mm);
+  \fill[white] (0, 0) circle (125.5mm);
+
+  % Labels.
+  \foreach \sector/\label in {%
+      1/A,  2/B, 3/C, 4/D, 5/E, 6/F, 7/G, 8/H, 9/I, 10/J, 11/K, 12/L, 13/M, 14/N, 15/O, 16/P, 17/Q, 18/R, 19/S, 20/T, 21/U, 22/V, 23/W, 24/X, 25/Y, 26/Z}%
+  {
+    \node[number, rotate={13.846 * (-\sector + 1)}] at ({13.846 * (-\sector + 1.5)} : 197.75mm) {\label};
+    \node[number, font=\small, rotate={13.846 * (-\sector + 1)}] at ({13.846 * (-\sector + 1.5)} : 157.75mm) {\sector};
+  }
+\end{tikzpicture}
+\end{center}
+
+\vspace{2mm}\noindent
+{\bf Przykład:} szyfrujemy zdanie „Lubię szkołę”. Po pierwsze – w naszym alfabecie (patrz rysunek) nie ma wielkich liter, polskich znaków i spacji. Dlatego będziemy szyfrować tekst „lubieszkole”. Przesunięcia odczytujemy z tabeli: l $\rightarrow$ o, u $\rightarrow$ x, b $\rightarrow$ e, i $\rightarrow$ l, e $\rightarrow$ h, s $\rightarrow$ v, z $\rightarrow$ c, k $\rightarrow$ n, o $\rightarrow$ r, l $\rightarrow$ o, e $\rightarrow$ h. Otrzymujemy napis „oxelhvcnroh”.
+Zauważ, w jaki sposób zaszyfrowaliśmy literę z: alfabet się „zawinął”.
+
+\vspace{2mm}\noindent
+{\bf Ćwiczenie:} zaszyfruj swoje imię i nazwisko za pomocą szyfru Cezara.
+
+\subsection*{Zadania}
+
+W rozwiązaniu zadań mogą być pomocne przykładowe programy z zeszłego tygodnia: ,,suma liczb'' i ,,flaga polska'', zamieszczone na następnej kartce.
+
+\subsubsection*{Obliczenia}
+
+\zad Napisz program, który wyświtela na ekranie liczby od $100$ do $1$.
+
+\zad Napisz program, który wyświetla na ekranie najpierw liczby nieparzyste od $1$ do $99$, a następnie liczby parzyste od $2$ do $100$.
+
+\zad Napisz program, który oblicza sumę liczb parzystych od $2$ do $100$.
+
+\zad Napisz program, który wyświetla liczby od $1$ do $100$, ale każdą liczbę podzielną przez $3$ zastępując tekstem ,,foo''.
+
+\zad Napisz program, który wyświetla liczby od $1$ do $100$, zamiast liczb podzielnych przez $3$ wypisując ,,foo'', zamiast liczby podzielnych przez $3$ ale nie podzielnych przez $5$ wypisując ,,bar'' a zamiast liczb podzielnych przez $3$ i przez $5$ wypisując ,,foobar''.
+
+\subsubsection*{Przetwarzanie tekstu}
+
+Jeżeli {\tt s} jest zmienną typu {\tt string}, to
+
+\begin{itemize}
+  \item s.length() to długość napisu,
+  \item s[0], s[1], s[2] to kolejne litery napisu.
+\end{itemize}
+
+\vspace{2mm}\noindent
+{\bf Przykład:} 
+\begin{verbatim}
+  string napis = "To jest napis!";
+
+  cout << napis.length() << endl;                // wypisana zostanie liczba 14
+  cout << napis[3] << endl;                      // wypisana zostanie litera 'j'
+  cout << napis[napis.length() - 1] << endl;     // wypisany zostanie znak '!'  
+\end{verbatim}
+
+
+\zadgw Napisz program, który pyta użytkownika o imię, a potem odpowiada ,,Jesteś chłopakiem!'' lub ,,Jesteś dziewczyną!''.
+
+\zad Napisz program, który pyta użytkownika o wyraz, a następnie wyświetla ten wyraz od końca.
+
+\zad Napisz program, który pyta użytkownika o wyraz, a następnie wyświetla go w następujący sposób: najpierw jego parzyste litery, a następnie nieparzyste.
+
+
+
+\zad Napisz program, który szyfruje dany wyraz za pomocą szyfru Cezara.
+
+\zad Napisz program, który odszyfrowuje dany wyraz zaszyfrowany szyfrem Cezara.
+
+\subsection*{Suma liczb od $1$ do $100$}
+\begin{verbatim}
+  int suma = 0;
+  for (int liczba = 1; liczba <= 100; liczba++) {
+    suma = suma + liczba;
+  }
+  cout << "Suma liczb od 1 do 100 wynosi " << suma << "." << endl;
+\end{verbatim}
+
+\subsection*{Flaga polska}
+\begin{verbatim}
+  int s; cout << "Szerokość?"; cin >> s;
+  int w; cout << "Wysokość?"; cin >> w;
+  for (int i = 0; i < w/2; i++) {
+    for (int j = 0; j < s; j++) { cout << '.'; }
+    cout << endl;
+  }
+  for (int i = 0; i < w/2; i++) {
+    for (int j = 0; j < s; j++) { cout << '#'; }
+    cout << endl;
+  }  
+\end{verbatim}
+
+\end{document}
