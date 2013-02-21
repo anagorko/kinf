@@ -75,8 +75,13 @@ int init()
         return -1;
     }
     
-    if(!al_install_keyboard()) {
+    if (!al_install_keyboard()) {
         cerr << "Błąd podczas inicjalizacji klawiatury." << endl;
+        return -1;
+    }
+
+    if (!al_install_mouse()) {
+        cerr << "Błąd podczas inicjalizacji myszy." << endl;
         return -1;
     }
   
