@@ -13,7 +13,7 @@ using namespace std;
 //
 
 const int screen_w = 1000;   // szerokość ekranu (screen width)
-const int screen_h = 562;   // wysokość ekranu (screen height)
+const int screen_h = 550;   // wysokość ekranu (screen height)
 
 /****************************************
  * Tu rozpoczyna się istotna część kodu *
@@ -27,6 +27,18 @@ const int screen_h = 562;   // wysokość ekranu (screen height)
 // Zmienne
 //
 
+bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
+int mouse_x;
+int mouse_y;
+bool mouse_pressed = false;
+
+const int wiel = 25;
+
+const int sz = screen_w / wiel;
+const int wy = screen_h / wiel;
+
+int grid[sz][wy];
+
 //
 // Rysowanie planszy
 //
@@ -34,6 +46,18 @@ const int screen_h = 562;   // wysokość ekranu (screen height)
 void rysuj_plansze()
 {
     al_clear_to_color(al_map_rgb(0,0,0));
+    
+    al_put_pixel(mouse_x-3, mouse_y-3, al_map_rgb(255,255,255));
+
+    for (int x = 0; x < sz; x++) {
+        for (int y = 0; y < wy; y++) {
+            if (grid[x][y] == 0) {
+                al_draw_filled_rectangle(x * wiel, y * wiel, (x+1) * wiel - 1, (y+1)* wiel - 1, al_map_rgb(128,128,255));
+            } else {
+                al_draw_filled_rectangle(x * wiel, y * wiel, (x+1) * wiel - 1, (y+1)* wiel - 1, al_map_rgb(255,128,128));
+            }
+        }
+    }
 }
 
 //
@@ -42,6 +66,16 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
+    if (mouse_pressed) {
+        int click_x = mouse_x / wiel;
+        int click_y = mouse_y / wiel;
+        
+        if (click_x >= 0 && click_x < sz && click_y >= 0 && click_y < wy) {
+            grid[click_x][click_y] = 1 - grid[click_x][click_y];
+        }
+        
+        mouse_pressed = false;
+    }
 }
 
 //
@@ -57,7 +91,6 @@ void co_robia_gracze()
  ****************************************/
  
 const float FPS = 60;       // Frames Per Second
-bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 
 ALLEGRO_DISPLAY *display = NULL;
 ALLEGRO_EVENT_QUEUE *event_queue = NULL;
@@ -75,7 +108,7 @@ int init()
         return -1;
     }
     
-    if (!al_install_keyboard()) {
+    if(!al_install_keyboard()) {
         cerr << "Błąd podczas inicjalizacji klawiatury." << endl;
         return -1;
     }
@@ -109,6 +142,7 @@ int init()
     al_register_event_source(event_queue, al_get_display_event_source(display));  
     al_register_event_source(event_queue, al_get_timer_event_source(timer));  
     al_register_event_source(event_queue, al_get_keyboard_event_source());
+    al_register_event_source(event_queue, al_get_mouse_event_source());
     al_clear_to_color(al_map_rgb(0,0,0));
   
     al_flip_display();  
@@ -154,6 +188,16 @@ int main(int argc, char ** argv)
             if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
                 wyjdz = true;
             }
+        } else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+            break;
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES ||
+            ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) { 
+            mouse_x = ev.mouse.x;
+            mouse_y = ev.mouse.y;
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
+            mouse_pressed = false;
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
+            mouse_pressed = true;
         }
 
         if(przerysuj && al_is_event_queue_empty(event_queue)) {

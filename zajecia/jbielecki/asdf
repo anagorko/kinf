@@ -1,0 +1,4 @@
+jak wlozysz do Twojego katalogu jakis plik to to usun:
+git rm -r ściezka_dostepu
+git commit -m '...'
+git push
