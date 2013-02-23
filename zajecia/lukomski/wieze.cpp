@@ -1,3 +1,11 @@
+//
+// Bez komentarzy trudno odgadnąć Twoje intencje w tym programie.
+// Nazwy tablic t i ta są zbyt generyczne i nic nie znaczą.
+// Jakie jest znaczenie ta[i][0] i ta[i][1]? Czy uzasadnione jest użycie jednej tablicy?
+// Być może sensowne jest oddzielenie czytania danych od obliczeń.
+// Co to jest least i most i do czego służą?
+// Itd.
+//
 #include<iostream>
 using namespace std;
 int main(){

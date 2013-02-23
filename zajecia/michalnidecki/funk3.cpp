@@ -1,3 +1,7 @@
+//
+// Przyjmuje się, że pierwszym i drugim wyrazem ciągu Fibnoacciego jest 1, 1
+// Po poprawieniu usterek usuń ten komentarz.
+//
 #include<iostream>
 using namespace std;
 int fibonacci(int n)
