@@ -1,3 +1,8 @@
+//
+// Funkcja min jest błędna: co się dzieje, gdy a == b?
+// Proszę też, byś zrobił odpowiednie wcięcia.
+// Po wprowadzeniu poprawek usuń ten komentarz.
+//
 #include<iostream>
 using namespace std;
 int min(int a, int b){
