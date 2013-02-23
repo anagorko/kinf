@@ -1,3 +1,7 @@
+//
+// Popraw proszę wcięcia i odstępy pomiędzy funkcjami
+//
+
 #include<iostream>
 using namespace std;
 string reverse(string s){
