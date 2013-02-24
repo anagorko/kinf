@@ -9,7 +9,7 @@ int main()
 	
 	long long int silnia = 1;
 	
-	for (int i=  1; i<=x; i++) 
+	for (int i = 1; i <= x; i++) 
 {
 	silnia *= i; 
 }
