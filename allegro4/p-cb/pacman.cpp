@@ -13,6 +13,7 @@ int main()
 	install_keyboard();
 	set_color_depth(24);
 	set_gfx_mode( GFX_AUTODETECT, xs, ys, 0, 0);
+	BITMAP * bufor = create_bitmap(xs, ys);
 
 	if (!screen) {
 		cout << "Nie udalo sie otworzyc okna." << endl;
@@ -26,7 +27,7 @@ int main()
 		}
 
 	
-	
+	clear_to_color(screen, makecol(0, 0, 0));
 	textprintf_centre_ex(screen, font, xs/2, ys/2, makecol(0,255,0), makecol(0,0,0), "PAC-MAN BEREK");
 	usleep(20000);	
 		
@@ -57,9 +58,10 @@ int main()
 
 
 	while (!key[KEY_ESC]) {
-		clear_to_color(screen, makecol(0,0,0));
-		blit(stwor,screen,0,0,xst,yst,30,30);
-		blit(pacman,screen,0,0,x,y,30,30);
+		clear_to_color(bufor, makecol(0,0,0));
+		blit(stwor,bufor,0,0,xst,yst,30,30);
+		blit(pacman,bufor,0,0,x,y,30,30);
+		blit(bufor, screen, 0, 0, 0, 0, xs, ys);
 		
 		odl = xst - x;		
 		wysoko = yst - y;
@@ -106,23 +108,22 @@ int main()
 		}
 		if (key[KEY_W]) {
 			yst = yst - 4; if (yst < 0) { yst = ys - 1; }
-		if (odl <= 30 && wysoko <= 30  ){
+		}
+		if (odl <= 30 && odl >= -30){
+		if (wysoko <= 30 && wysoko >= -30){
 		
 		if(xst>(x-30) && xst<(x+30) && yst>(y-30) && yst<(y+30))
 		{
-			allegro_message("the end.");
-            		break;
-		}
-		else
-		{
-
+			clear_to_color(screen, makecol(0, 0, 0));
+			textprintf_centre_ex(screen, font, xs/2, ys/2, makecol(255,255,255), makecol(0,0,0), "THE END");
+			while(!key[KEY_ESC]);
+			break;
 		}	
+		}
 		}
 			
 	}
 		
 
-
-}	
 }
 END_OF_MAIN();
