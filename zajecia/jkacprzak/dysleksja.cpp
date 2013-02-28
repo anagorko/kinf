@@ -1,3 +1,7 @@
+//
+// Janku, ten program się nawet nie kompiluje :)
+//
+
 #include<iostream>
 using namespace std;
 int main(){
