@@ -15,7 +15,7 @@ int main(){
 	
 		for(int i= 0; i < ajs.length(); i++){
 
-		if(cfaj[i] != ajs[i]){ wynik++; }}
+		if(cfaj[i] != ajs[i]){ error++; }}
 
 
 		cout << error<<"\n";
