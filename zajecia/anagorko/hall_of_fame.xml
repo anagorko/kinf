@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<kinf>
+  <problems>
+
+    <problem-group>
+      <title>Zadania domowe</title>
+
+      <problem id="choinka2.cpp">
+        <name>Choinka 2</name>
+        <url></url>
+      </problem>
+      <problem id="kasztany.cpp">
+        <name>Kasztany</name>
+        <url></url>
+      </problem>
+      <problem id="dysleksja.cpp">
+        <name>Dysleksja</name>
+        <url></url>
+      </problem>
+      <problem id="upside_down.cpp">
+        <name>uʍop ǝpısdn</name>
+        <url></url>
+      </problem>
+      <problem id="wersaliki.cpp">
+        <name>WERSALIKI</name>
+        <url>/Wersaliki</url>
+      </problem>
+    </problem-group>
+
+    <problem-group>
+      <title>Ćwiczenia</title>
+      <problem id="inicjalizacja.cpp">
+        <name>Inicjalizacja</name>
+        <url></url>
+      </problem>
+      <problem id="na_wspak.cpp">
+        <name>Na wspak</name>
+        <url></url>
+      </problem>      
+      <problem id="parzyste_przodem.cpp">
+        <name>Parzyste przodem</name>
+        <url></url>
+      </problem>
+      <problem id="funkcje.cpp">
+        <name>Ćwiczenia 1-5 z funkcji</name>
+        <url></url>
+      </problem>
+    </problem-group>
+
+    <problem-group>
+      <title>Kącik Olimpijski</title>
+      <problem id="pieczatki.cpp">
+        <name>Pieczątki</name>
+        <url></url>
+      </problem>
+      <problem id="przyciski.cpp">
+        <name>Przyciski</name>
+        <url></url>
+      </problem>
+      <problem id="wieze.cpp">
+        <name>Wieże</name>
+        <url></url>
+      </problem>
+      <problem id="ukryte_liczby.cpp">
+        <name>Ukryte Liczby</name>
+        <url></url>
+      </problem>
+    </problem-group>
+  </problems>
+
+  <solutions>
+    <problem-solved id="upside_down.cpp">
+      <solution who="jbielecki" partial="22/2/2013"/>
+    </problem-solved>
+    
+    <problem-solved id="dysleksja.cpp">
+      <solution who="jbielecki" accepted="22/2/2013"/>
+      <solution who="jkacprzak" partial="22/2/2013"/>
+      <solution who="jmarchewicz" partial="22/2/2013"/>
+    </problem-solved>
+
+    <problem-solved id="wersaliki.cpp">
+      <solution who="jbielecki" partial="22/2/2013"/>
+      <solution who="jkacprzak" partial="22/2/2013"/>
+      <solution who="jmarchewicz" partial="22/2/2013"/>
+    </problem-solved>
+
+    <problem-solved id="funkcje.cpp">
+      <solution who="Miziol" partial="22/2/2013"/>
+      <solution who="michalnidecki" partial="22/2/2013"/>
+      <solution who="lukomski" partial="22/2/2013"/>
+    </problem-solved>
+
+    <problem-solved id="wieze.cpp">
+      <solution who="lukomski" partial="22/2/2013"/>
+    </problem-solved>
+
+    <problem-solved id="ukryte_liczby.cpp">
+      <solution who="lukomski" accepted="19/2/2013"/>
+    </problem-solved>
+  </solutions>
+      
+  <members>
+    <member id="celahirius">
+      <initials>FG</initials>
+    </member>
+    <member id="lukomski">
+      <initials>JL</initials>
+    </member>
+    <member id="Miziol">
+      <initials>KM</initials>
+    </member>
+    <member id="michalnidecki">
+      <initials>MN</initials>
+    </member>
+    <member id="jbielecki">
+      <initials>JB</initials>
+    </member>
+    <member id="floza">
+      <initials>FL</initials>
+    </member>
+    <member id="bkula">
+      <initials>BK</initials>
+    </member>
+    <member id="fprzepiorka">
+      <initials>FP</initials>
+    </member>
+    <member id="mszczachor">
+      <initials>MSz</initials>
+    </member>
+    <member id="jkacprzak">
+      <initials>JK</initials>
+    </member>
+    <member id="jmarchewicz">
+      <initials>JM</initials>
+    </member>
+    <member id="adam1324">
+      <initials>AP</initials>
+    </member>
+  </members>
+</kinf>
