@@ -29,7 +29,7 @@
         <header>
           <h1>KInf Hall of Fame</h1>
 
-          <p class="view"><a href="https://github.com/anagorko/kinf">View the Project on GitHub <small>anagorko/kinf</small></a></p>
+          <a href="https://github.com/anagorko/kinf/wiki/">Wróć na stronę</a>
 
         </header>
         <section>
@@ -43,8 +43,8 @@
           </table>
         </section>
         <footer>
-          <p>This project is maintained by <a href="https://github.com/anagorko">anagorko</a></p>
-          <p><small>Hosted on GitHub Pages - Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+          &#169; 2013 <a href="https://github.com/anagorko/kinf">Kółko 
+          Informatyczne</a>&#160;<a href="http://zagle.sternik.edu.pl">Szkoły Żagle</a>.
         </footer>
       </div>
       <script src="javascripts/scale.fix.js"></script>
