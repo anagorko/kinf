@@ -6,5 +6,4 @@ int main()
 	getline(cin,s);
 	string t;
 	getline(cin,t);
-	int ile=0;
-	for (int=0
+	for (int i=0; i<s.length; i++)

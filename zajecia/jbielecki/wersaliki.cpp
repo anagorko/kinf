@@ -1,3 +1,7 @@
+//
+// Janku, popraw wcięcia w tym programie
+// Po poprawieniu usuń ten komentarz
+//
 #include <iostream>
 #include <string>
 

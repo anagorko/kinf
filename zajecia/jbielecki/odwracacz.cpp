@@ -1,3 +1,8 @@
+//
+// Janku, popraw wcięcia i zmień nazwę pliku na upside_down.cpp
+// (git mv odwracacz.cpp upside_down.cpp)
+// Potem usuń ten komentarz
+//
 #include <iostream>
 #include <string>
 using namespace std;
