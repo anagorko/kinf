@@ -1,7 +1,3 @@
-//
-// Janku, popraw nazwę tego pliku na wersaliki.cpp
-// potem usuń ten komentarz
-//
 #include<iostream>
 using namespace std;
 int main()
