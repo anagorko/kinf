@@ -1,3 +1,7 @@
+//
+// Janku, porób wcięcia w tym programie.
+// Po usunięciu usterek usuń ten komentarz
+//
 #include <iostream>
 #include <string>
 using namespace std;
