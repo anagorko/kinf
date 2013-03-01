@@ -2,24 +2,31 @@
 #include <string>
 
 using namespace std;
-int main() {
+int main() 
+{
+	
 	string s;
 	getline(cin, s);
 	
 	string male = "aąbcćdeęfghijklłmnńoóprsśtuwyzźż";
 	string duze = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻ";
 	
-	for(int i = 0; i < s.length(); i++){
+	for(int i = 0; i < s.length(); i++)
+	{
 	
-	int j = 0;
+		int j = 0;
 	
-	while(j < male.length() && s[i] != male[j]){
-	j++;
+		while(j < male.length() && s[i] != male[j]){
+		j++;
 	}
-	if(s[i] == male[j]){
-	cout << duze[j];}
-	else {
+	
+	if(s[i] == male[j])
+	{
+		cout << duze[j];
+	}
+	else 
+	{
 	cout << s[i];
-}
-}
+	}
+		}
 }
