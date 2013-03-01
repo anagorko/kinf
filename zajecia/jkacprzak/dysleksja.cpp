@@ -1,5 +1,6 @@
 //
-// Janku, ten program się nawet nie kompiluje :)
+// Janku, sprawdź działanie programu w serwisie main.edu.pl
+// Jak zaliczysz na 100% usuń ten komentarz
 //
 
 #include<iostream>
