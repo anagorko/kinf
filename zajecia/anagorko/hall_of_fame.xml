@@ -116,26 +116,26 @@
     <member id="jbielecki">
       <initials>JB</initials>
     </member>
-    <member id="floza">
-      <initials>FL</initials>
+    <member id="jkacprzak">
+      <initials>JK</initials>
     </member>
     <member id="bkula">
       <initials>BK</initials>
     </member>
-    <member id="fprzepiorka">
-      <initials>FP</initials>
-    </member>
-    <member id="mszczachor">
-      <initials>MSz</initials>
-    </member>
-    <member id="jkacprzak">
-      <initials>JK</initials>
+    <member id="floza">
+      <initials>FL</initials>
     </member>
     <member id="jmarchewicz">
       <initials>JM</initials>
     </member>
     <member id="adam1324">
       <initials>AP</initials>
+    </member>
+    <member id="fprzepiorka">
+      <initials>FP</initials>
+    </member>
+    <member id="mszczachor">
+      <initials>MSz</initials>
     </member>
   </members>
 </kinf>
