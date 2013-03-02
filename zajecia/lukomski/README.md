@@ -14,6 +14,6 @@
 
 ## Kącik olimpijski
 
-* Ukryte liczby - ** zaliczone **
+* Ukryte liczby - **zaliczone**
 
 * Wieżyczki - nie skończone (2 marca 2013)
