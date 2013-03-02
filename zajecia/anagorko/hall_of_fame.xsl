@@ -33,14 +33,7 @@
 
         </header>
         <section>
-          <br clear="both"/>
-          <table style="margin-top: 20px">
-            <tr>
-              <td></td>
-              <xsl:apply-templates select="members/member"/>
-            </tr>
-            <xsl:apply-templates select="problems/problem-group"/>
-          </table>
+          <xsl:apply-templates select="member-group"/>
         </section>
         <footer>
           &#169; 2013 <a href="https://github.com/anagorko/kinf">Kółko 
@@ -50,6 +43,20 @@
       <script src="javascripts/scale.fix.js"></script>
     </body>
   </html>
+</xsl:template>
+
+<xsl:template match="member-group">
+  <h1><xsl:value-of select="title"/></h1>
+  <br clear="both"/><br/>
+  <table style="margin-top: 20px">
+    <tr>
+      <td></td>
+      <xsl:apply-templates select="members/member"/>
+    </tr>
+    <xsl:apply-templates select="problems/problem-group">
+      <xsl:with-param name="nom" select="count(members/member) + 1"/>
+    </xsl:apply-templates>
+  </table>
 </xsl:template>
 
 <xsl:template match="member">
@@ -76,10 +83,11 @@
 </xsl:template>
 
 <xsl:template match="problem-group">
+  <xsl:param name="nom"/>
   <tr>
     <th style="font-weight:bold">
       <xsl:attribute name="colspan">
-        <xsl:value-of select="$noc"/>
+        <xsl:value-of select="$nom"/>
       </xsl:attribute>
       <xsl:value-of select="title"/>
     </th>
@@ -93,7 +101,7 @@
       <xsl:attribute name="title"><xsl:value-of select="@id"/></xsl:attribute>
       <xsl:value-of select="name"/>
     </td>
-    <xsl:apply-templates select="//members/member" mode="problem-solved">
+    <xsl:apply-templates select="../../../members/member" mode="problem-solved">
       <xsl:with-param name="problem_id"><xsl:value-of select="@id"/></xsl:with-param>
     </xsl:apply-templates>
   </tr>
@@ -103,17 +111,17 @@
   <xsl:param name="problem_id"/>
   <xsl:variable name="member_id"><xsl:value-of select="@id"/></xsl:variable>
   <td style="border-left: 1px solid #cccccc">
-    <xsl:if test="/kinf/solutions/problem-solved[@id=$problem_id]/solution[@who=$member_id]">
+    <xsl:if test="/kinf/member-group/solutions/problem-solved[@id=$problem_id]/solution[@who=$member_id]">
       <xsl:choose>
-        <xsl:when test="/kinf/solutions/problem-solved[@id=$problem_id]/solution[@who=$member_id]/@accepted">
-          <img src="images/checkmark.png">
+        <xsl:when test="/kinf/member-group/solutions/problem-solved[@id=$problem_id]/solution[@who=$member_id]/@accepted">
+          <img src="images/good.png">
             <xsl:attribute name="title">
               <xsl:value-of select="$member_id"/>/<xsl:value-of select="$problem_id"/>
             </xsl:attribute>
           </img>
         </xsl:when>
         <xsl:otherwise>
-          <img src="images/pause.png">
+          <img src="images/wrong.png">
             <xsl:attribute name="title">
               <xsl:value-of select="$member_id"/>/<xsl:value-of select="$problem_id"/>
             </xsl:attribute>
