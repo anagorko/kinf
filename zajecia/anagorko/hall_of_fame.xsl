@@ -31,6 +31,24 @@
 
           <a href="https://github.com/anagorko/kinf/wiki/">Wróć na stronę</a>
 
+          <br/><br/>
+          <h2>Legenda</h2>
+          
+          <table>
+            <tr>
+              <td><img src="images/good.png"/></td>
+              <td>zadanie zaliczone.</td>
+            </tr>
+            <tr>
+              <td><img src="images/wrong.png"/></td>
+              <td>zadanie rozpoczęte lub rozwiązane z błędami.</td>
+            </tr>
+            <tr>
+              <td>&#160;</td>
+              <td>zadanie nierozpoczęte.</td>
+            </tr>
+          </table>
+          
         </header>
         <section>
           <xsl:apply-templates select="member-group"/>
@@ -57,6 +75,7 @@
       <xsl:with-param name="nom" select="count(members/member) + 1"/>
     </xsl:apply-templates>
   </table>
+  <br/>
 </xsl:template>
 
 <xsl:template match="member">
