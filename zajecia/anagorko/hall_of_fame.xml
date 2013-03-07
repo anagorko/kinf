@@ -34,6 +34,10 @@
     </problems>
 
     <solutions>
+      <problem-solved id="przyciski.cpp">
+        <solution who="lukomski" accepted="7/3/2013"/>
+      </problem-solved>
+
       <problem-solved id="funkcje.cpp">
         <solution who="Miziol" partial="22/2/2013"/>
         <solution who="michalnidecki" partial="22/2/2013"/>
@@ -114,6 +118,15 @@
     </problems>
 
     <solutions>
+      <problem-solved id="choinka2.cpp">
+        <solution who="jbielecki" accepted="7/3/2013"/>
+        <solution who="fprzepiorka" partial="7/3/2013"/>
+      </problem-solved>
+
+      <problem-solved id="kasztany.cpp">
+        <solution who="jbielecki" accepted="7/3/2013"/>
+      </problem-solved>
+
       <problem-solved id="upside_down.cpp">
         <solution who="jbielecki" accepted="2/3/2013"/>
         <solution who="jmarchewicz" accepted="2/3/2013"/>
@@ -122,7 +135,7 @@
       <problem-solved id="dysleksja.cpp">
         <solution who="jbielecki" accepted="22/2/2013"/>
         <solution who="jkacprzak" partial="22/2/2013"/>
-        <solution who="jmarchewicz" partial="2/3/2013"/>
+        <solution who="jmarchewicz" accepted="7/3/2013"/>
         <solution who="bkula" partial="2/3/2013"/>
         <solution who="floza" accepted="2/3/2013"/>
       </problem-solved>
@@ -136,7 +149,17 @@
     
       <problem-solved id="inicjalizacja.cpp">
         <solution who="adam1324" partial="2/3/2013"/>
+        <solution who="jbielecki" partial="7/3/2013"/>
       </problem-solved>
+
+      <problem-solved id="na_wspak.cpp">
+        <solution who="jbielecki" accepted="7/3/2013"/>
+      </problem-solved>
+
+      <problem-solved id="parzyste_przodem.cpp">
+        <solution who="jbielecki" accepted="7/3/2013"/>
+      </problem-solved>
+      
     </solutions>
       
     <members>
