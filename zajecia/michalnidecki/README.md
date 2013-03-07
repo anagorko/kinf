@@ -4,7 +4,7 @@
 
 1. **zaliczone**
 2. **zaliczone**
-3. źle (2 marca 2013)
+3. **zaliczone**
 4. można robić 3x mniej podstawień, użyj funkcji string::reverse (2 marca 2013)
 5. **zaliczone**
 
