@@ -12,5 +12,5 @@
 
 * ukryte_liczby.cpp - **zaliczone**
 * wiezyczki.cpp - nie skończone (2 marca 2013)
-* przyciski.cpp - brak rozwiązania (2 marca 2013)
+* przyciski.cpp - **zaliczone**
 * pieczatki.cpp - brak rozwiązania (2 marca 2013)
