@@ -1,4 +1,4 @@
-
+// (C) Janek Bielecki
 #include <iostream>
 #include <string>
 
