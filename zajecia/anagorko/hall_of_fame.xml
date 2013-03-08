@@ -121,6 +121,7 @@
       <problem-solved id="choinka2.cpp">
         <solution who="jbielecki" accepted="7/3/2013"/>
         <solution who="fprzepiorka" partial="7/3/2013"/>
+        <solution who="jkacprzak" partial="8/3/2013"/>
       </problem-solved>
 
       <problem-solved id="kasztany.cpp">
@@ -142,7 +143,7 @@
   
       <problem-solved id="wersaliki.cpp">
         <solution who="jbielecki" accepted="2/3/2013"/>
-        <solution who="jkacprzak" partial="22/2/2013"/>
+        <solution who="jkacprzak" accepted="8/3/2013"/>
         <solution who="jmarchewicz" accepted="2/3/2013"/>
         <solution who="floza" accepted="2/3/2013"/>
       </problem-solved>
