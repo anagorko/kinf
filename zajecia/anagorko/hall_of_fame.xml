@@ -26,6 +26,14 @@
 
       <problem-group>
         <title>Ćwiczenia</title>
+        <problem id="slogany.cpp">
+          <name>Slogany</name>
+          <url></url>
+        </problem>
+        <problem id="funkcje68.cpp">
+          <name>Ćwiczenia 6-8 z funkcji</name>
+          <url></url>
+        </problem>
         <problem id="funkcje.cpp">
           <name>Ćwiczenia 1-5 z funkcji</name>
           <url></url>
@@ -75,8 +83,19 @@
   
     <problems>  
       <problem-group>
-        <title>Zadania domowe</title>
-  
+        <title>Zadania domowe</title>  
+        <problem id="multiplies.cpp">
+          <name>Multiplies of 3 and 5</name>
+          <url></url>
+        </problem>
+        <problem id="kwsz.cpp">
+          <name>Kwadraty i sześciany</name>
+          <url></url>
+        </problem>
+        <problem id="patterns.cpp">
+          <name>Wzory (patterns.cpp)</name>
+          <url></url>
+        </problem>
         <problem id="choinka2.cpp">
           <name>Choinka 2</name>
           <url></url>
