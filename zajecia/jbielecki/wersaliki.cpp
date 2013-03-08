@@ -1,7 +1,4 @@
-//
-// Janku, popraw wcięcia w tym programie
-// Po poprawieniu usuń ten komentarz
-//
+// (C) Janek Bielecki
 #include <iostream>
 #include <string>
 

@@ -1,4 +1,3 @@
-// (C) Janek Bielecki
 #include <iostream>
 #include <string>
 
@@ -6,18 +5,19 @@ using namespace std;
 int main()
 {
 	int n;	
-	string a;
-	string b;
+	string r;
+	string t;
 
 	cin >> n;
-	cin >> a;
-	cin >> b;
+	cin >> r;
+	cin >> t;
 
 	int wynik = 0;
 	for(int i= 0; i < n; i++){
 
-	if(b[i] != a[i]){ wynik++; }}
+	if(t[i] != r[i]){ wynik++; }}
 
 
 	cout << wynik;
 }
+
