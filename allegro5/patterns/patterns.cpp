@@ -247,10 +247,10 @@ int init()
     al_init_font_addon(); // initialize the font addon
     al_init_ttf_addon();// initialize the ttf (True Type Font) addon
 
-    font = al_load_ttf_font("../tutorial/FreeMono.ttf",12,0);
+    font = al_load_ttf_font("FreeMono.ttf",12,0);
   
     if (!font) {
-        cerr << "Nie mogę załadować czcionki ../tutorial/FreeMono.ttf" << endl;
+        cerr << "Nie mogę załadować czcionki FreeMono.ttf" << endl;
         al_destroy_display(display);
         al_destroy_timer(timer);
         return -1;
