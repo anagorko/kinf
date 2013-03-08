@@ -24,7 +24,6 @@ const int wy = screen_h / wiel;
 
 // rozmiary planszy: sz x wy
 int grid[sz][wy];
-int zero = 0;
 void wyczysc()
 {
     for (int x = 0; x < sz; x++) {
@@ -52,7 +51,7 @@ void szachownica()
 {
 	for (int x = 0; x < sz; x++) {
 		for (int y = 0; y < wy; y++) {
-			if (x % 2 == 0){
+			if ((x+y) % 2 == 0){
 				grid[x][y] = 1;
 			}else {
 				grid[x][y] = 0;
@@ -79,6 +78,17 @@ void paski()
 
 void flaga()
 {
+	for (int x = 0; x < wy; x++) {
+		for (int y = 0; y < sz; y++) {
+			if (y < wy/2){
+				grid[x][y] = 0;
+		       	}
+			else{
+				grid[x][y] = 1;
+			}
+		}
+	}
+
 }
 
 void prostokaty()
