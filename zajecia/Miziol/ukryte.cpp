@@ -7,7 +7,7 @@ string s;
 cin>>n;
 getline(cin,s);
 for(int i=0;i<n;i++)
-	{
+	{//dlignu
 	cin>>r;
 	if(
 	}
