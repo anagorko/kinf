@@ -6,6 +6,38 @@
     <problems>
       <problem-group>
         <title>Kącik Olimpijski</title>
+        <problem id="piramida.cpp">
+          <name>Piramida liczbowa</name>
+          <url></url>
+        </problem>
+        <problem id="szachownica.cpp">
+          <name>Szachownica</name>
+          <url></url>
+        </problem>
+        <problem id="odejmowanie.cpp">
+          <name>Odejmowanie</name>
+          <url></url>
+        </problem>
+        <problem id="drzewo.cpp">
+          <name>Drzewo</name>
+          <url></url>
+        </problem>
+        <problem id="czynniki.cpp">
+          <name>Gra w czynniki</name>
+          <url></url>
+        </problem>
+        <problem id="zbior.cpp">
+          <name>Imieninowy zbiór</name>
+          <url></url>
+        </problem>
+        <problem id="prezenty.cpp">
+          <name>Prezenty</name>
+          <url></url>
+        </problem>
+        <problem id="lampki.cpp">
+          <name>Lampki</name>
+          <url></url>
+        </problem>
         <problem id="pieczatki.cpp">
           <name>Pieczątki</name>
           <url></url>
@@ -42,14 +74,19 @@
     </problems>
 
     <solutions>
+      <problem-solved id="pieczatki.cpp">
+        <solution who="lukomski" partial="15/3/2013"/>
+      </problem-solved>
+
       <problem-solved id="przyciski.cpp">
         <solution who="lukomski" accepted="7/3/2013"/>
+        <solution who="michalnidecki" partial="15/3/2013"/>
       </problem-solved>
 
       <problem-solved id="funkcje.cpp">
         <solution who="Miziol" partial="22/2/2013"/>
         <solution who="michalnidecki" partial="22/2/2013"/>
-        <solution who="lukomski" partial="22/2/2013"/>
+        <solution who="lukomski" accepted="15/3/2013"/>
       </problem-solved>
   
       <problem-solved id="wiezyczki.cpp">
@@ -84,6 +121,22 @@
     <problems>  
       <problem-group>
         <title>Zadania domowe</title>  
+        <problem id="czas.cpp">
+          <name>Czas wycieczki</name>
+          <url></url>
+        </problem>
+        <problem id="zapalki.cpp">
+          <name>Zapałki</name>
+          <url></url>
+        </problem>
+        <problem id="figury.cpp">
+          <name>Figury szachowe</name>
+          <url></url>
+        </problem>
+        <problem id="fibo.cpp">
+          <name>Even Fibonacci numbers</name>
+          <url></url>
+        </problem>
         <problem id="multiplies.cpp">
           <name>Multiplies of 3 and 5</name>
           <url></url>
@@ -134,17 +187,48 @@
         </problem>
       </problem-group>
   
+      <problem-group>
+        <title>Projekty</title>
+        <problem id="life.cpp">
+          <name>Gra w życie</name>
+        </problem>
+      </problem-group>
     </problems>
 
     <solutions>
+      <problem-solved id="life.cpp">
+        <solution who="bkula" partial="15/3/2013"/>
+      </problem-solved>
+
+      <problem-solved id="multiplies.cpp">
+        <solution who="bkula" accepted="15/3/2013"/>
+        <solution who="fprzepiorka" accepted="15/3/2013"/>
+        <solution who="jbielecki" accepted="15/3/2013"/>
+        <solution who="jkacprzak" accepted="15/3/2013"/>
+      </problem-solved>
+
+      <problem-solved id="kwsz.cpp">
+        <solution who="bkula" accepted="15/3/2013"/>
+        <solution who="jbielecki" accepted="15/3/2013"/>
+        <solution who="jkacprzak" accepted="15/3/2013"/>
+      </problem-solved>
+
+      <problem-solved id="patterns.cpp">
+        <solution who="bkula" partial="15/3/2013"/>
+        <solution who="jbielecki" partial="15/3/2013"/>
+        <solution who="jkacprzak" partial="15/3/2013"/>
+      </problem-solved>
+
       <problem-solved id="choinka2.cpp">
         <solution who="jbielecki" accepted="7/3/2013"/>
-        <solution who="fprzepiorka" partial="7/3/2013"/>
+        <solution who="fprzepiorka" accepted="15/3/2013"/>
         <solution who="jkacprzak" partial="8/3/2013"/>
+        <solution who="bkula" accepted="15/3/2013"/>
       </problem-solved>
 
       <problem-solved id="kasztany.cpp">
         <solution who="jbielecki" accepted="7/3/2013"/>
+        <solution who="bkula" accepted="15/3/2013"/>
       </problem-solved>
 
       <problem-solved id="upside_down.cpp">
@@ -169,7 +253,7 @@
     
       <problem-solved id="inicjalizacja.cpp">
         <solution who="adam1324" partial="2/3/2013"/>
-        <solution who="jbielecki" partial="7/3/2013"/>
+        <solution who="jbielecki" accepted="15/3/2013"/>
       </problem-solved>
 
       <problem-solved id="na_wspak.cpp">
