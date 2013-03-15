@@ -22,7 +22,7 @@ int main()
 	if((tab[i] % 2) == 0)
 		{
 	
-	cout << tab[i];
+	cout << tab[i]<< " ";
 		}
 
 	}
@@ -32,7 +32,7 @@ int main()
 	if((tab[i] % 2) != 0)
 		{
 	
-	cout << " " << tab[i];
+	cout << tab[i] << " ";
 		}
 
 	}

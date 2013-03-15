@@ -1,2 +1,0 @@
-tu nic nie ma
-
