@@ -7,20 +7,20 @@ int main()
 	cin >> n;
 	int tab[n];
 	
-	for(int i = 7; i < n + 7; i++)
+	for(int i = 0; i < n; i++)
 	
 	{
 	
-	tab[i] = i;
+	tab[i] = i + 7;
 	
 	}
 
-	for(int i = 7; i < n + 7; i++)
+	for(int i = 0; i < n; i++)
 	
 	{
 
 
-	cout << "tab[" << i - 7 << "] = " << tab[i] << endl;
+	cout << "tab[" << i << "] = " << tab[i] << endl;
 	
 	}
 

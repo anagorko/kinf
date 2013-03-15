@@ -1,3 +1,5 @@
+// (c) copyright by Jan Kacprzak
+
 #include <iostream>
 #include <string>
 using namespace std;
