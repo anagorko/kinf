@@ -12,6 +12,7 @@ int z;
 int x = 3;
 int nx = n*2+1;
 	cin >> n;
+	z = n-2;
 	while (x > 0){
 		r = 1;
 		while (n > 0){
@@ -31,8 +32,8 @@ int nx = n*2+1;
 		}
 		x -=1;
 	}
-	z = (n*2+1)/2;
-	for (int i = 0; i <= z ;i++){
+	
+	for (int i = 1; i <= z ;i++){
 		cout << ".";
 	}
 	cout << "HHH\n";
