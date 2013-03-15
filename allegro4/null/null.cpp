@@ -4,7 +4,7 @@
 
 using namespace std;
 
-const int xs = 640, ys = 480;
+const int xs = 1024, ys = 600;
 
 int main()
 { 
