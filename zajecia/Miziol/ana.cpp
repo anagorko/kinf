@@ -2,7 +2,7 @@
 using namespace std;
 int main()
 {
-int n=0,w=0,z=0,t2[25],t[25];
+int n=0,w=0,t2[25],t[25];
 for (int i=0;i<25;i++){t[i]=0;t2[i]=0;}
 string s,s2,a="abcdefghijklmnopqrstuwxyz";
 cin>>s;
@@ -38,6 +38,7 @@ for (int i=0;i<s.size();i++)
 cin>>n;
 for (int i=0;i<n;i++)
 	{
+	for (int k=0;k<25;k++){t[k]=0;t2[k]=0;}
 	cin>>s2;
 	//getline(cin, s2);
 	for (int j=0;j<s2.size();j++)
@@ -79,6 +80,7 @@ for (int i=0;i<n;i++)
 			if(w<0&&w==-1){cout<<a[j];}
 			if(w>0&&w==1){cout<<a[j];}
 			else{}
+			w=0;
 			}
 		}
 	}
