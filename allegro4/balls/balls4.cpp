@@ -8,7 +8,7 @@ const int N = 20;
 
 float x[N], y[N], dx[N], dy[N];
 
-const int xs = 1280, ys = 720;
+const int xs = 1024, ys = 600;
 const int r = 18;
 const int speed = 4;
 
@@ -90,7 +90,7 @@ int main(){
       // wyświetlenie (double buffering)
       vsync();
       blit(buffer, screen, 0,0,0,0,SCREEN_W, SCREEN_H);
-      usleep(20000);      
+      usleep(200);      
     }
 
     return 0;

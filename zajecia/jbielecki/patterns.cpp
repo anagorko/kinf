@@ -91,19 +91,26 @@ void paski()
 void flaga()
 {	
     for (int x = 0; x < sz; x++) {
+
+  	for (int y = 0; y < wy; y++) {
+            grid[x][y] = 0;		//czyszczenie planszy
+        }
+	
         for (int y = wy / 2; y < wy; y++) {
-            grid[x][y] = 1;
+            grid[x][y] = 1;		//rysowanie flagi
         }
     }
+
 }
 
 void prostokaty()
 {
+
+
 }
 
 void kolo()
 {
-
 }
 
 void kwiat()
