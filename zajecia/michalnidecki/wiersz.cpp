@@ -6,11 +6,12 @@ int main()
 	int n = 1, k = 1, d, sg[2], w = 0;
 	bool tak;
 	cin >> n >> k;
+	cin.ignore();
 	for(int i = 0; i < n; i++){
-		cin >> s1;
-		cin >> s2;
-		//getline(cin,s1);
-		//getline(cin,s2);
+		//cin >> s1;
+		//cin >> s2;
+		getline(cin,s1);
+		getline(cin,s2);
 		sg[0] = 0;
 		sg[1] = 0;
 		for(int j = 0; j < s1.length(); j++){
