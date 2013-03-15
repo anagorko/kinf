@@ -6,9 +6,9 @@ using namespace std;
 
 const int N = 3;
 
-float x[N], y[N], dx[N], dy[N];
+float x[N], y[N], dx[N], dy[N];  //DEKLARACJA 4 3-ELEMENTOWYCH TABLIC
 
-const int xs = 1280, ys = 720;
+const int xs = 1024, ys = 600;   //WYBIERAMY ROZDZIELCZOŚĆ
 
 const int r = 20;
 
@@ -34,6 +34,10 @@ int main(){
 	if (y[n] + dy[n] > ys - r || y[n] + dy[n] < r) { dy[n] = -dy[n]; }
       }
 
+	//********************
+
+
+	//*************
       // przesunięcie kul
       for (int n = 0; n < N; n++) {
 	x[n] = x[n] + dx[n]; y[n] = y[n] + dy[n];

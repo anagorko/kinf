@@ -10,14 +10,13 @@
 #include <iostream>
 using namespace std;
 
-const int screen_w = 1024;   // szerokość ekranu (screen width) 1000
-const int screen_h = 500;   // wysokość ekranu (screen height)	560
+const int screen_w = 1000;   // szerokość ekranu (screen width)
+const int screen_h = 560;   // wysokość ekranu (screen height)
 
-const int wiel = 12;
+const int wiel = 20;
 
 const int sz = (screen_w - 100) / wiel;
-const int wy = screen_h / wiel;				
-				
+const int wy = screen_h / wiel;
 
 /*********************************
  * Tu piszecie swoje rozwiązania *
@@ -25,6 +24,11 @@ const int wy = screen_h / wiel;
 
 // rozmiary planszy: sz x wy
 int grid[sz][wy];
+
+int kom[sz][wy];
+int bk;
+
+
 
 void wyczysc()
 {
@@ -36,77 +40,46 @@ void wyczysc()
 }
 
 void odwroc()
-
 {
-     for (int x = 0; x < sz; x++) {
-	for (int y = 0; y < wy; y++) {
-        	
-		if(grid[x][y] == 0){
-	
-		grid[x][y] = 1;
-		}
-        
+for (int x = 0; x < sz; x++) {
+        for (int y = 0; y < wy; y++) {
+        if (x != 0 && y != 0 && grid[x - 1][y - 1] == 1) bk++;
+        if (x != 0 && grid[x - 1][y] == 1) bk++;
+        if (x != 0 && y != wy && grid[x - 1][y + 1] == 1) bk++;
+        if (y != wy && grid[x][y + 1] == 1) bk++;
+        if (x != sz && y != wy && grid[x + 1][y + 1] == 1) bk++;
+        if (x != sz && grid[x + 1][y] == 1) bk++;
+        if (x != sz && y != 0 && grid[x + 1][y - 1] == 1) bk++;
+        if (y != 0 && grid[x][y - 1] == 1) bk++;
 
-		else{
-
-		grid[x][y] = 0;
-    		
-        	}
-
+        if (grid[x][y] == 0 && bk == 3) kom[x][y] = 1;
+        else if (grid[x][y] == 1 && (bk != 2 && bk != 3)) kom[x][y] = 0;
+        else kom[x][y] = grid[x][y];
+        bk = 0;
         }
-     }
-}
+    }
 
+    for (int x = 0; x < sz; x++) {
+        for (int y = 0; y < wy; y++) {
+            grid[x][y] = kom[x][y];
+        }
+    }
+}
 
 void szachownica()
 {
-	for (int x = 0; x < sz; x++) {
-		for (int y = 0; y < wy; y++) {
-			if ((x+y) % 2 == 0){
-				grid[x][y] = 1;
-			}
-			else {
-				grid[x][y] = 0;
-			}
-		}
-	}
 }
 
 void paski()
 {
-	for (int x = 0; x < sz; x++) {
-		for (int y = 0; y < wy; y++) {
-
-			if (x % 2 == 0){
-				grid[x][y] = 1;
-			}
-			
-			else {
-				grid[x][y] = 0;
-			}
-		}
-	}
 }
 
 void flaga()
-{	
-    for (int x = 0; x < sz; x++) {
-
-  	for (int y = 0; y < wy; y++) {
-            grid[x][y] = 0;		//czyszczenie planszy
-        }
-	
-        for (int y = wy / 2; y < wy; y++) {
-            grid[x][y] = 1;		//rysowanie flagi
-        }
-    }
-
+{
 }
 
 void prostokaty()
 {
-
-
 }
 
 void kolo()
