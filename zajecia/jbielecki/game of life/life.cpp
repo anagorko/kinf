@@ -10,14 +10,13 @@
 #include <iostream>
 using namespace std;
 
-const int screen_w = 1024;   // szerokość ekranu (screen width) 1000
-const int screen_h = 500;   // wysokość ekranu (screen height)	560
+const int screen_w = 1000;   // szerokość ekranu (screen width)
+const int screen_h = 560;   // wysokość ekranu (screen height)
 
-const int wiel = 12;
+const int wiel = 20;
 
 const int sz = (screen_w - 100) / wiel;
-const int wy = screen_h / wiel;				
-				
+const int wy = screen_h / wiel;
 
 /*********************************
  * Tu piszecie swoje rozwiązania *
@@ -36,78 +35,104 @@ void wyczysc()
 }
 
 void odwroc()
-
 {
-     for (int x = 0; x < sz; x++) {
-	for (int y = 0; y < wy; y++) {
-        	
-		if(grid[x][y] == 0){
-	
-		grid[x][y] = 1;
-		}
-        
-
-		else{
-
-		grid[x][y] = 0;
-    		
-        	}
-
+    for (int x = 0; x < sz; x++) {
+        for (int y = 0; y < wy; y++) {
+            grid[x][y] = 1-grid[x][y];
         }
-     }
+    }
 }
-
 
 void szachownica()
 {
-	for (int x = 0; x < sz; x++) {
-		for (int y = 0; y < wy; y++) {
-			if ((x+y) % 2 == 0){
-				grid[x][y] = 1;
-			}
-			else {
-				grid[x][y] = 0;
-			}
-		}
-	}
+    for (int x = 0; x < sz; x++) {
+        for (int y = 0; y < wy; y++) {
+            if ((x+y)%2 == 0) {
+                grid[x][y] = 0;
+            } else {
+                grid[x][y] = 1;
+            }
+        }
+    }
 }
 
 void paski()
 {
-	for (int x = 0; x < sz; x++) {
-		for (int y = 0; y < wy; y++) {
-
-			if (x % 2 == 0){
-				grid[x][y] = 1;
-			}
-			
-			else {
-				grid[x][y] = 0;
-			}
-		}
-	}
+    for (int x = 0; x < sz; x++) {
+        for (int y = 0; y < wy; y++) {
+            if (x%2 == 0) {
+                grid[x][y] = 0;
+            } else {
+                grid[x][y] = 1;
+            }
+        }
+    }
 }
 
 void flaga()
-{	
+{
     for (int x = 0; x < sz; x++) {
-        for (int y = wy / 2; y < wy; y++) {
-            grid[x][y] = 1;
+        for (int y = 0; y < wy; y++) {
+            if (y >= wy/2 == 0) {
+                grid[x][y] = 0;
+            } else {
+                grid[x][y] = 1;
+            }
         }
     }
 }
 
 void prostokaty()
 {
+    wyczysc();
+
+    int i = 0;
+        
+    while (2 * i < wy && 2 * i < sz) {
+        for (int x = i; x < sz - i; x++) {
+            grid[x][i] = 1;
+            grid[x][wy-i-1] = 1;
+        }
+        for (int y = i; y < wy - i; y++) {
+            grid[i][y] = 1;
+            grid[sz-1-i][y] = 1;
+        }
+        
+        i += 2;
+    }
 }
 
 void kolo()
 {
-
+    for (int x = 0; x < sz; x++) {
+        for (int y = 0; y < wy; y++) {
+            if ((x - sz/2)*(x-sz/2) + (y-wy/2)*(y-wy/2) < wy * wy / 4) {
+                grid[x][y] = 1;
+            } else {
+                grid[x][y] = 0;
+            }
+        }
+    }
 }
 
-void kwiat()
+void glider()
 {
+  // miejsce na Twoje rozwiązanie
+}
+
+int zlicz_pole(int x, int y)
+{
+  // miejsce na Twoje rozwiązanie
+}
+
+int zlicz_sasiadow(int x, int y)
+{
+  // miejsce na Twoje rozwiązanie
+}
+
+void single_step()
+{
+  // miejsce na Twoje rozwiązanie
 }
 
 /********************************************************
@@ -196,6 +221,8 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
+    bool new_mouse_pressed = false;
+    
     if (mouse_pressed) {
         if (mouse_x < screen_w - 100) {
             int click_x = mouse_x / wiel;
@@ -220,13 +247,15 @@ void aktualizuj_plansze()
                     case 4: flaga(); break;
                     case 5: prostokaty(); break;
                     case 6: kolo(); break;
-                    case 7: kwiat(); break;
+                    case 7: glider(); break;
+                    case 8: single_step(); break;
+                    case 9: single_step(); new_mouse_pressed = true; break;
                     default:
                         ;
                     }                        
                 }
             }
-            mouse_pressed = false;
+            mouse_pressed = new_mouse_pressed;
         }
     }
 }
@@ -333,7 +362,9 @@ int main(int argc, char ** argv)
     dodaj_przycisk( (przycisk) { screen_w - 90, 168, screen_w - 10, 200, "Flaga" });
     dodaj_przycisk( (przycisk) { screen_w - 90, 208, screen_w - 10, 240, "Prostokąty" });
     dodaj_przycisk( (przycisk) { screen_w - 90, 248, screen_w - 10, 280, "Koło" });
-    dodaj_przycisk( (przycisk) { screen_w - 90, 288, screen_w - 10, 320, "Kwiat" });
+    dodaj_przycisk( (przycisk) { screen_w - 90, 288, screen_w - 10, 320, "Glider" });
+    dodaj_przycisk( (przycisk) { screen_w - 90, 328, screen_w - 10, 360, "Step" });
+    dodaj_przycisk( (przycisk) { screen_w - 90, 368, screen_w - 10, 400, "Auto" });
     
     //
     // Event loop - główna pętla programu
