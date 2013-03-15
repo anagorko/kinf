@@ -1,10 +1,6 @@
-//
-// Popraw proszę wcięcia i odstępy pomiędzy funkcjami
-//
-
 #include<iostream>
 using namespace std;
-string reverse(string s){
+string reverse(string &s){
 	char s1;
 	for(int i=0;i<s.length()/2;i++){
 		s1=s[i];
