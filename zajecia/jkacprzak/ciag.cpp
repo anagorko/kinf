@@ -1,3 +1,5 @@
+// (c) by Jan Kacprzak
+
 #include<iostream>
 using namespace std;
 int main (){
