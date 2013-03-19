@@ -14,7 +14,7 @@ else
 	{
 	r=r+(s[i]*m);
 	m=m*10;
-	
+	i--;
 	}
 if(im<i){im=i;}
 return i,r,s,n,m,im;
