@@ -20,7 +20,7 @@ int main()
 int kolor[3] = { 255 , 0 , 0};
 int kolejka = 1;
 	
-	while (!key[KEY_Z]||!key[KEY_F]||!key[KEY_J]) {
+	while (!key[KEY_Z]) {
 	
 	if (kolejka  == 1){	// czerwony
 		kolor[0] = 255;
