@@ -1,7 +1,7 @@
 #include<iostream>
 #include<string.h>
 using namespace std;
-string rev(string &s)
+void rev(string &s)
 	{
 	char n;
 	int l=s.length()/2;
