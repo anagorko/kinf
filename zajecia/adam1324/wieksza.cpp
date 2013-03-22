@@ -2,7 +2,7 @@
 using namespace std;
 int main(){
 int a,s;
-cout<<"";
+cin s;
 cin a;
 if(a>s){
 	cout<< s << a <<endl;
