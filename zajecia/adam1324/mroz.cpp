@@ -4,8 +4,9 @@ int main(){
 int a;
 cin a;
 if(a>0){
-cout<<"jest mróz";
+	cout<<"jest mróz\n";
 }else{
-cout<<"nie ma mrozu"
+	cout<<"nie ma mrozu\n";
 }
-}	return 0;
+return 0;
+}
