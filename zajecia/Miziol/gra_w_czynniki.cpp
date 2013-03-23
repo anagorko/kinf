@@ -39,6 +39,14 @@ for(int i=1;i<100000;i++)
 	{
 	if(i=1){wy[i]=false;}
 	if(i=lp[ilp]){ilp++;wy[i]=false;}
+	else
+		{
+		for(int j=0; ;j++)
+			{
+			if(wy[i]%lp[j]==0 && i/lp[j]==false){wy[i]=true;break;}
+			if(wy[i]<lp[j]){break;}
+			}
+		}
 	}
 //koniec kto wygra
 //przykłady
