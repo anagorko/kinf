@@ -10,10 +10,10 @@
 #include <iostream>
 using namespace std;
 
-const int screen_w = 1000;   // szerokość ekranu (screen width)
-const int screen_h = 560;   // wysokość ekranu (screen height)
+const int screen_w = 1024;   // szerokość ekranu (screen width)
+const int screen_h = 530;   // wysokość ekranu (screen height)
 
-const int wiel = 20;
+const int wiel = 15;
 
 const int sz = (screen_w - 100) / wiel;
 const int wy = screen_h / wiel;
@@ -24,6 +24,8 @@ const int wy = screen_h / wiel;
 
 // rozmiary planszy: sz x wy
 int grid[sz][wy];
+int kom[sz][wy]; 
+//Na tablicy kom będą obliczane ruchy komorek a potem bedzie ona wyswietlana patrz l. 180 - 183 
 
 void wyczysc()
 {
@@ -106,7 +108,7 @@ void kolo()
 {
     for (int x = 0; x < sz; x++) {
         for (int y = 0; y < wy; y++) {
-            if ((x - sz/2)*(x-sz/2) + (y-wy/2)*(y-wy/2) < wy * wy / 4) {
+            if ((x - sz/2)*(x-sz/2) + (y-wy/2)*(y-wy/2) <wy * wy / 5) {
                 grid[x][y] = 1;
             } else {
                 grid[x][y] = 0;
@@ -117,31 +119,88 @@ void kolo()
 
 void glider()
 {
-  // miejsce na Twoje rozwiązanie
+  wyczysc();
+
+  grid[5][5] = 1;
+  grid[6][5] = 1;
+  grid[7][5] = 1;
+  grid[7][4] = 1;
+  grid[6][3] = 1;
 }
 
+void pentonimo()
+{
+	wyczysc();
+	grid[sz / 2][wy / 2] = 1;
+	grid[sz / 2][wy / 2 - 1] = 1;
+	grid[sz / 2][wy / 2 - 2] = 1;
+	grid[sz / 2 + 1][wy / 2 - 2] = 1;
+	grid[sz / 2 - 1][wy / 2 - 1] = 1;
+	
+
+}
+int liczba_pol;
 int zlicz_pole(int x, int y)
 {
-  // miejsce na Twoje rozwiązanie
+        if (x != 0 && y != 0 && grid[x - 1][y - 1] == 1) liczba_pol++;
+        if (x != 0 && grid[x - 1][y] == 1) liczba_pol++;
+        if (x != 0 && y != wy && grid[x - 1][y + 1] == 1) liczba_pol++;
+        if (y != wy && grid[x][y + 1] == 1) liczba_pol++;
+        if (x != sz && y != wy && grid[x + 1][y + 1] == 1) liczba_pol++;
+        if (x != sz && grid[x + 1][y] == 1) liczba_pol++;
+        if (x != sz && y != 0 && grid[x + 1][y - 1] == 1) liczba_pol++;
+        if (y != 0 && grid[x][y - 1] == 1) liczba_pol++;
 }
+
+
+int liczba_sasiadow;
 
 int zlicz_sasiadow(int x, int y)
 {
-  // miejsce na Twoje rozwiązanie
+
+
+	if (x != 0 && y != 0 && grid[x - 1][y - 1] == 1) liczba_sasiadow++;	//przed policzeniem sprawdzam
+	if (x != 0 && grid[x - 1][y] == 1) liczba_sasiadow++;			//czy komorki nie wystają
+	if (x != 0 && y != wy && grid[x - 1][y + 1] == 1) liczba_sasiadow++;	//poza planszę
+	if(y != wy && grid[x][y + 1] == 1) liczba_sasiadow++;			
+	if (x != sz && y != wy && grid[x + 1][y + 1] == 1) liczba_sasiadow++;
+	if (x != sz && grid[x + 1][y] == 1) liczba_sasiadow++;
+	if (x != sz && y != 0 && grid[x + 1][y - 1] == 1) liczba_sasiadow++;
+	if (y != 0 && grid[x][y - 1] == 1) liczba_sasiadow++;
+
 }
+
 
 void single_step()
 {
-  // miejsce na Twoje rozwiązanie
+	for (int x = 0; x < sz; x++) {
+		for (int y = 0; y < wy; y++) {
+		
+		zlicz_sasiadow(x, y);							//liczymy sasiadow
+		zlicz_pole(x, y);							//liczymy puste pola 
+											//kolo komorek
+		
+		if(liczba_sasiadow == 3)   kom[x][y] = 1;				//podstawowe
+		else if (grid [x][y] == 1 && liczba_pol >= 4)   kom[x][y] = 0;  	//zasady 
+		else if(grid[x][y] == 1 && liczba_pol <= 1 )	kom[x][y] = 0;		//gry w zycie
+		else   kom[x][y] = grid[x][y];						
+
+		liczba_sasiadow = 0;		
+		liczba_pol = 0;
+		
+		}
+	}
+	
+	for (int x = 0; x < sz; x++) {
+		for (int y = 0; y < wy; y++) {
+
+		grid[x][y] = kom[x][y];
+
+		}
+	}
 }
 
-/********************************************************
- * Dalej nie musicie nic zmieniać (choć nikt nie broni) *
- ********************************************************/
 
-//
-// Zmienne
-//
 
 ALLEGRO_FONT *font;
     
@@ -207,9 +266,9 @@ void rysuj_plansze()
     for (int x = 0; x < sz; x++) {
         for (int y = 0; y < wy; y++) {
             if (grid[x][y] == 0) {
-                al_draw_filled_rectangle(x * wiel, y * wiel, (x+1) * wiel - 1, (y+1)* wiel - 1, al_map_rgb(128,128,255));
+                al_draw_filled_rectangle(x * wiel, y * wiel, (x+1) * wiel - 1, (y+1)* wiel - 1, al_map_rgb(255,255,255));//128, 128, 255 kolor
             } else {
-                al_draw_filled_rectangle(x * wiel, y * wiel, (x+1) * wiel - 1, (y+1)* wiel - 1, al_map_rgb(255,128,128));
+                al_draw_filled_rectangle(x * wiel, y * wiel, (x+1) * wiel - 1, (y+1)* wiel - 1, al_map_rgb(255,0,0)); //255 128 128 kolor
             }
         }
     }
@@ -248,10 +307,9 @@ void aktualizuj_plansze()
                     case 5: prostokaty(); break;
                     case 6: kolo(); break;
                     case 7: glider(); break;
-                    case 8: single_step(); break;
-                    case 9: single_step(); new_mouse_pressed = true; break;
-                    default:
-                        ;
+                    case 8: pentonimo(); break;
+                    case 9: single_step(); break;
+                    case 10: single_step(); new_mouse_pressed = true; break;
                     }                        
                 }
             }
@@ -363,8 +421,9 @@ int main(int argc, char ** argv)
     dodaj_przycisk( (przycisk) { screen_w - 90, 208, screen_w - 10, 240, "Prostokąty" });
     dodaj_przycisk( (przycisk) { screen_w - 90, 248, screen_w - 10, 280, "Koło" });
     dodaj_przycisk( (przycisk) { screen_w - 90, 288, screen_w - 10, 320, "Glider" });
-    dodaj_przycisk( (przycisk) { screen_w - 90, 328, screen_w - 10, 360, "Step" });
-    dodaj_przycisk( (przycisk) { screen_w - 90, 368, screen_w - 10, 400, "Auto" });
+	  dodaj_przycisk( (przycisk) { screen_w - 90, 328, screen_w - 10, 360, "R pentonimo" });
+    dodaj_przycisk( (przycisk) { screen_w - 90, 368, screen_w - 10, 400, "Step" });
+    dodaj_przycisk( (przycisk) { screen_w - 90, 408, screen_w - 10, 440, "Auto" });
     
     //
     // Event loop - główna pętla programu
