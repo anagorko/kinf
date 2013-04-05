@@ -2,23 +2,14 @@
 using namespace std;
 int main()
 {
-int n,w;
+int n,w=1;
 cin>>n;
-for(int j=n-1;j>0;j--)
+for(int i=1;i<n+1;i++)
 	{
-	int x,m;
-	cin>>x;
-	cin>>m;
-	for(int i=m;i>0;i--)
-		{
-		int y;
-		cin>>y;
-		if(y==x)
-			{
-			w++;
-			}
-		}
-		cout<<w;
+	w=w*i;
 	}
+w=w%10;
+cout<<w<<"\n";
+
 return 0;
 }
