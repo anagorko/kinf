@@ -236,12 +236,12 @@ void rysuj_przycisk(przycisk &p)
     if (p.x1 <= mouse_x && mouse_x <= p.x2 &&
         p.y1 < mouse_y && mouse_y <= p.y2) {
         if (mouse_pressed) {
-            bg = al_map_rgb(200,0,0);
+            bg = al_map_rgb(255,255,255);
         } else {
             bg = al_map_rgb(50,50,50);
         }
     } else {
-        bg = al_map_rgb(0,0,200);
+        bg = al_map_rgb(255,0,0);
     }
     
     al_draw_filled_rectangle(p.x1, p.y1, p.x2, p.y2, bg);    
