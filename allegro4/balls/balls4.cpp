@@ -4,7 +4,7 @@
 
 using namespace std;
 
-const int N = 20;
+const int N = 7;
 
 float x[N], y[N], dx[N], dy[N];
 

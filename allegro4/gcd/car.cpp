@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const int xs = 1366, ys = 768;
+const int xs = 1280, ys = 800;
 
 int main()
 {
