@@ -14,3 +14,7 @@
 * przyciski.cpp - brak rozwiązania
 * pieczatki.cpp - brak rozwiązania
 * wieżyczki.cpp - brak rozwiązania
+
+
+# Miziola pytania i uwagi
+5.Co mam zmienić by void działał prawidłowo?
