@@ -4,8 +4,8 @@
 
 using namespace std;
 
-const int xs = 1366;
-const int ys = 768;
+const int xs = 1024;
+const int ys = 600;
 
 int main(){ 
 	srand(getpid());
@@ -13,11 +13,11 @@ int main(){
 	allegro_init();
 	install_keyboard();
 	set_color_depth(24);
-	set_gfx_mode( GFX_AUTODETECT, xs, ys, 0, 0); // wybieramy rozdzielczoÅ›Ä‡ xs na ys
+	set_gfx_mode( GFX_AUTODETECT, xs, ys, 0, 0); // wybieramy rozdzielczość xs na ys
 
 	usleep(10000);
 
-	BITMAP * ekran_tytulowy = load_tga("ekran_tytulowy.tga", default_palette);
+	BITMAP * ekran_tytulowy = load_tga("/home/janek/kinf/allegro4/lander/ekran_tytulowy.tga", default_palette);
 
 	blit(ekran_tytulowy, screen, 0, 0, 0, 0, xs, ys);
 	
@@ -29,7 +29,7 @@ int main(){
 
 	// rysujemy powierzchnię księżyca
 	
-	int wierzcholki[22] = { 0, 700, 200, 750, 300, 680, 440, 720, 600, 700, 900, 733, 1021, 722, 1321, 740, 1366, 700, 1366,768, 0, 768 };
+	int wierzcholki[22] = { 0, 700, 200, 750, 300, 680, 440, 720, 600, 700, 900, 733, 1021, 722, 1321, 740, 1024, 600, 1024,768, 0, 600 };
 
 	polygon(screen, 11, wierzcholki, makecol(100,100,100));
 	
@@ -44,7 +44,7 @@ int main(){
 
 	// wektor prędkości
 	
-	double dx = (rand() % 100 - 50)/30;
+	double dx = rand() % 100 - 50)/30;
 	double dy = 0;
 		
 	// paliwo

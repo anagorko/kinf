@@ -8,12 +8,14 @@ int main()
 	cout << "Druga odleglosc = " << odleglosc[1] << endl;
 	cout << "Piata odleglosc = " << odleglosc[4] << endl;
 
-	// w tym miejscu dopisz kod
-	
+	double aaa = odleglosc[1];
+	double aab = odleglosc[4];
+	odleglosc[4] = aaa;
+	odleglosc[1] = aab;
         cout << "Wszystkie odleglosci: " << endl;
         for (int i = 0; i < 5; i++) {
             cout << "Odleglosc nr " << i << " " << odleglosc[i] << endl;
-        }
+        }cmake -DCMAKE_INSTALL_PREFIX=/usr ..
 
         cout << "Najwieksza odleglosc: ";
         double n = 0;

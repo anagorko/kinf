@@ -8,7 +8,11 @@
 
 using namespace std;
 
+<<<<<<< HEAD
 const int xs = 1280, ys = 800;
+=======
+const int xs = 1000, ys = 500;
+>>>>>>> 85417296894084b983a9dc2785dae52ac6e5038a
 
 int main()
 {
