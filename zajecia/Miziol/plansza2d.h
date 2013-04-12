@@ -18,6 +18,11 @@ ALLEGRO_DISPLAY *display = NULL;
 ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 ALLEGRO_TIMER *timer = NULL;
 
+bool color_compare(ALLEGRO_COLOR c1, ALLEGRO_COLOR c2)
+{
+	return memcmp(&c1, &c2, sizeof(ALLEGRO_COLOR)) == 0;
+}
+
 void plansza2d_rysuj(ALLEGRO_COLOR p[px][py], int kx, int ky)
 {
     for (int x = 0; x < px; x++) {
