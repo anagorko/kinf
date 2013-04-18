@@ -1,10 +1,31 @@
 <?xml version="1.0"?>
 <kinf>
   <member-group>
-    <title>Grupa zaawansowana</title>
+    <title>Koniki</title>
 
     <problems>
       <problem-group>
+        <title>Projekty</title>
+        <problem id="mrowka_langtona.cpp">
+          <name>Mrówka Langtona</name>
+        </problem>
+        <problem id="life.cpp">
+          <name>Gra w życie</name>
+        </problem>
+      </problem-group>
+     <problem-group>
+       <title>Sortowanie</title>
+       <problem id="bubble_sort.cpp" required="18/04/2013">
+         <name>Sortowanie bąbelkowe</name>
+       </problem>
+       <problem id="selection_sort.cpp" required="18/04/2013">
+         <name>Sortowanie przez wybieranie</name>
+       </problem>
+       <problem id="sortowanie cwiczenia" required="18/04/2013">
+         <name>Ćwiczenia z sortowania</name>
+       </problem>
+     </problem-group>
+     <problem-group>
         <title>Kącik Olimpijski</title>
         <problem id="piramida.cpp">
           <name>Piramida liczbowa</name>
@@ -57,6 +78,14 @@
       </problem-group>
 
       <problem-group>
+        <title>Zadania domowe</title>
+        <problem id="trojkat.cpp" required="18/4/2013">
+          <name>Trójkąt Pascala</name>
+          <url></url>
+        </problem>
+      </problem-group>
+
+      <problem-group>
         <title>Ćwiczenia</title>
         <problem id="slogany.cpp">
           <name>Slogany</name>
@@ -74,6 +103,10 @@
     </problems>
 
     <solutions>
+      <problem-solved id="mrowka_langtona.cpp">
+        <solution who="Miziol" partial="18/04/2013"/>
+      </problem-solved>
+      
       <problem-solved id="pieczatki.cpp">
         <solution who="lukomski" partial="15/3/2013"/>
       </problem-solved>
@@ -116,11 +149,63 @@
   </member-group>
   
   <member-group>
-    <title>Grupa początkująca</title>
+    <title>Wiewiórki</title>
   
     <problems>  
       <problem-group>
+        <title>Projekty</title>
+        <problem id="life.cpp">
+          <name>Gra w życie</name>
+        </problem>
+        <problem id="mrowka_langtona.cpp">
+          <name>Mrówka Langtona</name>
+        </problem>
+      </problem-group>
+      <problem-group>
+       <title>Sortowanie</title>
+       <problem id="bubble_sort.cpp" required="18/04/2013">
+         <name>Sortowanie bąbelkowe</name>
+       </problem>
+       <problem id="selection_sort.cpp" required="18/04/2013">
+         <name>Sortowanie przez wybieranie</name>
+       </problem>
+       <problem id="sortowanie cwiczenia" required="18/04/2013">
+         <name>Ćwiczenia z sortowania</name>
+       </problem>
+     </problem-group>
+     <problem-group>
         <title>Zadania domowe</title>  
+        <problem id="trojkat.cpp">
+          <name>Trójkąt Pascala</name>
+          <url></url>
+        </problem>
+        <problem id="haft.cpp">
+          <name>Haft</name>
+          <url></url>
+        </problem>
+        <problem id="postac_pily.cpp">
+          <name>Postać piły</name>
+          <url></url>
+        </problem>
+
+        <problem id="figura.cpp">
+          <name>Figura</name>
+          <url></url>
+        </problem>
+        <problem id="pieczatki.cpp">
+          <name>Pieczątki</name>
+          <url></url>
+        </problem>
+        <problem id="sumy.cpp">
+          <name>Sumy</name>
+          <url></url>
+        </problem>
+        <problem id="liczebniki.cpp">
+          <name>Liczebniki</name>
+          <url></url>
+        </problem>
+
+
         <problem id="czas.cpp">
           <name>Czas wycieczki</name>
           <url></url>
@@ -135,6 +220,10 @@
         </problem>
         <problem id="fibo.cpp">
           <name>Even Fibonacci numbers</name>
+          <url></url>
+        </problem>
+        <problem id="choinka.cpp">
+          <name>Choinka</name>
           <url></url>
         </problem>
         <problem id="multiplies.cpp">
@@ -173,24 +262,17 @@
   
       <problem-group>
         <title>Ćwiczenia</title>
-        <problem id="inicjalizacja.cpp">
+        <problem id="inicjalizacja.cpp" required="18/4/2013">
           <name>Inicjalizacja</name>
-          <url></url>
+          <url>https://github.com/anagorko/kinf/wiki/tablice-jednowymiarowe</url>
         </problem>
-        <problem id="na_wspak.cpp">
+        <problem id="na_wspak.cpp" required="18/4/2013">
           <name>Na wspak</name>
-          <url></url>
+          <url>https://github.com/anagorko/kinf/wiki/tablice-jednowymiarowe</url>
         </problem>      
-        <problem id="parzyste_przodem.cpp">
+        <problem id="parzyste_przodem.cpp" required="18/4/2013">
           <name>Parzyste przodem</name>
-          <url></url>
-        </problem>
-      </problem-group>
-  
-      <problem-group>
-        <title>Projekty</title>
-        <problem id="life.cpp">
-          <name>Gra w życie</name>
+          <url>https://github.com/anagorko/kinf/wiki/tablice-jednowymiarowe</url>
         </problem>
       </problem-group>
     </problems>
@@ -283,9 +365,6 @@
       <member id="jmarchewicz">
         <initials>JM</initials>
       </member>
-      <member id="adam1324">
-        <initials>AP</initials>
-      </member>
       <member id="fprzepiorka">
         <initials>FP</initials>
       </member>
@@ -294,4 +373,73 @@
       </member>
     </members>
   </member-group>
+
+  <member-group>
+    <title>Biedronki</title>
+    
+    <problems>
+      <problem-group>
+        <title>Zadania domowe</title>
+      </problem-group>
+      <problem-group>
+        <title>Projekty</title>
+        <problem id="labirynt">
+          <name>Labirynt</name>
+        </problem>
+      </problem-group>
+      <problem-group>
+        <title>Kurs Zerowy (Od A do Z) - ćwiczenia</title>
+        <problem id="az petle">
+          <name>Pętle</name>
+        </problem>
+        <problem id="az instrukcja warunkowa">
+          <name>Instrukcja warunkowa</name>
+        </problem>
+        <problem id="az wyrazenia">
+          <name>Wyrazenia</name>
+        </problem>
+        <problem id="az zmienne">
+          <name>Zmienne</name>
+        </problem>
+        <problem id="az io">
+          <name>Wejście-wyjście</name>
+        </problem>
+        <problem id="az git" required="18/04/2013">
+          <name>Obsługa git-a</name>
+        </problem>
+      </problem-group>
+    </problems>
+    
+    <solutions>
+      <problem-solved id="labirynt">
+        <solution who="pnagorko" partial="18/04/2013"/>
+      </problem-solved>
+      
+      <problem-solved id="az petle">
+        <solution who="KTrzaskowski" partial="18/04/2013"/>
+      </problem-solved>
+      <problem-solved id="az io">
+        <solution who="KTrzaskowski" partial="18/04/2013"/>
+      </problem-solved>
+    </solutions>
+    
+    <members>
+      <member id="gmurawski">
+        <initials>GM</initials>
+      </member>
+      <member id="pnagorko">
+        <initials>PN</initials>
+      </member>
+      <member id="adam1324">
+        <initials>AP</initials>
+      </member>
+      <member id="pjpawel">
+        <initials>PP</initials>
+      </member>
+      <member id="KTrzaskowski">
+        <initials>KT</initials>
+      </member>
+    </members>    
+  </member-group>
+  
 </kinf>

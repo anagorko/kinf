@@ -32,6 +32,11 @@
           <a href="https://github.com/anagorko/kinf/wiki/">Wróć na stronę</a>
 
           <br/><br/>
+          <h2>Grupy</h2>
+          
+            <xsl:apply-templates select="member-group" mode="toc"/>
+                    
+          <br/><br/>
           <h2>Legenda</h2>
           
           <table>
@@ -40,9 +45,13 @@
               <td>zadanie zaliczone.</td>
             </tr>
             <tr>
-              <td><img src="images/wrong.png"/></td>
+              <td><img src="images/in_progress.png"/></td>
               <td>zadanie rozpoczęte lub rozwiązane z błędami.</td>
             </tr>
+            <tr>
+              <td><img src="images/wrong.png"/></td>
+              <td>bez tego zadania nie idziesz dalej.</td>
+            </tr>            
             <tr>
               <td>&#160;</td>
               <td>zadanie nierozpoczęte.</td>
@@ -63,8 +72,15 @@
   </html>
 </xsl:template>
 
+<xsl:template match="member-group" mode="toc">
+  &#160;<a><xsl:attribute name="href">#<xsl:value-of select="title"/></xsl:attribute>
+  <xsl:value-of select="title"/></a><br/>
+</xsl:template>
+
 <xsl:template match="member-group">
-  <h1><xsl:value-of select="title"/></h1>
+  <a><xsl:attribute name="name"><xsl:value-of select="title"/></xsl:attribute>
+    <h1><xsl:value-of select="title"/></h1>
+  </a>
   <br clear="both"/><br/>
   <table style="margin-top: 20px">
     <tr>
@@ -130,24 +146,35 @@
   <xsl:param name="problem_id"/>
   <xsl:variable name="member_id"><xsl:value-of select="@id"/></xsl:variable>
   <td style="border-left: 1px solid #cccccc">
-    <xsl:if test="/kinf/member-group/solutions/problem-solved[@id=$problem_id]/solution[@who=$member_id]">
-      <xsl:choose>
-        <xsl:when test="/kinf/member-group/solutions/problem-solved[@id=$problem_id]/solution[@who=$member_id]/@accepted">
-          <img src="images/good.png">
-            <xsl:attribute name="title">
-              <xsl:value-of select="$member_id"/>/<xsl:value-of select="$problem_id"/>
-            </xsl:attribute>
-          </img>
-        </xsl:when>
-        <xsl:otherwise>
+    <xsl:choose>
+      <xsl:when test="/kinf/member-group/solutions/problem-solved[@id=$problem_id]/solution[@who=$member_id]">
+        <xsl:choose>
+          <xsl:when test="/kinf/member-group/solutions/problem-solved[@id=$problem_id]/solution[@who=$member_id]/@accepted">
+            <img src="images/good.png">
+              <xsl:attribute name="title">
+                <xsl:value-of select="$member_id"/>/<xsl:value-of select="$problem_id"/>
+              </xsl:attribute>
+            </img>
+          </xsl:when>
+          <xsl:when test="/kinf/member-group/solutions/problem-solved[@id=$problem_id]/solution[@who=$member_id]/@partial">
+             <img src="images/in_progress.png">
+               <xsl:attribute name="title">
+                 <xsl:value-of select="$member_id"/>/<xsl:value-of select="$problem_id"/>
+               </xsl:attribute>
+             </img>
+          </xsl:when>
+        </xsl:choose>
+      </xsl:when> 
+      <xsl:otherwise>
+        <xsl:if test="/kinf/member-group/problems/problem-group/problem[@id=$problem_id]/@required">
           <img src="images/wrong.png">
             <xsl:attribute name="title">
               <xsl:value-of select="$member_id"/>/<xsl:value-of select="$problem_id"/>
             </xsl:attribute>
           </img>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:if>
+        </xsl:if>
+      </xsl:otherwise>
+    </xsl:choose>
   </td>
 </xsl:template>
 
