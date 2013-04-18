@@ -106,6 +106,20 @@
       <problem-solved id="mrowka_langtona.cpp">
         <solution who="Miziol" partial="18/04/2013"/>
       </problem-solved>
+
+      <problem-solved id="bubble_sort.cpp">
+        <solution who="Miziol" partial="18/4/2013"/>
+        <solution who="lukomski" accepted="18/4/2013"/>
+        <solution who="michalnidecki" accepted="18/4/2013"/>
+      </problem-solved>
+
+      <problem-solved id="selection_sort.cpp">
+        <solution who="Miziol" partial="18/4/2013"/>
+      </problem-solved>
+
+      <problem-solved id="sortowanie cwiczenia">
+        <solution who="Miziol" partial="18/4/2013"/>
+      </problem-solved>
       
       <problem-solved id="pieczatki.cpp">
         <solution who="lukomski" partial="15/3/2013"/>
@@ -280,6 +294,18 @@
     <solutions>
       <problem-solved id="life.cpp">
         <solution who="bkula" partial="15/3/2013"/>
+      </problem-solved>
+
+      <problem-solved id="bubble_sort.cpp">
+        <solution who="jbielecki" accepted="18/4/2013"/>
+        <solution who="jkacprzak" accepted="18/4/2013"/>
+        <solution who="bkula" accepted="18/4/2013"/>
+        <solution who="j.marchewicz" accepted="18/4/2013"/>
+        <solution who="fprzepiorka" accepted="18/4/2013"/>
+      </problem-solved>
+
+      <problem-solved id="selection_sort.cpp">
+        <solution who="jbielecki" accepted="18/4/2013"/>
       </problem-solved>
 
       <problem-solved id="multiplies.cpp">
