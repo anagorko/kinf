@@ -1,0 +1,24 @@
+#include <iostream>
+using namespace std;
+int main () {
+int n;
+cin >> n;
+int tab[n];
+  for (int i = n; i > 0; i--) {
+		cin >> tab[i];
+	}
+	for (int i = n; i > 0; i--) {
+		int x = tab[i];
+		int z = i;
+		int c = i + 1;
+		int y = 0;
+		if (tab[i] > tab[c]) {
+			tab[c] = x;
+			tab[i] = tab[c];
+		}
+	}
+	for (int b = n; b > 0; b--) {
+		cout << tab[b];
+	}
+cout << endl;
+}
