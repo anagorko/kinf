@@ -6,21 +6,20 @@ int n,r,ru;
 cin>>n;
 int t[n];
 for(int i=0;i<n;i++){cin>>t[i];}
-for(;;)
+
+for(int i=0;i<n;i++)
 	{
-	for(int i=0;i<n;i++)
+	for(int j=i+1;j<n;j++)
 		{
-		if(t[i]>t[i+1])
+		if(t[i]>t[j])
 			{
-			ru++;
 			r=t[i];
-			t[i]=t[i+1];
-			t[i+1]=r;
+			t[i]=t[j];
+			t[j]=r;
 			}
 		}
-	if(ru>0){break;}
-	ru=0;
 	}
+
 for(int i=0;i<n;i++)
 	{
 	cout<<t[i]<<" ";
