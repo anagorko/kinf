@@ -2,9 +2,10 @@
 using namespace std;
 int main()
 {
-int n,r,ru,w;
+int n,r,ru;
+float w;
 cin>>n;
-int t[n];
+float t[n];
 for(int i=0;i<n;i++){cin>>t[i];}
 
 for(int i=0;i<n;i++)
@@ -19,7 +20,7 @@ for(int i=0;i<n;i++)
 			}
 		}
 	}
-if(n%2==0){w=(t[n/2]+t[(n/2)-2])/2;}
+if(n%2==0){w=(t[n/2]+t[(n/2)-1])/2;}
 if(n%2==1){w=t[n/2];}
 cout<<w<<"\n";
 
