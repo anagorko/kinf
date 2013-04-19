@@ -8,7 +8,7 @@ int t[n];
 for(int i=0;i<n;i++){cin>>t[i];}
 for(;;)
 	{
-	for(int i=0;i<n;i++)
+	for(int i=-1;i<n;i++)
 		{
 		if(t[i]>t[i+1])
 			{
@@ -18,7 +18,7 @@ for(;;)
 			t[i+1]=r;
 			}
 		}
-	if(ru>0){break;}
+	if(ru==0){break;}
 	ru=0;
 	}
 for(int i=0;i<n;i++)
