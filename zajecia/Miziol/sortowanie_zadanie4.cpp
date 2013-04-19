@@ -30,6 +30,7 @@ for(int i=0;i<n;i++)
 	{
 	if(w[i]>ww[0]){ww[1]=i;ww[0]=w[i];}
 	}
+cout<<ww[1];
 cout<<"\n";
 
 return 0;
