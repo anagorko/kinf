@@ -16,8 +16,6 @@ int main(int argc, char** argv)
     ALLEGRO_EVENT_QUEUE *event_queue = al_create_event_queue();
     al_register_event_source(event_queue, al_get_display_event_source(okno));
     ALLEGRO_EVENT event;
-    while(!al_key_down(&klawiatura, ALLEGRO_KEY_ESCAPE))
-    {
         al_get_next_event(event_queue, &event);if(event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) { return 0; }
         al_get_keyboard_state(&klawiatura);
         
@@ -36,7 +34,8 @@ int main(int argc, char** argv)
         // koniec istotnej części kodu
         al_flip_display();
         al_rest(0.005);//pauza
-    }
+
+    usleep(1000000);
     al_destroy_display(okno);
     return 0;
 }
