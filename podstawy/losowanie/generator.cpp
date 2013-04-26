@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
     
     cout << ile << endl;
     for (int i = 0; i < ile; i++) {
-        cout << (random() % zakres) << " ";
+        cout << (random() % zakres) << endl;
     }
     cout << endl;
     
