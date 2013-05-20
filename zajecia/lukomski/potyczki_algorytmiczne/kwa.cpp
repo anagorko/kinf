@@ -7,8 +7,7 @@ int main(){
 	cin>>n;
 	long long int m=2*n;
 	while(true){
-	//int  w=sqrt(m);
-		if(((float)sqrt(m))%1==0){
+		if(sqrt(m)-(int)sqrt(m)==0){
 			cout<<m<<endl;return 0;
 		}
 	m=m+n;
