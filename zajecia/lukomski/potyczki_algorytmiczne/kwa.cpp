@@ -1,5 +1,5 @@
 #include<iostream>
-//#include<cmath>
+#include<cmath>
 using namespace std;
 int main(){
 	int n;
@@ -7,7 +7,7 @@ int main(){
 	cin>>n;
 	long long int m=2*n;
 	while(true){
-		if(sqrt(m)-(int)sqrt(m)==0){
+		if(sqrtl(m)-(int)sqrtl(m)==0){
 			cout<<m<<endl;return 0;
 		}
 	m=m+n;
