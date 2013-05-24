@@ -1,3 +1,3 @@
 Obrazek i muzyka pod adresem:
-https://skydrive.live.com/?cid=E3447C13EF8187D8&id=E3447C13EF8187D8!105
+https://drive.google.com/folderview?id=0B38hFkgewTdbXzRfbloxcW44Nk0&usp=sharing
 created by jkacprzak
