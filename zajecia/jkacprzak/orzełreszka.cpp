@@ -1,4 +1,4 @@
-//(c) by Janke Kacprzak
+//(c) by Janek Kacprzak
 
 #include <stdlib.h>
 #include <iostream>
