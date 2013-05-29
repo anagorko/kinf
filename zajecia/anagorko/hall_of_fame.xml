@@ -15,6 +15,9 @@
       </problem-group>
      <problem-group>
        <title>Sortowanie</title>
+       <problem id="bucket_sort.cpp" required="26/04/2013">
+         <name>Sortowanie kubełkowe</name>
+       </problem>
        <problem id="bubble_sort.cpp" required="18/04/2013">
          <name>Sortowanie bąbelkowe</name>
        </problem>
@@ -107,6 +110,10 @@
         <solution who="Miziol" partial="18/04/2013"/>
       </problem-solved>
 
+      <problem-solved id="bucket_sort.cpp">
+        <solution who="lukomski" partial="29/5/2013"/>
+      </problem-solved>
+
       <problem-solved id="bubble_sort.cpp">
         <solution who="Miziol" partial="18/4/2013"/>
         <solution who="lukomski" accepted="18/4/2013"/>
@@ -115,16 +122,22 @@
 
       <problem-solved id="selection_sort.cpp">
         <solution who="Miziol" partial="18/4/2013"/>
+        <solution who="lukomski" accepted="29/5/2013"/>
       </problem-solved>
 
       <problem-solved id="sortowanie cwiczenia">
         <solution who="Miziol" partial="18/4/2013"/>
+        <solution who="lukomski" accepted="29/5/2013"/>
       </problem-solved>
       
       <problem-solved id="pieczatki.cpp">
         <solution who="lukomski" partial="15/3/2013"/>
       </problem-solved>
 
+      <problem-solved id="szachownica.cpp">
+        <solution who="lukomski" accepted="29/5/2013"/>
+      </problem-solved>
+     
       <problem-solved id="przyciski.cpp">
         <solution who="lukomski" accepted="7/3/2013"/>
         <solution who="michalnidecki" partial="15/3/2013"/>
