@@ -5,7 +5,7 @@
 using namespace std;
 int main(){
 	srandom(time(NULL)+getpid());
-	string g[11]={"my, our common, the party's, my family's, our children's, my fellow Europeans', the government's, the industry's, the consumers', the immigrants', the only truly"};
+	string g[11];
 	g[0]="my";
 	g[1]="our common";
 	g[2]="the party's";
@@ -17,7 +17,7 @@ int main(){
 	g[8]="the consumers'";
 	g[9]="the immigrants'";
 	g[10]="the only truly";
-	string a[15]={"improved, responsible, peacekeeping, free, pro-life, politically correct, integrated, federal, progressive, anti-crime, drug-addicted, gradual, democratic, genetically engineered, racial"};
+	string a[15];
 	a[0]="improved";
 	a[1]="responsible";
 	a[2]="peacekeeping";
@@ -33,7 +33,7 @@ int main(){
 	a[12]="democratic";
 	a[13]="genetically engineered";
 	a[14]="racial";
-	string s[17]={"improved, responsible, peacekeeping, free, pro-life, politically correct, integrated, federal, progressive, anti-crime, drug-addicted, gradual, democratic, genetically engineered, racial"};
+	string s[17];
 	s[0]="freedom";
 	s[1]="national security";
 	s[2]="abuse";
@@ -51,7 +51,7 @@ int main(){
 	s[14]="set of family-values";
 	s[15]="legislation";
 	s[16]="discrimination";
-	string v[10]={"benefits, improves, decreases, supports, is built on, is the best guarantee for, creates an opportunity for, forms, is necessary for, will be established to combat"};
+	string v[10];
 	v[0]="benefits";
 	v[1]="improves";
 	v[2]="decreases";
