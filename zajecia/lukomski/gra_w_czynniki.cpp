@@ -1,34 +1,29 @@
 #include<iostream>
 using namespace std;
 int main(){
-	int n,x,c,a;
+	int n;
 	cin>>n;
-	bool magda,bez=true;
+	int t[n];
+	int max=0;
 	for(int i=0;i<n;i++){
-		magda=false;
-		cin>>x;
-		a=x-1;
-		while(a>1){
-			if(x%a==0){
-				for(int q=2;q<x;q++){
-					if((x/a)>3){bez=false;break;}
-				}
-				if(bez){
-					x=x/a;
-					if(magda){
-						magda=false;
-						cout<<"1a= "<<a<<endl;
-					}else{
-						magda=true;
-						cout<<"2a= "<<a<<endl;
-					}
-					a=x-1;
-				}
-			}
-			a--;
-		}
-		if(magda){cout<<"MAGDA\n";}
-		if(!magda){cout<<"BARTEK\n";}
+		cin>>t[i];
+		if(t[i]>max){max=t[i];}
 	}
-return 0;
+	int ta[max];
+	ta[0]=0;
+	ta[1]=0;
+	for(int i=2;i<max;i++){
+		bool znalazlem=false;
+		ta[i]=0;
+		for(int a=2;a<i;a++){
+			if((i+1)%a==0 && ta[i-a]==0){ta[i]=1;break;}
+		}
+	}
+	for(int i=0;i<n;i++){
+		if(ta[t[i]-1]==1){cout<<"MAGDA\n";
+		}else{
+			cout<<"BARTEK\n";
+		}
+	}
+	return 0;
 }
