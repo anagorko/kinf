@@ -13,9 +13,8 @@ int main(){
 	ta[0]=0;
 	ta[1]=0;
 	for(int i=2;i<max;i++){
-		bool znalazlem=false;
 		ta[i]=0;
-		for(int a=2;a<i;a++){
+		for(int a=2;a<=(i+1)/2;a++){
 			if((i+1)%a==0 && ta[i-a]==0){ta[i]=1;break;}
 		}
 	}
