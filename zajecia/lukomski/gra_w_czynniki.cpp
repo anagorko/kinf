@@ -10,12 +10,25 @@ int main(){
 		if(t[i]>max){max=t[i];}
 	}
 	int ta[max];
-	ta[0]=0;
-	ta[1]=0;
-	for(int i=2;i<max;i++){
+	bool czypier[max];
+	int pier[max];
+	int kon=0;
+	for(int i=0;i<max;i++){//czyszczenie czypier(czy pierwsza);
+		czypier[i]=true;
+	}
+	for(int i=2;i<max;i++){//sito arystotelesa
+		if(czypier[i]==true){
+			pier[kon]=i;
+			kon++;
+			for(int a=i;a<max;a=a+i){
+				czypier[a]=false;
+			}
+		}
+	}
+	for(int i=0;i<max;i++){//rozwiazywanie tablicy
 		ta[i]=0;
-		for(int a=2;a<=(i+1)/2;a++){
-			if((i+1)%a==0 && ta[i-a]==0){ta[i]=1;break;}
+		for(int a=0;a<kon && pier[a]<i+1;a++){
+			if(ta[i-pier[a]]==0 && (i+1)%pier[a]==0){ta[i]=1;break;}
 		}
 	}
 	for(int i=0;i<n;i++){
