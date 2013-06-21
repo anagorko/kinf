@@ -144,6 +144,7 @@ callback_lws_mirror(struct libwebsocket_context *context,
 		break;
 
 	case LWS_CALLBACK_RECEIVE:
+		cout << string((char *) in, len) << endl;
 
 		if (((ringbuffer_head - pss->ringbuffer_tail) &
 				  (MAX_MESSAGE_QUEUE - 1)) == (MAX_MESSAGE_QUEUE - 1)) {
