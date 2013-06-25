@@ -52,6 +52,7 @@ int main(int argc, char **argv)
 	int x = xs/2+100, y = ys/2 + 100;// zmienne pacmana
 	int xst = xs/2, yst = ys/2;
 	int odl, wysoko;
+	string kierunek;
  
 	BITMAP * stwor_prawoup = load_tga("stwor3.tga", default_palette);
 	BITMAP * stwor_lewoup = load_tga("stwor4.tga", default_palette);
@@ -90,7 +91,7 @@ int main(int argc, char **argv)
 			ss >> p;
         
     			if (p == "pacman") {
-            			ss >> x; ss >> y;
+            			ss >> x; ss >> y; ss >> kierunek;
 		        }
 
       		}		
@@ -98,9 +99,10 @@ int main(int argc, char **argv)
 		if (key[KEY_LEFT]) {
 			stringstream ss;
 
-			ss << "pacman " << (x-5) << " " << y << " lewo";
+			ss << "pacman " << (x-5) << " " << y << lewo ;
 			send_packet(ss.str());
-//			x = x - 5; if (x < 0) { x = xs - 1; }
+//			x = x - 5; 
+			if (x < 0) { x = xs - 1; }
 //			pacman = pacman_lewo;
 		}
 		if (key[KEY_RIGHT]) {
