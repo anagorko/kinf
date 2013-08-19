@@ -34,11 +34,12 @@ const int screen_h = 768;   // wysokość ekranu (screen height)
 
 void rysuj_plansze()
 {
-    al_clear_to_color(al_map_rgb(0,0,0));
     ALLEGRO_BITMAP * kwadrat = al_create_bitmap(500, 500);
+    al_clear_to_color(al_map_rgba( 0, 0, 0, 0));
     al_set_target_bitmap(kwadrat);
     al_clear_to_color(al_map_rgba(0, 100, 255, 0));
-    al_draw_bitmap(kwadrat, 50, 50, 0);
+    al_set_target_bitmap(al_get_backbuffer(display));
+    al_draw_bitmap(display, 50, 50, 0);
 }
 
 //
