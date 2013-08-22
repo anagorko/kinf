@@ -23,6 +23,8 @@ const int screen_h = 768;   // wysokość ekranu (screen height)
 //
 // Struktury danych
 //
+	//ALLEGRO_BITMAP * kwadrat = al_create_bitmap( 500, 500);
+	//al_clear_to_color(al_map_rgb(23, 34, 45));
 
 //
 // Zmienne
@@ -31,32 +33,6 @@ const int screen_h = 768;   // wysokość ekranu (screen height)
 //
 // Rysowanie planszy
 //
-
-void rysuj_plansze()
-{
-    ALLEGRO_BITMAP * kwadrat = al_create_bitmap(500, 500);
-    al_clear_to_color(al_map_rgba( 0, 0, 0, 0));
-    al_set_target_bitmap(kwadrat);
-    al_clear_to_color(al_map_rgba(0, 100, 255, 0));
-    al_set_target_bitmap(al_get_backbuffer(display));
-    al_draw_bitmap(display, 50, 50, 0);
-}
-
-//
-// Mechanika gry
-//
-
-void aktualizuj_plansze()
-{
-}
-
-//
-// Reakcja na akcje graczy
-//
-
-void co_robia_gracze()
-{
-}
  
 /****************************************
  * Kod poniżej jest w miarę generyczny  *
@@ -122,6 +98,32 @@ int init()
 
     return 0;
 }
+//
+// Rysowanie planszy
+//
+
+void rysuj_plansze()
+{
+
+}
+
+//
+// Mechanika gry
+//
+
+void aktualizuj_plansze()
+{
+}
+
+//
+// Reakcja na akcje graczy
+//
+
+void co_robia_gracze()
+{
+}
+ 
+
 
 int main(int argc, char ** argv)
 {
