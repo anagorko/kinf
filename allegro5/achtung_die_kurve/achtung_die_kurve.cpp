@@ -1,5 +1,7 @@
 //
-// Szablon gry w Allegro 5. (C) Kółko Informatyczne Szkoły Żagle
+// Achtung die kurve
+// zrobiony przy pomocy szablonu gry w Allegro 5.
+// (C) Kółko Informatyczne Szkoły Żagle
 //
 
 #include <allegro5/allegro.h>
@@ -9,31 +11,10 @@
 #include <iostream>
 using namespace std;
 
-//
-// Konfiguracja gry
-//
 
 const int screen_w = 1366;   // szerokość ekranu (screen width)
 const int screen_h = 768;   // wysokość ekranu (screen height)
 
-/****************************************
- * Tu rozpoczyna się istotna część kodu *
- ****************************************/
- 
-//
-// Struktury danych
-//
-	//ALLEGRO_BITMAP * kwadrat = al_create_bitmap( 500, 500);
-	//al_clear_to_color(al_map_rgb(23, 34, 45));
-
-//
-// Zmienne
-//
-
-//
-// Rysowanie planszy
-//
- 
 /****************************************
  * Kod poniżej jest w miarę generyczny  *
  ****************************************/
@@ -98,12 +79,34 @@ int init()
 
     return 0;
 }
+/****************************************
+ * Tu rozpoczyna się istotna część kodu *
+ ****************************************/
+
+//
+//kofiguracja gry
+//
+ 
+//
+// Struktury danych
+//
+        //ALLEGRO_BITMAP * kwadrat = al_create_bitmap( 500, 500);
+        //al_clear_to_color(al_map_rgb(23, 34, 45));
+
+//
+// Zmienne
+// 
+
 //
 // Rysowanie planszy
 //
 
 void rysuj_plansze()
 {
+	al_set_target_bitmap(kwadrat);
+        al_clear_to_color(al_map_rgb(12,150,24));
+        al_set_target_bitmap(al_get_backbuffer(display));
+        al_draw_bitmap(kwadrat,100,100,0);
 
 }
 
@@ -131,7 +134,12 @@ int main(int argc, char ** argv)
         cerr << "Inicjalizacja nie powiodła się." << endl;
         return -1;
     }
- 
+	ALLEGRO_BITMAP * kwadrat = al_create_bitmap(500, 500);
+//	al_set_target_bitmap(kwadrat);
+//	al_clear_to_color(al_map_rgb(12,150,24));
+//	al_set_target_bitmap(al_get_backbuffer(display));
+//	al_draw_bitmap(kwadrat,100,100,0);
+
     bool przerysuj = true;
     bool wyjdz = false;  
 
