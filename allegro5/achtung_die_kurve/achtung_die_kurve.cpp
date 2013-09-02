@@ -90,8 +90,6 @@ int init()
 //
 // Struktury danych
 //
-        //ALLEGRO_BITMAP * kwadrat = al_create_bitmap( 500, 500);
-        //al_clear_to_color(al_map_rgb(23, 34, 45));
 
 //
 // Zmienne
@@ -103,11 +101,8 @@ int init()
 
 void rysuj_plansze()
 {
-	al_set_target_bitmap(kwadrat);
-        al_clear_to_color(al_map_rgb(12,150,24));
-        al_set_target_bitmap(al_get_backbuffer(display));
-        al_draw_bitmap(kwadrat,100,100,0);
-
+        al_clear_to_color(al_map_rgb( 0, 0, 0));
+	al_draw_rectangle(25, 25, 1100, 700, al_map_rgb(255, 255, 255), 10 );//x1,y1,x2,y2,kolor,szerokosc;
 }
 
 //
@@ -135,9 +130,9 @@ int main(int argc, char ** argv)
         return -1;
     }
 	ALLEGRO_BITMAP * kwadrat = al_create_bitmap(500, 500);
-//	al_set_target_bitmap(kwadrat);
-//	al_clear_to_color(al_map_rgb(12,150,24));
-//	al_set_target_bitmap(al_get_backbuffer(display));
+	al_set_target_bitmap(kwadrat);
+	al_clear_to_color(al_map_rgb(12,150,24));
+	al_set_target_bitmap(al_get_backbuffer(display));
 //	al_draw_bitmap(kwadrat,100,100,0);
 
     bool przerysuj = true;
