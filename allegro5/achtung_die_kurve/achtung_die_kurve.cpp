@@ -90,6 +90,11 @@ int init()
 //
 // Struktury danych
 //
+	typedef struct type{
+		int player;
+		int time;
+	};
+	type board[1070][687];
 
 //
 // Zmienne
@@ -102,7 +107,7 @@ int init()
 void rysuj_plansze()
 {
         al_clear_to_color(al_map_rgb( 0, 0, 0));
-	al_draw_rectangle(25, 25, 1100, 700, al_map_rgb(255, 255, 255), 10 );//x1,y1,x2,y2,kolor,szerokosc;
+	al_draw_rectangle(10, 10, 1100, 707, al_map_rgb(255, 255, 255), 10 );//x1,y1,x2,y2,kolor,szerokosc;
 }
 
 //
