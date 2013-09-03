@@ -86,7 +86,7 @@ int init()
 //
 //kofiguracja gry
 //
-	
+	int czas=0;
 
 //
 // Struktury danych
@@ -106,11 +106,23 @@ int init()
 //
 void clean()
 {
-	for(int i=0;i<1070;i++){
+	for(int i=1;i<1070;i++){
+		for(int a=1;a<687;a++){
+		board[i][a].player=-1;
+		board[i][a].time=-1;
+		}
+	}
+	for(int i=0;i<1071;i++){
 	board[i][0].player=100;
 	board[i][687].player=100;
 	board[i][0].time=0;
 	board[i][687].time=0;
+		if(i<688){
+		board[0][i].player=100;
+		board[1070][i].player=100;
+		board[0][i].time=0;
+		board[1070][i].time=0;
+		}
 	}
 
 }
@@ -148,11 +160,6 @@ int main(int argc, char ** argv)
         cerr << "Inicjalizacja nie powiodła się." << endl;
         return -1;
     }
-	ALLEGRO_BITMAP * kwadrat = al_create_bitmap(500, 500);
-	al_set_target_bitmap(kwadrat);
-	al_clear_to_color(al_map_rgb(12,150,24));
-	al_set_target_bitmap(al_get_backbuffer(display));
-//	al_draw_bitmap(kwadrat,100,100,0);
 
     bool przerysuj = true;
     bool wyjdz = false;  
