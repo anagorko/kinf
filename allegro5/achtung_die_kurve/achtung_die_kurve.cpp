@@ -86,7 +86,8 @@ int init()
 //
 //kofiguracja gry
 //
- 
+	
+
 //
 // Struktury danych
 //
@@ -94,12 +95,25 @@ int init()
 		int player;
 		int time;
 	};
-	type board[1070][687];
+	type board[1071][688];//+2
 
 //
 // Zmienne
 // 
 
+//
+//Czyszczenie
+//
+void clean()
+{
+	for(int i=0;i<1070;i++){
+	board[i][0].player=100;
+	board[i][687].player=100;
+	board[i][0].time=0;
+	board[i][687].time=0;
+	}
+
+}
 //
 // Rysowanie planszy
 //
@@ -143,6 +157,7 @@ int main(int argc, char ** argv)
     bool przerysuj = true;
     bool wyjdz = false;  
 
+	clean();
     //
     // Event loop - główna pętla programu
     //
