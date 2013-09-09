@@ -7,6 +7,9 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_native_dialog.h>
+#include <time.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 #include <iostream>
 using namespace std;
@@ -25,6 +28,7 @@ bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 ALLEGRO_DISPLAY *display = NULL;
 ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 ALLEGRO_TIMER *timer = NULL;
+
 
 int init()
 {
@@ -87,6 +91,12 @@ int init()
 //kofiguracja gry
 //
 	int czas=0;
+	//player1
+	float xplayer1=23;
+	float yplayer1=323;
+	float stepplayer1=10;
+	float radiusplayer1=5;//prmień 
+	float spaceplayer1=10;
 
 //
 // Struktury danych
@@ -106,6 +116,7 @@ int init()
 //
 void clean()
 {
+	srandom(time(NULL)+getpid());
 	for(int i=1;i<1070;i++){
 		for(int a=1;a<687;a++){
 		board[i][a].player=-1;
@@ -115,17 +126,29 @@ void clean()
 	for(int i=0;i<1071;i++){
 	board[i][0].player=100;
 	board[i][687].player=100;
-	board[i][0].time=0;
-	board[i][687].time=0;
+	board[i][0].time=-100;
+	board[i][687].time=-100;
 		if(i<688){
 		board[0][i].player=100;
 		board[1070][i].player=100;
-		board[0][i].time=0;
-		board[1070][i].time=0;
+		board[0][i].time=-100;
+		board[1070][i].time=-100;
 		}
 	}
-
+	xplayer1=random()%1070-radiusplayer1;
+	yplayer1=random()%687-radiusplayer1;
+	for(int i=0;i<radiusplayer1;i++){
+		for(int a=0;a<radiusplayer1;a++){
+			int iks=xplayer1-(radiusplayer1/2)+i;
+			int igrek=yplayer1-(radiusplayer1/2)+a;
+			if(((igrek-yplayer1)(igrek-yplayer1)+(xplayer1-iks)(xplayer1-iks))<(radiusplayer1*radiusplayer1)){
+			//	board[x1][y1].time=czas;
+			//	board[x1][y1].player=1;
+			}
+		}
+	}
 }
+
 //
 // Rysowanie planszy
 //
@@ -134,6 +157,7 @@ void rysuj_plansze()
 {
         al_clear_to_color(al_map_rgb( 0, 0, 0));
 	al_draw_rectangle(10, 10, 1100, 707, al_map_rgb(255, 255, 255), 10 );//x1,y1,x2,y2,kolor,szerokosc;
+
 }
 
 //
@@ -142,6 +166,8 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
+	
+
 }
 
 //
@@ -150,6 +176,10 @@ void aktualizuj_plansze()
 
 void co_robia_gracze()
 {
+	if(key[ALLEGRO_KEY_LEFT]){
+	}
+
+
 }
  
 
