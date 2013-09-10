@@ -28,6 +28,7 @@ bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 ALLEGRO_DISPLAY *display = NULL;
 ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 ALLEGRO_TIMER *timer = NULL;
+ALLEGRO_BITMAP * snakes = NULL;
 
 
 int init()
@@ -90,12 +91,14 @@ int init()
 //
 //kofiguracja gry
 //
+	int xpl=1071;
+	int ypl=688;
 	int czas=0;
 	//player1
 	float xplayer1=23;
 	float yplayer1=323;
 	float stepplayer1=10;
-	float radiusplayer1=5;//prmień 
+	float radiusplayer1=5;//promień 
 	float spaceplayer1=10;
 
 //
@@ -109,7 +112,7 @@ int init()
 
 //
 // Zmienne
-// 
+//
 
 //
 //Czyszczenie
@@ -135,18 +138,24 @@ void clean()
 		board[1070][i].time=-100;
 		}
 	}
-	xplayer1=random()%1070-radiusplayer1;
-	yplayer1=random()%687-radiusplayer1;
+	//xplayer1=random()%1070-radiusplayer1;
+	//yplayer1=random()%687-radiusplayer1;
 	for(int i=0;i<radiusplayer1;i++){
 		for(int a=0;a<radiusplayer1;a++){
 			int iks=xplayer1-(radiusplayer1/2)+i;
 			int igrek=yplayer1-(radiusplayer1/2)+a;
-			if(((igrek-yplayer1)(igrek-yplayer1)+(xplayer1-iks)(xplayer1-iks))<(radiusplayer1*radiusplayer1)){
-			//	board[x1][y1].time=czas;
-			//	board[x1][y1].player=1;
+			if((igrek-yplayer1)*(igrek-yplayer1)+(xplayer1-iks)*(xplayer1-iks)<radiusplayer1*radiusplayer1){
+				board[iks][igrek].time=czas;
+				board[iks][igrek].player=1;
 			}
 		}
 	}
+	al_set_target_bitmap(snakes);
+	al_create_bitmap(1071,688);
+	al_clear_to_color(al_map_rgb(0, 0, 0));
+	al_draw_filled_circle(xplayer1,yplayer1, radiusplayer1, al_map_rgb(15,15,15));
+	al_set_target_backbuffer(display);
+	//al_draw_bitmap(snakes, 0, 0, 0);
 }
 
 //
