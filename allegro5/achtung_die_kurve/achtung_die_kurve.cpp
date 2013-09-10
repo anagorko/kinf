@@ -95,10 +95,10 @@ int init()
 	int ypl=688;
 	int czas=0;
 	//player1
-	float xplayer1=23;
+	float xplayer1=230;
 	float yplayer1=323;
 	float stepplayer1=10;
-	float radiusplayer1=5;//promień 
+	float radiusplayer1=10;//promień 
 	float spaceplayer1=10;
 
 //
@@ -138,8 +138,8 @@ void clean()
 		board[1070][i].time=-100;
 		}
 	}
-	//xplayer1=random()%1070-radiusplayer1;
-	//yplayer1=random()%687-radiusplayer1;
+	xplayer1=random()%1070-radiusplayer1;
+	yplayer1=random()%687-radiusplayer1;
 	for(int i=0;i<radiusplayer1;i++){
 		for(int a=0;a<radiusplayer1;a++){
 			int iks=xplayer1-(radiusplayer1/2)+i;
@@ -150,12 +150,11 @@ void clean()
 			}
 		}
 	}
+	snakes = al_create_bitmap(1090,697);
 	al_set_target_bitmap(snakes);
-	al_create_bitmap(1071,688);
-	al_clear_to_color(al_map_rgb(0, 0, 0));
-	al_draw_filled_circle(xplayer1,yplayer1, radiusplayer1, al_map_rgb(15,15,15));
+	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
+	al_draw_filled_circle(xplayer1,yplayer1, radiusplayer1, al_map_rgb(155,23,0));
 	al_set_target_backbuffer(display);
-	//al_draw_bitmap(snakes, 0, 0, 0);
 }
 
 //
@@ -164,9 +163,9 @@ void clean()
 
 void rysuj_plansze()
 {
-        al_clear_to_color(al_map_rgb( 0, 0, 0));
+	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_draw_rectangle(10, 10, 1100, 707, al_map_rgb(255, 255, 255), 10 );//x1,y1,x2,y2,kolor,szerokosc;
-
+	al_draw_bitmap(snakes, 10, 10, 0);
 }
 
 //
