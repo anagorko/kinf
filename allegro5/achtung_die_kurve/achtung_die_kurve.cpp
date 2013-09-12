@@ -95,11 +95,11 @@ int init()
 	int ypl=688;
 	int czas=0;
 	//player1
-	float xplayer1=230;
-	float yplayer1=323;
+	float xplayer1=5;
+	float yplayer1=5;
 	float stepplayer1=10;
 	float radiusplayer1=10;//promień 
-	float spaceplayer1=10;
+	float spaceplayer1=5;
 
 //
 // Struktury danych
@@ -138,8 +138,10 @@ void clean()
 		board[1070][i].time=-100;
 		}
 	}
-	xplayer1=random()%1070-radiusplayer1;
-	yplayer1=random()%687-radiusplayer1;
+	while(xplayer1<=20+radiusplayer1 || yplayer1<=20+radiusplayer1){
+	xplayer1=random()%1070-2*radiusplayer1;
+	yplayer1=random()%687-2*radiusplayer1;
+	}
 	for(int i=0;i<radiusplayer1;i++){
 		for(int a=0;a<radiusplayer1;a++){
 			int iks=xplayer1-(radiusplayer1/2)+i;
@@ -174,7 +176,7 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
-	
+
 
 }
 
@@ -189,7 +191,7 @@ void co_robia_gracze()
 
 
 }
- 
+
 
 
 int main(int argc, char ** argv)
@@ -226,7 +228,7 @@ int main(int argc, char ** argv)
             key[ev.keyboard.keycode] = true;
         } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
             key[ev.keyboard.keycode] = false;
-            
+
             if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
                 wyjdz = true;
             }
