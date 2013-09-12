@@ -10,6 +10,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <math.h>
 
 #include <iostream>
 using namespace std;
@@ -22,7 +23,7 @@ const int screen_h = 768;   // wysokość ekranu (screen height)
  * Kod poniżej jest w miarę generyczny  *
  ****************************************/
  
-const float FPS = 60;       // Frames Per Second
+const float FPS = 200; //60      // Frames Per Second
 bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 
 ALLEGRO_DISPLAY *display = NULL;
@@ -94,12 +95,15 @@ int init()
 	int xpl=1071;
 	int ypl=688;
 	int czas=0;
+	int lastczas;
 	//player1
 	float xplayer1=5;
 	float yplayer1=5;
-	float stepplayer1=10;
-	float radiusplayer1=10;//promień 
-	float spaceplayer1=5;
+	float stepplayer1=0.5;
+	float radiusplayer1=3;//promień 
+	float spaceplayer1=2;
+	int  alfaplayer1=1;
+	int degreesplayer1=0;
 
 //
 // Struktury danych
@@ -113,6 +117,7 @@ int init()
 //
 // Zmienne
 //
+	bool przegrales=false;
 
 //
 //Czyszczenie
@@ -167,6 +172,9 @@ void rysuj_plansze()
 {
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_draw_rectangle(10, 10, 1100, 707, al_map_rgb(255, 255, 255), 10 );//x1,y1,x2,y2,kolor,szerokosc;
+	al_set_target_bitmap(snakes);
+	al_draw_filled_circle(xplayer1, yplayer1, radiusplayer1, al_map_rgb(155, 23, 0));
+	al_set_target_backbuffer(display);
 	al_draw_bitmap(snakes, 10, 10, 0);
 }
 
@@ -176,7 +184,34 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
-
+	czas++;
+	xplayer1=xplayer1+stepplayer1*cos(degreesplayer1);
+	yplayer1=yplayer1+stepplayer1*sin(degreesplayer1);
+	for(int i=0;i<radiusplayer1;i++){
+		for(int a=0;a<radiusplayer1;a++){
+			int iks=xplayer1-(radiusplayer1/2)+i;
+			int igrek=yplayer1-(radiusplayer1/2)+a;
+			if((igrek-yplayer1)*(igrek-yplayer1)+(xplayer1-iks)*(xplayer1-iks)<radiusplayer1*radiusplayer1){
+				if(board[iks][igrek].player!=-1){
+					if(board[iks][igrek].player==1){
+						if(board[iks][igrek].time<czas-10){
+							cout<<"wjechales w siebie"<<endl;
+							przegrales=true;
+						}
+					}else if(board[iks][igrek].player==-100){
+						cout<<"wjechales w sciane"<<endl;
+						przegrales=true;
+					}else{
+						cout<<"wiechales w kolege"<<endl;
+						przegrales=true;
+					}
+				}else{
+					board[iks][igrek].player=1;
+					board[iks][igrek].time=czas;
+				}
+			}
+		}
+	}
 
 }
 
@@ -186,7 +221,13 @@ void aktualizuj_plansze()
 
 void co_robia_gracze()
 {
-	if(key[ALLEGRO_KEY_LEFT]){
+	if(key[ALLEGRO_KEY_LEFT] && czas-lastczas>20){
+	degreesplayer1=degreesplayer1-alfaplayer1%360;
+	lastczas=czas;
+	}
+	if(key[ALLEGRO_KEY_RIGHT] && czas-lastczas>20){
+	degreesplayer1=degreesplayer1+alfaplayer1%360;
+	lastczas=czas;
 	}
 
 
@@ -202,14 +243,14 @@ int main(int argc, char ** argv)
     }
 
     bool przerysuj = true;
-    bool wyjdz = false;  
+    bool wyjdz = false;
 
 	clean();
     //
     // Event loop - główna pętla programu
     //
         
-    while(!wyjdz)
+    while(!wyjdz && !przegrales)
     {
         ALLEGRO_EVENT ev;
         al_wait_for_event(event_queue, &ev);
@@ -227,7 +268,7 @@ int main(int argc, char ** argv)
         } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
             key[ev.keyboard.keycode] = true;
         } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
-            key[ev.keyboard.keycode] = false;
+            key[ev.keyboard.keycode] = false ;
 
             if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
                 wyjdz = true;
