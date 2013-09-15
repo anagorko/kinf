@@ -102,8 +102,8 @@ int init()
 	float stepplayer1=0.1;
 	float radiusplayer1=3;//promień 
 	float spaceplayer1=90;
-	int  alfaplayer1=1;
-	int degreesplayer1=0;
+	float  alfaplayer1=0.3;
+	float degreesplayer1=0;
 
 //
 // Struktury danych
@@ -214,11 +214,11 @@ void aktualizuj_plansze()
 void co_robia_gracze()
 {
 	if(key[ALLEGRO_KEY_LEFT] && czas-lastczas>spaceplayer1){
-	degreesplayer1=degreesplayer1-alfaplayer1%360;
+	degreesplayer1=degreesplayer1-alfaplayer1;
 	lastczas=czas;
 	}
 	if(key[ALLEGRO_KEY_RIGHT] && czas-lastczas>spaceplayer1){
-	degreesplayer1=degreesplayer1+alfaplayer1%360;
+	degreesplayer1=degreesplayer1+alfaplayer1;
 	lastczas=czas;
 	}
 
