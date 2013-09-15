@@ -23,7 +23,7 @@ const int screen_h = 768;   // wysokość ekranu (screen height)
  * Kod poniżej jest w miarę generyczny  *
  ****************************************/
  
-const float FPS = 200; //60      // Frames Per Second
+const float FPS = 700; //60      // Frames Per Second
 bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 
 ALLEGRO_DISPLAY *display = NULL;
@@ -99,9 +99,9 @@ int init()
 	//player1
 	float xplayer1=5;
 	float yplayer1=5;
-	float stepplayer1=0.5;
+	float stepplayer1=0.1;
 	float radiusplayer1=3;//promień 
-	float spaceplayer1=2;
+	float spaceplayer1=90;
 	int  alfaplayer1=1;
 	int degreesplayer1=0;
 
@@ -112,7 +112,7 @@ int init()
 		int player;
 		int time;
 	};
-	type board[1071][688];//+2
+	type board[1082][689];//+2
 
 //
 // Zmienne
@@ -125,42 +125,31 @@ int init()
 void clean()
 {
 	srandom(time(NULL)+getpid());
-	for(int i=1;i<1070;i++){
-		for(int a=1;a<687;a++){
+	for(int i=1;i<1081;i++){
+		for(int a=1;a<688;a++){
 		board[i][a].player=-1;
 		board[i][a].time=-1;
 		}
 	}
-	for(int i=0;i<1071;i++){
+	for(int i=0;i<1082;i++){
 	board[i][0].player=100;
-	board[i][687].player=100;
+	board[i][688].player=100;
 	board[i][0].time=-100;
-	board[i][687].time=-100;
+	board[i][688].time=-100;
 		if(i<688){
 		board[0][i].player=100;
-		board[1070][i].player=100;
+		board[1081][i].player=100;
 		board[0][i].time=-100;
-		board[1070][i].time=-100;
+		board[1081][i].time=-100;
 		}
 	}
 	while(xplayer1<=20+radiusplayer1 || yplayer1<=20+radiusplayer1){
-	xplayer1=random()%1070-2*radiusplayer1;
-	yplayer1=random()%687-2*radiusplayer1;
+	xplayer1=random()%1072-2*radiusplayer1;
+	yplayer1=random()%679-2*radiusplayer1;
 	}
-	for(int i=0;i<radiusplayer1;i++){
-		for(int a=0;a<radiusplayer1;a++){
-			int iks=xplayer1-(radiusplayer1/2)+i;
-			int igrek=yplayer1-(radiusplayer1/2)+a;
-			if((igrek-yplayer1)*(igrek-yplayer1)+(xplayer1-iks)*(xplayer1-iks)<radiusplayer1*radiusplayer1){
-				board[iks][igrek].time=czas;
-				board[iks][igrek].player=1;
-			}
-		}
-	}
-	snakes = al_create_bitmap(1090,697);
+	snakes = al_create_bitmap(1080,687);
 	al_set_target_bitmap(snakes);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
-	al_draw_filled_circle(xplayer1,yplayer1, radiusplayer1, al_map_rgb(155,23,0));
 	al_set_target_backbuffer(display);
 }
 
@@ -173,9 +162,9 @@ void rysuj_plansze()
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_draw_rectangle(10, 10, 1100, 707, al_map_rgb(255, 255, 255), 10 );//x1,y1,x2,y2,kolor,szerokosc;
 	al_set_target_bitmap(snakes);
-	al_draw_filled_circle(xplayer1, yplayer1, radiusplayer1, al_map_rgb(155, 23, 0));
+	al_draw_filled_circle(xplayer1-1, yplayer1-1, radiusplayer1, al_map_rgb(0, 23, 155));
 	al_set_target_backbuffer(display);
-	al_draw_bitmap(snakes, 10, 10, 0);
+	al_draw_bitmap(snakes, 20, 20, 0);
 }
 
 //
@@ -194,16 +183,19 @@ void aktualizuj_plansze()
 			if((igrek-yplayer1)*(igrek-yplayer1)+(xplayer1-iks)*(xplayer1-iks)<radiusplayer1*radiusplayer1){
 				if(board[iks][igrek].player!=-1){
 					if(board[iks][igrek].player==1){
-						if(board[iks][igrek].time<czas-10){
+						if(board[iks][igrek].time<czas-100){
 							cout<<"wjechales w siebie"<<endl;
 							przegrales=true;
+							break;
 						}
-					}else if(board[iks][igrek].player==-100){
-						cout<<"wjechales w sciane"<<endl;
-						przegrales=true;
-					}else{
+					}else if(board[iks][igrek].player!=100){
 						cout<<"wiechales w kolege"<<endl;
 						przegrales=true;
+						break;
+					}else if(board[iks][igrek].player==100){
+						cout<<"wjechales w sciane"<<endl;
+						przegrales=true;
+						break;
 					}
 				}else{
 					board[iks][igrek].player=1;
@@ -212,7 +204,7 @@ void aktualizuj_plansze()
 			}
 		}
 	}
-
+	
 }
 
 //
@@ -221,11 +213,11 @@ void aktualizuj_plansze()
 
 void co_robia_gracze()
 {
-	if(key[ALLEGRO_KEY_LEFT] && czas-lastczas>20){
+	if(key[ALLEGRO_KEY_LEFT] && czas-lastczas>spaceplayer1){
 	degreesplayer1=degreesplayer1-alfaplayer1%360;
 	lastczas=czas;
 	}
-	if(key[ALLEGRO_KEY_RIGHT] && czas-lastczas>20){
+	if(key[ALLEGRO_KEY_RIGHT] && czas-lastczas>spaceplayer1){
 	degreesplayer1=degreesplayer1+alfaplayer1%360;
 	lastczas=czas;
 	}
@@ -281,7 +273,8 @@ int main(int argc, char ** argv)
             rysuj_plansze();
 
             al_flip_display();
-         }    
+         }
+	if(przegrales){cout<<"YOU LOST BABY ON X= "<<xplayer1<<" and Y= "<<yplayer1<<endl;}
     }
 
     return 0;
