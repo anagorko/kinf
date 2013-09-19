@@ -92,11 +92,18 @@ int init()
 //
 //kofiguracja gry
 //
+	int numberofplayer=1;
 	int xpl=1071;
 	int ypl=688;
 	int czas=0;
 	int lastczas;
-	//player1
+	//players
+	typedef struct typeplayer{
+		float x;
+		float y;
+		float step;
+	};
+	typeplayer player[numberofplayer];
 	float xplayer1=5;
 	float yplayer1=5;
 	float stepplayer1=0.1;
@@ -174,8 +181,10 @@ void rysuj_plansze()
 void aktualizuj_plansze()
 {
 	czas++;
-	xplayer1=xplayer1+stepplayer1*cos(degreesplayer1);
-	yplayer1=yplayer1+stepplayer1*sin(degreesplayer1);
+	for(int i=0;i<numberofplayer;i++){
+		//player[i].x=xplayer1+stepplayer1*cos(degreesplayer1);
+		//player[i].y=yplayer1+stepplayer1*sin(degreesplayer1);
+	}
 	for(int i=0;i<radiusplayer1;i++){
 		for(int a=0;a<radiusplayer1;a++){
 			int iks=xplayer1-(radiusplayer1/2)+i;
