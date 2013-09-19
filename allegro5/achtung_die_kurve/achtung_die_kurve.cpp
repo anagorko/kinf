@@ -109,8 +109,8 @@ int init()
 	float stepplayer1=0.1;
 	float radiusplayer1=3;//promień 
 	float spaceplayer1=90;
-	int  alfaplayer1=1;
-	int degreesplayer1=0;
+	float  alfaplayer1=0.3;
+	float degreesplayer1=0;
 
 //
 // Struktury danych
@@ -125,7 +125,8 @@ int init()
 // Zmienne
 //
 	bool przegrales=false;
-
+    bool dotyka=false;
+    
 //
 //Czyszczenie
 //
@@ -167,9 +168,13 @@ void clean()
 void rysuj_plansze()
 {
 	al_clear_to_color(al_map_rgb(0, 0, 0));
-	al_draw_rectangle(10, 10, 1100, 707, al_map_rgb(255, 255, 255), 10 );//x1,y1,x2,y2,kolor,szerokosc;
+	al_draw_rectangle(19, 19, 1101, 709, al_map_rgb(255, 255, 255), 0 );//x1,y1,x2,y2,kolor,szerokosc;
 	al_set_target_bitmap(snakes);
-	al_draw_filled_circle(xplayer1-1, yplayer1-1, radiusplayer1, al_map_rgb(0, 23, 155));
+    if (dotyka) {
+    	al_draw_filled_circle(xplayer1-1, yplayer1-1, radiusplayer1, al_map_rgb(155, 23, 0));
+    } else {
+    	al_draw_filled_circle(xplayer1-1, yplayer1-1, radiusplayer1, al_map_rgb(0, 23, 155));
+    }
 	al_set_target_backbuffer(display);
 	al_draw_bitmap(snakes, 20, 20, 0);
 }
@@ -180,6 +185,7 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
+    dotyka = false;
 	czas++;
 	for(int i=0;i<numberofplayer;i++){
 		//player[i].x=xplayer1+stepplayer1*cos(degreesplayer1);
@@ -187,23 +193,34 @@ void aktualizuj_plansze()
 	}
 	for(int i=0;i<radiusplayer1;i++){
 		for(int a=0;a<radiusplayer1;a++){
-			int iks=xplayer1-(radiusplayer1/2)+i;
-			int igrek=yplayer1-(radiusplayer1/2)+a;
-			if((igrek-yplayer1)*(igrek-yplayer1)+(xplayer1-iks)*(xplayer1-iks)<radiusplayer1*radiusplayer1){
+			float f_iks=xplayer1-(radiusplayer1/2.0)+i;
+			float f_igrek=yplayer1-(radiusplayer1/2.0)+a;
+			if (f_iks < 0) { f_iks = 0; }
+			if (f_igrek < 0) { f_igrek = 0; }
+			if (f_iks > 1081) { f_iks = 1081; }
+			if (f_igrek > 688) { f_igrek = 688; }
+			
+			if((f_igrek-yplayer1)*(f_igrek-yplayer1)+(xplayer1-f_iks)*(xplayer1-f_iks)<radiusplayer1*radiusplayer1){
+				int iks = (int) f_iks;
+				int igrek = (int) f_igrek;
+				
 				if(board[iks][igrek].player!=-1){
 					if(board[iks][igrek].player==1){
 						if(board[iks][igrek].time<czas-100){
 							cout<<"wjechales w siebie"<<endl;
-							przegrales=true;
+//							przegrales=true;
+                            dotyka = true;
 							break;
 						}
 					}else if(board[iks][igrek].player!=100){
 						cout<<"wiechales w kolege"<<endl;
-						przegrales=true;
+//						przegrales=true;
+                        dotyka = true;
 						break;
 					}else if(board[iks][igrek].player==100){
 						cout<<"wjechales w sciane"<<endl;
-						przegrales=true;
+//						przegrales=true;
+                        dotyka = true;
 						break;
 					}
 				}else{
@@ -223,11 +240,11 @@ void aktualizuj_plansze()
 void co_robia_gracze()
 {
 	if(key[ALLEGRO_KEY_LEFT] && czas-lastczas>spaceplayer1){
-	degreesplayer1=degreesplayer1-alfaplayer1%360;
+	degreesplayer1=degreesplayer1-alfaplayer1;
 	lastczas=czas;
 	}
 	if(key[ALLEGRO_KEY_RIGHT] && czas-lastczas>spaceplayer1){
-	degreesplayer1=degreesplayer1+alfaplayer1%360;
+	degreesplayer1=degreesplayer1+alfaplayer1;
 	lastczas=czas;
 	}
 
