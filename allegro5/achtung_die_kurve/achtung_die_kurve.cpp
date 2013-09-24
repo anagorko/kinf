@@ -92,34 +92,30 @@ int init()
 //
 //kofiguracja gry
 //
-	const int number_of_player=1;
+	const int number_of_player=2;
 	int xpl=1071;
 	int ypl=688;
 	int czas=0;
-	int lastczas;
-	//player1
-	float xplayer1=5;
-	float yplayer1=5;
-	float stepplayer1=0.1;
-	float radiusplayer1=3;//promień 
-	float spaceplayer1=90;
-	float  alfaplayer1=0.3;
-	float degreesplayer1=0;
 
 //
 // Struktury danych
 //
-	typedef struct type_of_player{
-		int x;
-		int y;
-		int step;
-		int radius;
-		int space;
-		int alfa;
-		int degrees;
+	struct type_of_player{
+		float x;
+		float y;
+		float step;
+		float radius;
+		float space;
+		float alfa;
+		float degrees;
+		int lastczas;
+		int color0;
+		int color1;
+		int color2;
+		bool dotyka;
 	};
 	type_of_player player[number_of_player];
-	typedef struct type{
+	struct type{
 		int nrplayer;
 		int time;
 	};
@@ -155,16 +151,30 @@ void clean()
 		board[1081][i].time=-100;
 		}
 	}
-	player[0].x=5;
-	player[0].y=5;
-	player[0].radius=3;
-	player[0].step=0.1;
-	player[0].space=90;
-	player[0].alfa=0.3;
-	player[0].degrees=0;
-	while(player[0].x<=20+player[0].radius || player[0].y<=20+player[0].radius){
-	player[0].x=random()%1072-2*player[0].radius;
-	player[0].y=random()%679-2*player[0].radius;
+	for(int i=0;i<number_of_player;i++){
+		player[i].x=5;
+		player[i].y=5;
+		player[i].radius=3;
+		player[i].step=0.1;
+		player[i].space=90;
+		player[i].alfa=0.3;
+		player[i].degrees=0;
+		while(player[i].x<=20+player[i].radius || player[i].y<=20+player[i].radius){
+			player[i].x=random()%1072-2*player[i].radius;
+			player[i].y=random()%679-2*player[i].radius;
+		}
+		switch(i){
+		case 0:
+			player[i].color0=0;
+			player[i].color1=23;
+			player[i].color2=155;
+			break;
+		case 1:
+			player[i].color0=37;
+			player[i].color1=164;
+			player[i].color2=40;
+			break;
+		}
 	}
 	snakes = al_create_bitmap(1080,687);
 	al_set_target_bitmap(snakes);
@@ -181,12 +191,13 @@ void rysuj_plansze()
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_draw_rectangle(19, 19, 1101, 709, al_map_rgb(255, 255, 255), 0 );//x1,y1,x2,y2,kolor,szerokosc;
 	al_set_target_bitmap(snakes);
-    if (dotyka) {
-    	al_draw_filled_circle(xplayer1-1, yplayer1-1, radiusplayer1, al_map_rgb(155, 23, 0));
-    } else {
-    	al_draw_filled_circle(xplayer1, yplayer1-1, radiusplayer1, al_map_rgb(0, 23, 155));
-    }
-	al_draw_filled_circle(player[0].x, player[0].y, player[0].radius, al_map_rgb(23, 23, 23));
+	for(int i=0;i<number_of_player;i++){
+		if(player[i].dotyka) {
+    			al_draw_filled_circle(player[i].x-1, player[i].y-1, player[i].radius, al_map_rgb(155, 23, 0));
+    		}else{
+    			al_draw_filled_circle(player[i].x, player[i].y-1, player[i].radius, al_map_rgb(player[i].color0, player[i].color1, player[i].color2));
+    		}
+	}
 	al_set_target_backbuffer(display);
 	al_draw_bitmap(snakes, 20, 20, 0);
 }
@@ -197,52 +208,51 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
-    dotyka = false;
 	czas++;
-	player[0].x=player[0].x+player[0].step*cos(degreesplayer1);
-	player[0].y=player[0].y+player[0].step*sin(degreesplayer1);
-	xplayer1=xplayer1+stepplayer1*cos(degreesplayer1);
-	yplayer1=yplayer1+stepplayer1*sin(degreesplayer1);
-	for(int i=0;i<player[0].radius;i++){
-		for(int a=0;a<player[0].radius;a++){
-			float f_iks=player[0].x-(player[0].radius/2.0)+i;
-			float f_igrek=player[0].y-(player[0].radius/2.0)+a;
-			if (f_iks < 0) { f_iks = 0; }
-			if (f_igrek < 0) { f_igrek = 0; }
-			if (f_iks > 1081) { f_iks = 1081; }
-			if (f_igrek > 688) { f_igrek = 688; }
-			
-			if((f_igrek-player[0].y)*(f_igrek-player[0].y)+(player[0].x-f_iks)*(player[0].x-f_iks)<player[0].radius*player[0].radius){
-				int iks = (int) f_iks;
-				int igrek = (int) f_igrek;
-				
-				if(board[iks][igrek].nrplayer!=-1){
-					if(board[iks][igrek].nrplayer==1){
-						if(board[iks][igrek].time<czas-100){
-							cout<<"wjechales w siebie"<<endl;
+	for(int i=0;i<number_of_player;i++){
+		player[i].dotyka=false;
+		player[i].x=player[i].x+player[i].step*cos(player[i].degrees);
+		player[i].y=player[i].y+player[i].step*sin(player[i].degrees);
+		for(int a=0;a<player[i].radius;a++){
+			for(int e=0;e<player[i].radius;e++){
+				float f_iks=player[i].x-(player[i].radius/2.0)+a;
+				float f_igrek=player[i].y-(player[i].radius/2.0)+e;
+				if (f_iks < 0) { f_iks = 0; }
+				if (f_igrek < 0) { f_igrek = 0; }
+				if (f_iks > 1081) { f_iks = 1081; }
+				if (f_igrek > 688) { f_igrek = 688; }
+
+				if((f_igrek-player[0].y)*(f_igrek-player[0].y)+(player[0].x-f_iks)*(player[0].x-f_iks)<player[0].radius*player[0].radius){
+					int iks = (int) f_iks;
+					int igrek = (int) f_igrek;
+
+					if(board[iks][igrek].nrplayer!=-1){
+						if(board[iks][igrek].nrplayer==i){
+							if(board[iks][igrek].time<czas-100){
+								cout<<"wjechales w siebie"<<endl;
+//								przegrales=true;
+         					      	        player[i].dotyka = true;
+								break;
+							}
+						}else if(board[iks][igrek].nrplayer!=100){
+							cout<<"wiechales w kolege"<<endl;
 //							przegrales=true;
-                            dotyka = true;
+        	        			        player[i].dotyka = true;
+							break;
+						}else if(board[iks][igrek].nrplayer==100){
+							cout<<"wjechales w sciane"<<endl;
+//							przegrales=true;
+        	               				player[i].dotyka = true;
 							break;
 						}
-					}else if(board[iks][igrek].nrplayer!=100){
-						cout<<"wiechales w kolege"<<endl;
-//						przegrales=true;
-                        dotyka = true;
-						break;
-					}else if(board[iks][igrek].nrplayer==100){
-						cout<<"wjechales w sciane"<<endl;
-//						przegrales=true;
-                        dotyka = true;
-						break;
+					}else{
+						board[iks][igrek].nrplayer=i;
+						board[iks][igrek].time=czas;
 					}
-				}else{
-					board[iks][igrek].nrplayer=1;
-					board[iks][igrek].time=czas;
 				}
 			}
 		}
 	}
-	
 }
 
 //
@@ -251,19 +261,24 @@ void aktualizuj_plansze()
 
 void co_robia_gracze()
 {
-	if(key[ALLEGRO_KEY_LEFT] && czas-lastczas>spaceplayer1){
-	degreesplayer1=degreesplayer1-alfaplayer1;
-	lastczas=czas;
+	if(key[ALLEGRO_KEY_LEFT] && czas-player[0].lastczas>player[0].space){
+	player[0].degrees=player[0].degrees-player[0].alfa;
+	player[0].lastczas=czas;
 	}
-	if(key[ALLEGRO_KEY_RIGHT] && czas-lastczas>spaceplayer1){
-	degreesplayer1=degreesplayer1+alfaplayer1;
-	lastczas=czas;
-	}
-	if(key[ALLEGRO_KEY_LEFT] && czas-lastczas>player[0].space){
+	if(key[ALLEGRO_KEY_RIGHT] && czas-player[0].lastczas>player[0].space){
 	player[0].degrees=player[0].degrees+player[0].alfa;
-	lastczas=czas;
+	player[0].lastczas=czas;
 	}
-
+	if(number_of_player>=2){
+		if(key[ALLEGRO_KEY_Z] && czas-player[1].lastczas>player[1].space){
+		player[1].degrees=player[1].degrees-player[1].alfa;
+		player[1].lastczas=czas;
+		}
+		if(key[ALLEGRO_KEY_X] && czas-player[1].lastczas>player[1].space){
+                player[1].degrees=player[1].degrees+player[1].alfa;
+                player[1].lastczas=czas;
+		}
+	}
 
 }
 
@@ -316,7 +331,7 @@ int main(int argc, char ** argv)
 
             al_flip_display();
          }
-	if(przegrales){cout<<"YOU LOST BABY ON X= "<<xplayer1<<" and Y= "<<yplayer1<<endl;}
+	if(przegrales){cout<<"YOU LOST BABY ON X= "<<player[0].x<<" and Y= "<<player[0].y<<endl;}
     }
 
     return 0;
