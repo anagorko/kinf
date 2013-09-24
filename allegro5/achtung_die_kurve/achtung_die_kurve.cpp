@@ -92,6 +92,7 @@ int init()
 //
 //kofiguracja gry
 //
+	const int number_of_player=1;
 	int xpl=1071;
 	int ypl=688;
 	int czas=0;
@@ -108,8 +109,18 @@ int init()
 //
 // Struktury danych
 //
+	typedef struct type_of_player{
+		int x;
+		int y;
+		int step;
+		int radius;
+		int space;
+		int alfa;
+		int degrees;
+	};
+	type_of_player player[number_of_player];
 	typedef struct type{
-		int player;
+		int nrplayer;
 		int time;
 	};
 	type board[1082][689];//+2
@@ -128,25 +139,32 @@ void clean()
 	srandom(time(NULL)+getpid());
 	for(int i=1;i<1081;i++){
 		for(int a=1;a<688;a++){
-		board[i][a].player=-1;
+		board[i][a].nrplayer=-1;
 		board[i][a].time=-1;
 		}
 	}
 	for(int i=0;i<1082;i++){
-	board[i][0].player=100;
-	board[i][688].player=100;
+	board[i][0].nrplayer=100;
+	board[i][688].nrplayer=100;
 	board[i][0].time=-100;
 	board[i][688].time=-100;
 		if(i<688){
-		board[0][i].player=100;
-		board[1081][i].player=100;
+		board[0][i].nrplayer=100;
+		board[1081][i].nrplayer=100;
 		board[0][i].time=-100;
 		board[1081][i].time=-100;
 		}
 	}
-	while(xplayer1<=20+radiusplayer1 || yplayer1<=20+radiusplayer1){
-	xplayer1=random()%1072-2*radiusplayer1;
-	yplayer1=random()%679-2*radiusplayer1;
+	player[0].x=5;
+	player[0].y=5;
+	player[0].radius=3;
+	player[0].step=0.1;
+	player[0].space=90;
+	player[0].alfa=0.3;
+	player[0].degrees=0;
+	while(player[0].x<=20+player[0].radius || player[0].y<=20+player[0].radius){
+	player[0].x=random()%1072-2*player[0].radius;
+	player[0].y=random()%679-2*player[0].radius;
 	}
 	snakes = al_create_bitmap(1080,687);
 	al_set_target_bitmap(snakes);
@@ -166,8 +184,9 @@ void rysuj_plansze()
     if (dotyka) {
     	al_draw_filled_circle(xplayer1-1, yplayer1-1, radiusplayer1, al_map_rgb(155, 23, 0));
     } else {
-    	al_draw_filled_circle(xplayer1-1, yplayer1-1, radiusplayer1, al_map_rgb(0, 23, 155));
+    	al_draw_filled_circle(xplayer1, yplayer1-1, radiusplayer1, al_map_rgb(0, 23, 155));
     }
+	al_draw_filled_circle(player[0].x, player[0].y, player[0].radius, al_map_rgb(23, 23, 23));
 	al_set_target_backbuffer(display);
 	al_draw_bitmap(snakes, 20, 20, 0);
 }
@@ -180,42 +199,44 @@ void aktualizuj_plansze()
 {
     dotyka = false;
 	czas++;
+	player[0].x=player[0].x+player[0].step*cos(degreesplayer1);
+	player[0].y=player[0].y+player[0].step*sin(degreesplayer1);
 	xplayer1=xplayer1+stepplayer1*cos(degreesplayer1);
 	yplayer1=yplayer1+stepplayer1*sin(degreesplayer1);
-	for(int i=0;i<radiusplayer1;i++){
-		for(int a=0;a<radiusplayer1;a++){
-			float f_iks=xplayer1-(radiusplayer1/2.0)+i;
-			float f_igrek=yplayer1-(radiusplayer1/2.0)+a;
+	for(int i=0;i<player[0].radius;i++){
+		for(int a=0;a<player[0].radius;a++){
+			float f_iks=player[0].x-(player[0].radius/2.0)+i;
+			float f_igrek=player[0].y-(player[0].radius/2.0)+a;
 			if (f_iks < 0) { f_iks = 0; }
 			if (f_igrek < 0) { f_igrek = 0; }
 			if (f_iks > 1081) { f_iks = 1081; }
 			if (f_igrek > 688) { f_igrek = 688; }
 			
-			if((f_igrek-yplayer1)*(f_igrek-yplayer1)+(xplayer1-f_iks)*(xplayer1-f_iks)<radiusplayer1*radiusplayer1){
+			if((f_igrek-player[0].y)*(f_igrek-player[0].y)+(player[0].x-f_iks)*(player[0].x-f_iks)<player[0].radius*player[0].radius){
 				int iks = (int) f_iks;
 				int igrek = (int) f_igrek;
 				
-				if(board[iks][igrek].player!=-1){
-					if(board[iks][igrek].player==1){
+				if(board[iks][igrek].nrplayer!=-1){
+					if(board[iks][igrek].nrplayer==1){
 						if(board[iks][igrek].time<czas-100){
 							cout<<"wjechales w siebie"<<endl;
 //							przegrales=true;
                             dotyka = true;
 							break;
 						}
-					}else if(board[iks][igrek].player!=100){
+					}else if(board[iks][igrek].nrplayer!=100){
 						cout<<"wiechales w kolege"<<endl;
 //						przegrales=true;
                         dotyka = true;
 						break;
-					}else if(board[iks][igrek].player==100){
+					}else if(board[iks][igrek].nrplayer==100){
 						cout<<"wjechales w sciane"<<endl;
 //						przegrales=true;
                         dotyka = true;
 						break;
 					}
 				}else{
-					board[iks][igrek].player=1;
+					board[iks][igrek].nrplayer=1;
 					board[iks][igrek].time=czas;
 				}
 			}
@@ -236,6 +257,10 @@ void co_robia_gracze()
 	}
 	if(key[ALLEGRO_KEY_RIGHT] && czas-lastczas>spaceplayer1){
 	degreesplayer1=degreesplayer1+alfaplayer1;
+	lastczas=czas;
+	}
+	if(key[ALLEGRO_KEY_LEFT] && czas-lastczas>player[0].space){
+	player[0].degrees=player[0].degrees+player[0].alfa;
 	lastczas=czas;
 	}
 
