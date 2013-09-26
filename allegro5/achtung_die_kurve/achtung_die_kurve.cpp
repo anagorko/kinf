@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
+#include <time.h>
 
 #include <iostream>
 using namespace std;
@@ -23,7 +24,7 @@ const int screen_h = 768;   // wysokość ekranu (screen height)
  * Kod poniżej jest w miarę generyczny  *
  ****************************************/
  
-const float FPS = 700; //60      // Frames Per Second
+const float FPS = 1100; //60      // Frames Per Second
 bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 
 ALLEGRO_DISPLAY *display = NULL;
@@ -96,6 +97,8 @@ int init()
 	int xpl=1071;
 	int ypl=688;
 	int czas=0;
+	int stoper=clock();
+	int stoper1=0;
 
 //
 // Struktury danych
@@ -112,7 +115,7 @@ int init()
 		int color0;
 		int color1;
 		int color2;
-		bool dotyka;
+		bool touch;
 	};
 	type_of_player player[number_of_player];
 	struct type{
@@ -156,9 +159,10 @@ void clean()
 		player[i].y=5;
 		player[i].radius=3;
 		player[i].step=0.1;
-		player[i].space=90;
+		player[i].space=100;
 		player[i].alfa=0.3;
 		player[i].degrees=0;
+		player[i].touch=false;
 		while(player[i].x<=20+player[i].radius || player[i].y<=20+player[i].radius){
 			player[i].x=random()%1072-2*player[i].radius;
 			player[i].y=random()%679-2*player[i].radius;
@@ -192,14 +196,16 @@ void rysuj_plansze()
 	al_draw_rectangle(19, 19, 1101, 709, al_map_rgb(255, 255, 255), 0 );//x1,y1,x2,y2,kolor,szerokosc;
 	al_set_target_bitmap(snakes);
 	for(int i=0;i<number_of_player;i++){
-		if(player[i].dotyka) {
-    			al_draw_filled_circle(player[i].x-1, player[i].y-1, player[i].radius, al_map_rgb(155, 23, 0));
-    		}else{
+//		if(player[i].touch) {
+//    			al_draw_filled_circle(player[i].x-1, player[i].y-1, player[i].radius, al_map_rgb(155, 23, 0));
+//    		}else{
     			al_draw_filled_circle(player[i].x, player[i].y-1, player[i].radius, al_map_rgb(player[i].color0, player[i].color1, player[i].color2));
-    		}
+//    		}
 	}
 	al_set_target_backbuffer(display);
 	al_draw_bitmap(snakes, 20, 20, 0);
+//	printf(const ALLEGRO_FONT * 10, al_map_rgb(123,23,24), 110,110, 0); 
+//	al_draw_text(10,al_map_rgb(32, 23, 23), 1333, 23434, 0,"adadd");
 }
 
 //
@@ -209,8 +215,10 @@ void rysuj_plansze()
 void aktualizuj_plansze()
 {
 	czas++;
+	int stoper=clock();
+	if(stoper>=stoper1+1000){cout<<"ACHTUNG GODZINA "<<stoper/100000<<endl;stoper1=stoper;}
 	for(int i=0;i<number_of_player;i++){
-		player[i].dotyka=false;
+		if(player[i].touch){continue;}
 		player[i].x=player[i].x+player[i].step*cos(player[i].degrees);
 		player[i].y=player[i].y+player[i].step*sin(player[i].degrees);
 		for(int a=0;a<player[i].radius;a++){
@@ -222,28 +230,28 @@ void aktualizuj_plansze()
 				if (f_iks > 1081) { f_iks = 1081; }
 				if (f_igrek > 688) { f_igrek = 688; }
 
-				if((f_igrek-player[0].y)*(f_igrek-player[0].y)+(player[0].x-f_iks)*(player[0].x-f_iks)<player[0].radius*player[0].radius){
+				if((f_igrek-player[i].y)*(f_igrek-player[i].y)+(player[i].x-f_iks)*(player[i].x-f_iks)<player[i].radius*player[i].radius){
 					int iks = (int) f_iks;
 					int igrek = (int) f_igrek;
 
 					if(board[iks][igrek].nrplayer!=-1){
 						if(board[iks][igrek].nrplayer==i){
-							if(board[iks][igrek].time<czas-100){
-								cout<<"wjechales w siebie"<<endl;
+							if(board[iks][igrek].time<czas-player[i].space){
+								cout<<"GRACZ "<<i<<": wjechales w siebie"<<endl;
 //								przegrales=true;
-         					      	        player[i].dotyka = true;
-								break;
+         					      	        player[i].touch = true;
+								continue;
 							}
 						}else if(board[iks][igrek].nrplayer!=100){
-							cout<<"wiechales w kolege"<<endl;
+							cout<<"GRACZ "<<i<<": wiechales w kolege"<<endl;
 //							przegrales=true;
-        	        			        player[i].dotyka = true;
-							break;
+        	        			        player[i].touch = true;
+							continue;
 						}else if(board[iks][igrek].nrplayer==100){
-							cout<<"wjechales w sciane"<<endl;
+							cout<<"GRACZ "<<i<<": wjechales w sciane"<<endl;
 //							przegrales=true;
-        	               				player[i].dotyka = true;
-							break;
+        	               				player[i].touch = true;
+							continue;
 						}
 					}else{
 						board[iks][igrek].nrplayer=i;
