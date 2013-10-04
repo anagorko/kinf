@@ -86,6 +86,8 @@ int main(){
 //		cout<<endl;
 //	}
 	//sumowanie
+	int t1[200];
+	int ta1[200];
 	for(int i=199;i>0;i--){
 		if(dodatnie>0){
 			int suma=0;
@@ -93,10 +95,10 @@ int main(){
 				suma=suma+t[a][i];
 			}
 			if(suma>=10){
-				t[0][i-1]=(suma-(suma%10))/10;
+				t[0][i-1]=t[0][i-1]+(suma-(suma%10))/10;
 				suma=suma%10;
 			}
-			t[0][i]=suma;
+			t1[i]=suma;
 		}
 		if(n-dodatnie>0){
 			int suma=0;
@@ -104,10 +106,10 @@ int main(){
 				suma=suma+ta[a][i];
 			}
 			if(suma>=10){
-				ta[0][i-1]=(suma-(suma%10))/10;
+				ta[0][i-1]=ta[0][i-1]+(suma-(suma%10))/10;
 				suma=suma%10;
 			}
-			ta[0][i]=suma;
+			ta1[i]=suma;
 		}
 	}
 //	cout<<"zsumowane:\n";
@@ -122,8 +124,8 @@ int main(){
 	bool wiekszypierwszy=false;
 	if(dodatnie>0 && n-dodatnie>0){
 		for(int i=0;i<200;i++){
-	                        if(t[0][i]>ta[0][i]){wiekszypierwszy=true;break;}
-	                        if(t[0][i]<ta[0][i]){wiekszypierwszy=false;break;}
+	                        if(t1[i]>ta1[i]){wiekszypierwszy=true;break;}
+	                        if(t1[i]<ta1[i]){wiekszypierwszy=false;break;}
 	                        if(i==199){cout<<"0\n";return 0;}
 		}
 	}else if(dodatnie>0){wiekszypierwszy=true;}
@@ -132,57 +134,57 @@ int main(){
 		if(wiekszypierwszy){
 			int suma=0;
 	                for(int i=199;i>=0;i--){
-	         	      	if(t[0][i]-ta[0][i]>=0){
-	                        	t[0][i]=t[0][i]-ta[0][i];
+	         	      	if(t1[i]-ta1[i]>=0){
+	                        	t1[i]=t1[i]-ta1[i];
 	                       	}else{
-	                	       	t[0][i-1]--;
-	                               	t[0][i]=t[0][i]+10;
-	                               	t[0][i]=t[0][i]-ta[0][i];
+	                	       	t1[i-1]--;
+	                               	t1[i]=t1[i]+10;
+	                               	t1[i]=t1[i]-ta1[i];
 	                      	}
 		               	}
        		}else{
       		      	int suma=0;
        		       	for(int i=199;i>=0;i--){ 
-        			if(ta[0][i]-t[0][i]>=0){
-                	        	t[0][i]=ta[0][i]-t[0][i];
+        			if(ta1[i]-t1[i]>=0){
+                	        	t1[i]=ta1[i]-t1[i];
        	              		}else{
- 	   	                   	ta[0][i-1]--;
- 	                         	t[0][i]=ta[0][i]+10;
- 		       	          	t[0][i]=ta[0][i]-t[0][i];
+ 	   	                   	ta1[i-1]--;
+ 	                         	t1[i]=ta1[i]+10;
+ 		       	          	t1[i]=ta1[i]-t1[i];
                 	        }
        	         	}
    		}
 	}else if(!wiekszypierwszy){
 		cout<<"-";
 	        int licznik=0;
-	        while(ta[0][licznik]==0){
+	        while(ta1[licznik]==0){
 	                licznik++;
 	        }
 	        for(int i=licznik;i<=100;i++){
-	                cout<<ta[0][i];
+	                cout<<ta1[i];
 	        }
 	        licznik=199;
-	        while(t[0][licznik]==0){
+	        while(t1[licznik]==0){
 	                licznik--;
 	        }
        		for(int i=101;i<licznik;i++){
-       	        	cout<<ta[0][i];
+       	        	cout<<ta1[i];
        	 	}cout<<endl;
 	}
 	//wynik
 	if(!wiekszypierwszy){cout<<"-";}
 	int licznik=0;
-	while(t[0][licznik]==0){
+	while(t1[licznik]==0){
 		licznik++;
 	}
 	for(int i=licznik;i<=100;i++){
-		cout<<t[0][i];
+		cout<<t1[i];
 	}
 	licznik=199;
-	while(t[0][licznik]==0){
+	while(t1[licznik]==0){
 		licznik--;
 	}
 	for(int i=101;i<licznik;i++){
-		cout<<t[0][i];
+		cout<<t1[i];
 	}cout<<endl;
 }
