@@ -1,3 +1,5 @@
+// Copyright Krzysztof Srebro
+
 #include<iostream>
 using namespace std;
 
