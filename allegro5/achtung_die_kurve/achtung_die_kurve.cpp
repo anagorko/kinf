@@ -7,11 +7,14 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_native_dialog.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 #include <time.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <math.h>
 #include <time.h>
+
 
 #include <iostream>
 using namespace std;
@@ -31,6 +34,7 @@ ALLEGRO_DISPLAY *display = NULL;
 ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 ALLEGRO_TIMER *timer = NULL;
 ALLEGRO_BITMAP * snakes = NULL;
+ALLEGRO_FONT * font = NULL;
 
 
 int init()
@@ -75,6 +79,19 @@ int init()
         al_destroy_timer(timer);
         return -1;
     }
+
+	al_init_font_addon();
+	al_init_ttf_addon();
+
+	font=al_load_ttf_font("FreeMono.ttf", 12,0);
+
+   if (!font) {
+        cerr << "Nie mogę załadować czcionki FreeMono.ttf" << endl;
+        al_destroy_display(display);
+        al_destroy_timer(timer);
+        return -1;
+    }
+
   
     al_register_event_source(event_queue, al_get_display_event_source(display));  
     al_register_event_source(event_queue, al_get_timer_event_source(timer));  
@@ -210,6 +227,18 @@ void rysuj_plansze()
 	al_draw_bitmap(snakes, 20, 20, 0);
 //	printf(const ALLEGRO_FONT * 10, al_map_rgb(123,23,24), 110,110, 0); 
 //	al_draw_text(10,al_map_rgb(32, 23, 23), 1333, 23434, 0,"adadd");
+//###########################
+	TU!TU!TU!TU!
+
+
+	string tekst="halo";
+	al_draw_text(font, al_map_rgb(255,255,255), 100, 100,ALLEGRO_ALIGN_CENTRE, tekst.c_str());
+
+
+
+	TU!TU!TU!TU!
+//##########################
+//	al_draw_text(font, al_map_rgb(255,255,255), 500, 100, ALLEGRO_ALIGN_CENTRE, tekst.c_str());//allegro_align_centre
 }
 
 //
