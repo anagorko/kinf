@@ -13,7 +13,7 @@ using namespace std;
 //
 
 const int screen_w = 1000;   // szerokość ekranu (screen width)
-const int screen_h = 562;   // wysokość ekranu (screen height)
+const int screen_h = 700;   // wysokość ekranu (screen height)
 
 /****************************************
  * Tu rozpoczyna się istotna część kodu *
