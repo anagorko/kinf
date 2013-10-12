@@ -83,7 +83,7 @@ int init()
 	al_init_font_addon();
 	al_init_ttf_addon();
 
-	font=al_load_ttf_font("FreeMono.ttf", 12,0);
+	font=al_load_ttf_font("../patterns/FreeMono.ttf", 12,0);
 
    if (!font) {
         cerr << "Nie mogę załadować czcionki FreeMono.ttf" << endl;
@@ -228,7 +228,7 @@ void rysuj_plansze()
 //	printf(const ALLEGRO_FONT * 10, al_map_rgb(123,23,24), 110,110, 0); 
 //	al_draw_text(10,al_map_rgb(32, 23, 23), 1333, 23434, 0,"adadd");
 //###########################
-	TU!TU!TU!TU!
+//	TU!TU!TU!TU!
 
 
 	string tekst="halo";
@@ -236,7 +236,7 @@ void rysuj_plansze()
 
 
 
-	TU!TU!TU!TU!
+//	TU!TU!TU!TU!
 //##########################
 //	al_draw_text(font, al_map_rgb(255,255,255), 500, 100, ALLEGRO_ALIGN_CENTRE, tekst.c_str());//allegro_align_centre
 }
