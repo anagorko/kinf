@@ -32,6 +32,10 @@
 
 #include "libwebsockets.h"
 
+#include<string>
+#include<iostream>
+using namespace std;
+
 static int close_testing;
 int max_poll_elements;
 
@@ -144,7 +148,7 @@ callback_lws_mirror(struct libwebsocket_context *context,
 		break;
 
 	case LWS_CALLBACK_RECEIVE:
-		cout << string((char *) in, len) << endl;
+		cout <<"Odebrałem i wysłałem: ''"<< string((char *) in, len) << "''\n";
 
 		if (((ringbuffer_head - pss->ringbuffer_tail) &
 				  (MAX_MESSAGE_QUEUE - 1)) == (MAX_MESSAGE_QUEUE - 1)) {
