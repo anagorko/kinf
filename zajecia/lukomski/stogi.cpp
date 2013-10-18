@@ -4,6 +4,7 @@ int main(){
 	int n;
 	cin>>n;
 	int kop[n+1];
+	//wstawianie do kopca
 	for(int i=1;i<=n;i++){
 		int x=i;
 		cin>>kop[i];
@@ -14,20 +15,21 @@ int main(){
 			x=x/2;
 		}
 	}
-	while(n>0){
-		cout<<kop[1]<<" ";
+	//wyjmowanie z kopca
+	while(n>=1){
+		cout<<kop[1]<<" \n";
 		kop[1]=kop[n];
 		n--;
 		int x=1;
-		while(true){
+		while(n>0){
 			int y=0;
-			if(kop[x]>kop[x*2] && kop[x]>kop[x*2+1]){
+			if((n>=x*2+1) && (kop[x]>kop[x*2] && kop[x]>kop[x*2+1])){
 				if(kop[x*2]>kop[x*2+1]){
-					y=x*2;
-				}else{
 					y=x*2+1;
+				}else{
+					y=x*2;
 				}
-			}else if(kop[x]>kop[x*2] || kop[x]>kop[x*2+1]){
+			}else if((n>=x*2) &&  (kop[x]>kop[x*2] || kop[x]>kop[x*2+1])){
 				if(kop[x]>kop[x*2]){
 					y=x*2;
 				}else{
