@@ -14,7 +14,7 @@ void kolumna()
 
 int main()
 {
-	wypisz(5,"               ||\n");
+	wypisz(5,"               /\\\n");
 	cout << "            __/||\\__\n";
 	cout << "         __/:::||:::\\__\n";
 	cout << "      __/::::::||::::::\\__\n";
