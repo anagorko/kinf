@@ -2,8 +2,10 @@
 using namespace std;
 
 
-void kreski(){
-	cout<< "                 ||"<<endl;
+void kreski(int n, string s){
+	for (int i=0; i<n; i++){
+		cout << s;
+	}
 }
 void kreskiq() {
 	{cout<< "               _/||\\_"<<endl;}
@@ -20,36 +22,18 @@ void slasze(){
 }
 
 
-void pien(){
-	cout<<"              |%%||%%|"<<endl;
+void pien(int w, string d){
+	for (int e=0; e<w; e++) {
+		cout<< d;
+	}
 }
 int main(){
 	
-	kreski();
-	kreski();
-	kreski();
-	kreski();
+	kreski(4, "                 ||\n");
 	kreskiq();
 	slasze();
-	kreski();
-	kreski();
-	kreski();
-	kreski();
-	pien();
-	pien();
-	pien();
-	pien();
-	pien();
-	pien();
-	pien();
-	pien();
-	pien();
-	pien();
-	pien();
-	pien();
-	pien();
-	pien();
-	pien();	
+	kreski(4, "                 ||\n");
+	pien(10 , "              |%%||%%|\n");
 	kreskiq();
 	return 0;
 }
