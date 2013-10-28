@@ -9,20 +9,21 @@ int main(){
 	}
 	cout<<"\n";
 	int x,y;
-	x--;y--;
 	cin>>x>>y;
+	x--;y--;
 	int a;
 	cin>>a;
-	for(int i=x;i<x+a;i++){
+	for(int i=x;i<x+a+1;i++){
 		t[i][y]='*';
 	}
 	x=x+a;
 	int b;
 	cin>>b;
-	for(int i=y;i<y+b;i++){
+	for(int i=y+1;i<y+b+1;i++){
 		t[x][i]='*';
 	}
 	y=y+b;
+	x++;
 	int c;
 	cin>>c;
 	for(int i=x;i<x+c;i++){
