@@ -27,6 +27,8 @@ const int screen_h = 700;   // wysokość ekranu (screen height)
 // Zmienne
 //
 
+int a=0,b=0,w;
+
 //
 // Rysowanie planszy
 //
@@ -42,6 +44,9 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
+
+cout<<a;
+
 }
 
 //
@@ -50,6 +55,49 @@ void aktualizuj_plansze()
 
 void co_robia_gracze()
 {
+
+	if(ALLEGRO_KEY_PAD_0||ALLEGRO_KEY_0)
+		{
+		a=a*10;
+		}
+	if(ALLEGRO_KEY_PAD_1||ALLEGRO_KEY_1)
+		{
+		a=a*10+1;
+		}
+	if(ALLEGRO_KEY_PAD_2||ALLEGRO_KEY_2)
+		{
+		a=a*10+2;
+		}
+	if(ALLEGRO_KEY_PAD_3||ALLEGRO_KEY_3)
+		{
+		a=a*10+3;
+		}
+	if(ALLEGRO_KEY_PAD_4||ALLEGRO_KEY_4)
+		{
+		a=a*10+4;
+		}
+	if(ALLEGRO_KEY_PAD_5||ALLEGRO_KEY_5)
+		{
+		a=a*10+5;
+		}
+	if(ALLEGRO_KEY_PAD_6||ALLEGRO_KEY_6)
+		{
+		a=a*10+6;
+		}
+	if(ALLEGRO_KEY_PAD_7||ALLEGRO_KEY_7)
+		{
+		a=a*10+7;
+		}
+	if(ALLEGRO_KEY_PAD_8||ALLEGRO_KEY_8)
+		{
+		a=a*10+8;
+		}
+	if(ALLEGRO_KEY_PAD_9||ALLEGRO_KEY_9)
+		{
+		a=a*10+9;
+		}
+
+
 }
 
 /****************************************
