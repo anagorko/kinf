@@ -25,6 +25,9 @@ const int screen_h = 700;   // wysokość ekranu (screen height)
 
 //
 // Zmienne
+
+int a;
+
 //
 
 //
