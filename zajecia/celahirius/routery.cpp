@@ -5,16 +5,15 @@ using namespace std;
 int main()
 {
 	int n,w;
-	int k=1;
-
+	int k=1;					
+	
 	cin>>n;
 
-	for(int i=1; i<=n; i=i+k)
-	{
+	for(int i=1; i<n; i=i+k)
+	{		
 		k++;
+		//cout<<i<<endl<<endl;
 	}
 
-	w=k++;
-
-	cout<<w<<endl;
+	cout<<k<<endl;
 }
