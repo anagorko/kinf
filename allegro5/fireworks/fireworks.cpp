@@ -12,7 +12,7 @@ using namespace std;
 // Konfiguracja gry
 //
 
-const int screen_w = 1000;   // szerokość ekranu (screen width)
+const int screen_w = 800;   // szerokość ekranu (screen width)
 const int screen_h = 562;   // wysokość ekranu (screen height)
 
 /****************************************
@@ -39,9 +39,9 @@ typedef struct
 // Zmienne
 //
 
-const int default_life = 120;
-const int max_n = 1000;
-const int fragments = 7;
+const int default_life = 40;
+const int max_n = 10000;
+const int fragments = 3;
 const float g = 0.01;
 int n;
 
@@ -54,13 +54,11 @@ odlamek o[max_n];
 void rysuj_plansze()
 {
     al_clear_to_color(al_map_rgb(0,0,0));
-    
-//    al_draw_filled_circle(screen_w/2,screen_h/2, 10, al_map_rgb(255,255,255));
-    
+        
     for (int i = 0; i < n; i++) {
         if (o[i].life == 0) continue;
 
-        al_draw_filled_circle(o[i].x, o[i].y, 10, al_map_rgb(10+2*o[i].life, 10+2*o[i].life, 10+2*o[i].life));
+        al_draw_filled_circle(o[i].x, o[i].y, 3, al_map_rgb(o[i].life*(255 / default_life), o[i].life * (255 / default_life), 10+2*o[i].life));
     }
 }
 
@@ -78,8 +76,8 @@ void aktualizuj_plansze()
             for (int j = 0; j < fragments; j++) {
                 o[n].x = o[i].x;
                 o[n].y = o[i].y;
-                o[n].dx = o[i].dx * (1.0 + (rand() % 100) / 100.0);
-                o[n].dy = o[i].dy * (1.0 + (rand() % 100) / 100.0);
+                o[n].dx = o[i].dx * (0.5 + (rand() % 100) / 100.0);
+                o[n].dy = o[i].dy * (0.5 + (rand() % 100) / 100.0);
                 o[n].size = o[i].size - 1;
                 o[n].life = default_life;
                 
@@ -113,9 +111,18 @@ void inicjalizacja()
     o[n].y = screen_h - 20;
     o[n].dx = (float) (random() % 100) / 50.0 - 1.0;
     o[n].dy = -2 - (float) (random() % 100) / 100.0;
-    o[n].size = 2;
+    o[n].size = 4;
     o[n].life = default_life;
     n++;
+
+    o[n].x = screen_w / 2;
+    o[n].y = screen_h - 20;
+    o[n].dx = (float) (random() % 100) / 50.0 - 1.0;
+    o[n].dy = -2 - (float) (random() % 100) / 100.0;
+    o[n].size = 4;
+    o[n].life = default_life;
+    n++;
+  
 }
 
 /****************************************
@@ -185,6 +192,8 @@ int init()
 
 int main(int argc, char ** argv)
 {
+    srandom(getpid());
+    
     if (init() != 0) {
         cerr << "Inicjalizacja nie powiodła się." << endl;
         return -1;
