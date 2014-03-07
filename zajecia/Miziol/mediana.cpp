@@ -2,7 +2,7 @@
 using namespace std;
 int main()
 {
-int n,r,ru;
+int n,r,ru; 
 float w;
 cin>>n;
 float t[n];
