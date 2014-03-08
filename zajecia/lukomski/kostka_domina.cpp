@@ -31,7 +31,7 @@ int main(){
 		}
 	}
 	if(pocz>3 || n==1){cout<<"NIE\n";
-	}else if(pocz==0){
+	}else if(pocz==0 || n==2){
 		cout<<t[0]<<" "<<t[1]<<"\n";
 	}else{
 		if(ta[0]<ta[1]){cout<<ta[0]<<" "<<ta[1]<<"\n";
