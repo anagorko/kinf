@@ -1,6 +1,6 @@
-#include<iostream>
-#include<algorithm>
-#include<vector>
+#include <iostream>
+#include <algorithm>
+#include <vector>
 using namespace std;
 int main(){
 	int n;
@@ -16,17 +16,23 @@ int main(){
 	}
 	sort(t.begin(),t.end());
 	for(int i=0;i<2*n;i++){
+			cout<<t[i]<<" ";
+		}
+		cout<<"\n";
+	for(int i=0;i<2*n;i++){
 		int a=1;
 		while(t[i]==t[i+1]){
 			a++;
 			i++;
 		}
 		if(a%2==1){
-			t[i]=ta[pocz];
+			ta[pocz]=t[i];
 			pocz++;
 		}
 	}
-	if(pocz>3){cout<<"NIE\n";
+	if(pocz>3 || n==1){cout<<"NIE\n";
+	}else if(pocz==0){
+		cout<<t[0]<<" "<<t[1]<<"\n";
 	}else{
 		if(ta[0]<ta[1]){cout<<ta[0]<<" "<<ta[1]<<"\n";
 		}else{
