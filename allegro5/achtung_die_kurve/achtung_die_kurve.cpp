@@ -80,17 +80,17 @@ int init()
         return -1;
     }
 
-	al_init_font_addon();
-	al_init_ttf_addon();
+	//al_init_font_addon();
+	//al_init_ttf_addon();
 
-	font=al_load_ttf_font("../patterns/FreeMono.ttf", 12,0);
+	//font=al_load_ttf_font("../patterns/FreeMono.ttf", 12,0);
 
-   if (!font) {
-        cerr << "Nie mogę załadować czcionki FreeMono.ttf" << endl;
-        al_destroy_display(display);
-        al_destroy_timer(timer);
-        return -1;
-    }
+   //if (!font) {
+    //    cerr << "Nie mogę załadować czcionki FreeMono.ttf" << endl;
+   //     al_destroy_display(display);
+//        al_destroy_timer(timer);
+//        return -1;
+//    }
 
   
     al_register_event_source(event_queue, al_get_display_event_source(display));  
@@ -178,12 +178,11 @@ void clean()
 		player[i].y=5;
 		player[i].radius=10;
 		player[i].step=0.1;
-		player[i].space=320;
+		player[i].space=420;
 		player[i].spacetime=100;
 		player[i].alfa=0.5;
 		player[i].degrees=0;
 		player[i].touch=false;
-		player[i].radius_table=2*player[i].radius-6;
 		while(player[i].x<=20+player[i].radius || player[i].y<=20+player[i].radius){
 			player[i].x=random()%1072-2*player[i].radius;
 			player[i].y=random()%679-2*player[i].radius;
@@ -204,6 +203,9 @@ void clean()
 	snakes = al_create_bitmap(1080,687);
 	al_set_target_bitmap(snakes);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
+	for(int i=0;i<number_of_player;i++){
+ 	al_draw_filled_circle(player[i].x, player[i].y-1, player[i].radius, al_map_rgb(player[i].color0, player[i].color1, player[i].color2));
+	}
 	al_set_target_backbuffer(display);
 }
 
@@ -231,8 +233,8 @@ void rysuj_plansze()
 //	TU!TU!TU!TU!
 
 
-	string tekst="halo";
-	al_draw_text(font, al_map_rgb(255,255,255), 100, 100,ALLEGRO_ALIGN_CENTRE, tekst.c_str());
+//	string tekst="halo";
+//	al_draw_text(font, al_map_rgb(255,255,255), 100, 100,ALLEGRO_ALIGN_CENTRE, tekst.c_str());
 
 
 
@@ -254,16 +256,16 @@ void aktualizuj_plansze()
 		if(player[i].touch){continue;}
 		player[i].x=player[i].x+player[i].step*cos(player[i].degrees);
 		player[i].y=player[i].y+player[i].step*sin(player[i].degrees);
-		for(int a=0;a<player[i].radius_table;a++){
-			for(int e=0;e<player[i].radius_table;e++){
-				float f_iks=player[i].x-(player[i].radius_table/2.0)+a;
-				float f_igrek=player[i].y-(player[i].radius_table/2.0)+e;
+		for(int a=0;a<2*player[i].radius;a++){
+			for(int e=0;e<2*player[i].radius;e++){
+				float f_iks=player[i].x-player[i].radius+a;
+				float f_igrek=player[i].y-player[i].radius+e;
 				if (f_iks < 0) { f_iks = 0; }
 				if (f_igrek < 0) { f_igrek = 0; }
 				if (f_iks > xpl-1) { f_iks = xpl-1; }
 				if (f_igrek > ypl-1) { f_igrek = ypl-1; }
 
-				if((f_igrek-player[i].y)*(f_igrek-player[i].y)+(player[i].x-f_iks)*(player[i].x-f_iks)<player[i].radius_table*player[i].radius_table){
+				if((f_igrek-player[i].y)*(f_igrek-player[i].y)+(player[i].x-f_iks)*(player[i].x-f_iks)<player[i].radius*player[i].radius){
 					int iks = (int) f_iks;
 					int igrek = (int) f_igrek;
 
