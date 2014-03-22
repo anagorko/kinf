@@ -1,33 +1,32 @@
 #include<iostream>
-#include<string.h>
 using namespace std;
 int main()
 {
-int a,aw=0,bw=1,b;
+int a,m=0,b;
 string s;
-getline(cin,s);
+cin>>s;
+//getline(cin,s);
 char w[s.length()];
+for(int i=0;i<s.length();i++)
+	{
+	w[i]=';';
+	}
 a=0;
-b=s.length();
+b=s.length()-1;
 for(int i=0;i<s.length()/2;i++)
 	{
-	w[aw]=s[a];
-	w[bw]=s[b];
-	bw=bw+2;
+	w[m]=s[a];
+	m++;
+	w[m]=s[b];
+	m++;
 	b--;
-	aw=aw+2;
 	a++;
-	for(int i=0;i<s.length()+1;i++)
-		{
-		cout<<w[i];
-		}
-	cout<<"\n";
 	}
 if(s.length()%2==1)
 	{
-	w[s.length()]=s[(s.length())/2+1];
+	w[s.length()-1]=s[a];
 	}
-for(int i=0;i<s.length()+1;i++)
+for(int i=0;i<s.length();i++)
 	{
 	cout<<w[i];
 	}
