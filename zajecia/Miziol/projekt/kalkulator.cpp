@@ -84,6 +84,11 @@ for(int i=0;i<s.size();i++)
 		z='/';
 		t=false;
 		}
+	/*if(s[i]=='^')
+		{
+		z='^';
+		t=false;
+		}*/
 	}
 //obliczenia
 if(z=='+')
