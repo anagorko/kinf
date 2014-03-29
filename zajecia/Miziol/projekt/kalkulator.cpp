@@ -1,5 +1,6 @@
 #include<iostream>
 #include<string.h>
+#include<math.h>
 using namespace std;
 int main()
 {
@@ -84,11 +85,11 @@ for(int i=0;i<s.size();i++)
 		z='/';
 		t=false;
 		}
-	/*if(s[i]=='^')
+	if(s[i]=='^')
 		{
 		z='^';
 		t=false;
-		}*/
+		}
 	}
 //obliczenia
 if(z=='+')
@@ -106,6 +107,10 @@ if(z=='*')
 if(z=='/')
 	{
 	w=a/b;
+	}
+if(z=='^')
+	{
+	w=pow(a,b);
 	}
 //wypisywanie wyniku
 cout<<"="<<w<<"\n";
