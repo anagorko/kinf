@@ -4,6 +4,7 @@
 // (C) Kółko Informatyczne Szkoły Żagle
 //
 
+#include <iomanip>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_native_dialog.h>
@@ -14,6 +15,7 @@
 #include <unistd.h>
 #include <math.h>
 #include <time.h>
+#include <sstream>
 
 
 #include <iostream>
@@ -80,17 +82,17 @@ int init()
         return -1;
     }
 
-	//al_init_font_addon();
-	//al_init_ttf_addon();
+	al_init_font_addon();
+	al_init_ttf_addon();
 
-	//font=al_load_ttf_font("../patterns/FreeMono.ttf", 12,0);
+	font=al_load_ttf_font("FreeMono.ttf", 100,0);
 
-   //if (!font) {
-    //    cerr << "Nie mogę załadować czcionki FreeMono.ttf" << endl;
-   //     al_destroy_display(display);
-//        al_destroy_timer(timer);
-//        return -1;
-//    }
+   if (!font) {
+       cerr << "Nie mogę załadować czcionki FreeMono.ttf" << endl;
+        al_destroy_display(display);
+        al_destroy_timer(timer);
+        return -1;
+   }
 
   
     al_register_event_source(event_queue, al_get_display_event_source(display));  
@@ -116,6 +118,7 @@ int init()
 	int czas=0;
 	int stoper=clock();
 	int stoper1=0;
+	stringstream ss_time;
 
 //
 // Struktury danych
@@ -177,7 +180,7 @@ void clean()
 		player[i].x=5;
 		player[i].y=5;
 		player[i].radius=10;
-		player[i].step=0.1;
+		player[i].step=0.11;
 		player[i].space=420;
 		player[i].spacetime=100;
 		player[i].alfa=0.5;
@@ -233,9 +236,11 @@ void rysuj_plansze()
 //	TU!TU!TU!TU!
 
 
-//	string tekst="halo";
-//	al_draw_text(font, al_map_rgb(255,255,255), 100, 100,ALLEGRO_ALIGN_CENTRE, tekst.c_str());
-
+	ss_time << fixed << setprecision(1) << stoper/100000.0;
+	string tekst =  ss_time.str();
+	al_draw_text(font, al_map_rgb(255,255,255), 100, 100,ALLEGRO_ALIGN_CENTER, tekst.c_str());
+	ss_time.clear();
+	ss_time.str("");
 
 
 //	TU!TU!TU!TU!
@@ -250,7 +255,7 @@ void rysuj_plansze()
 void aktualizuj_plansze()
 {
 	czas++;
-	int stoper=clock();
+	stoper=clock();
 	if(stoper>=stoper1+1000){cout<<"ACHTUNG GODZINA "<<stoper/100000<<endl;stoper1=stoper;}
 	for(int i=0;i<number_of_player;i++){
 		if(player[i].touch){continue;}
