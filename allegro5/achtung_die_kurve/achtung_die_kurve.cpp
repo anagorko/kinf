@@ -37,6 +37,7 @@ ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 ALLEGRO_TIMER *timer = NULL;
 ALLEGRO_BITMAP * snakes = NULL;
 ALLEGRO_FONT * font = NULL;
+ALLEGRO_FONT * font1 = NULL;
 
 
 int init()
@@ -85,7 +86,8 @@ int init()
 	al_init_font_addon();
 	al_init_ttf_addon();
 
-	font=al_load_ttf_font("FreeMono.ttf", 100,0);
+	font=al_load_ttf_font("FreeMono.ttf", 60, 12);
+	font1=al_load_ttf_font("FreeMono.ttf", 30, 12);
 
    if (!font) {
        cerr << "Nie mogę załadować czcionki FreeMono.ttf" << endl;
@@ -221,31 +223,24 @@ void rysuj_plansze()
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_draw_rectangle(19, 19, 1101, 709, al_map_rgb(255, 255, 255), 0 );//x1,y1,x2,y2,kolor,szerokosc;
 	al_set_target_bitmap(snakes);
+//	WYSWIETLANIE WEZY
 	for(int i=0;i<number_of_player;i++){
-//		if(player[i].touch) {
-//    			al_draw_filled_circle(player[i].x-1, player[i].y-1, player[i].radius, al_map_rgb(155, 23, 0));
-//    		}else{
-    			al_draw_filled_circle(player[i].x, player[i].y-1, player[i].radius, al_map_rgb(player[i].color0, player[i].color1, player[i].color2));
-//    		}
+ 		al_draw_filled_circle(player[i].x, player[i].y-1, player[i].radius, al_map_rgb(player[i].color0, player[i].color1, player[i].color2));
 	}
 	al_set_target_backbuffer(display);
 	al_draw_bitmap(snakes, 20, 20, 0);
-//	printf(const ALLEGRO_FONT * 10, al_map_rgb(123,23,24), 110,110, 0); 
-//	al_draw_text(10,al_map_rgb(32, 23, 23), 1333, 23434, 0,"adadd");
-//###########################
-//	TU!TU!TU!TU!
-
-
+//	#################
+//	WYSWIETLANIE TIMERA
 	ss_time << fixed << setprecision(1) << stoper/100000.0;
 	string tekst =  ss_time.str();
-	al_draw_text(font, al_map_rgb(255,255,255), 100, 100,ALLEGRO_ALIGN_CENTER, tekst.c_str());
+	al_draw_text(font, al_map_rgb(255,255,255), 1200, 0,ALLEGRO_ALIGN_CENTER, tekst.c_str());
 	ss_time.clear();
+	tekst="sekund";
+	al_draw_text(font1, al_map_rgb(255,255,255), 1200, 70,ALLEGRO_ALIGN_CENTER, tekst.c_str());
 	ss_time.str("");
+//	###################
 
 
-//	TU!TU!TU!TU!
-//##########################
-//	al_draw_text(font, al_map_rgb(255,255,255), 500, 100, ALLEGRO_ALIGN_CENTRE, tekst.c_str());//allegro_align_centre
 }
 
 //
@@ -256,7 +251,7 @@ void aktualizuj_plansze()
 {
 	czas++;
 	stoper=clock();
-	if(stoper>=stoper1+1000){cout<<"ACHTUNG GODZINA "<<stoper/100000<<endl;stoper1=stoper;}
+	//if(stoper>=stoper1+1000){cout<<"ACHTUNG GODZINA "<<stoper/100000<<endl;stoper1=stoper;}
 	for(int i=0;i<number_of_player;i++){
 		if(player[i].touch){continue;}
 		player[i].x=player[i].x+player[i].step*cos(player[i].degrees);
