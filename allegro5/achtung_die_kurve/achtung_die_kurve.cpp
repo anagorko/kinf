@@ -36,6 +36,7 @@ ALLEGRO_DISPLAY *display = NULL;
 ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 ALLEGRO_TIMER *timer = NULL;
 ALLEGRO_BITMAP * snakes = NULL;
+ALLEGRO_BITMAP * quit_menu = NULL;
 ALLEGRO_FONT * font = NULL;
 ALLEGRO_FONT * font1 = NULL;
 
@@ -117,10 +118,14 @@ int init()
 	const int number_of_player=2;
 	const int xpl=1082;//1071
 	const int ypl=690;//688
+	//licznik
+
 	int czas=0;
 	int stoper=clock();
-	int stoper1=0;
+	int stoper_przerwa=0;
 	stringstream ss_time;
+	//klawisze
+	bool wcisnienty_escape=false;
 
 //
 // Struktury danych
@@ -157,6 +162,22 @@ int init()
 //
 //Czyszczenie
 //
+void menu_quit()
+{
+	cout<<"jestem w quit_menu\n";
+	al_draw_bitmap(quit_menu, 0, 0, 0);
+	al_flip_display();
+	while(true){
+		cout<<"wszedle, do pentli\n";
+		stoper_przerwa=clock();
+		if(key[ALLEGRO_KEY_ESCAPE]){
+			wcisnienty_escape=true;
+		}else if(wcisnienty_escape=true){
+			wcisnienty_escape=false;
+			break;
+		}
+	}
+}
 void clean()
 {
 	srandom(time(NULL)+getpid());
@@ -179,15 +200,16 @@ void clean()
 		}
 	}
 	for(int i=0;i<number_of_player;i++){
-		player[i].x=5;
-		player[i].y=5;
-		player[i].radius=10;
-		player[i].step=0.11;
-		player[i].space=420;
-		player[i].spacetime=100;
-		player[i].alfa=0.5;
-		player[i].degrees=0;
+		player[i].x=5;//pozycja x;
+		player[i].y=5;//pozycja y;
+		player[i].radius=10;//promien weza
+		player[i].step=0.11;//dlugosc kroku weza
+		player[i].space=420;//czas ponizej ktorego jest naliczana kolizja
+		player[i].spacetime=100;//co jaki czas oczytuje czy klawisz jedt wcisnienty
+		player[i].alfa=0.5;//wrazliwosc skrecania
+		player[i].degrees=0;//kierunek poczatkowy gracza
 		player[i].touch=false;
+		player[i].lastczas=0;//czas ostatniego wcisniencia klawisza
 		while(player[i].x<=20+player[i].radius || player[i].y<=20+player[i].radius){
 			player[i].x=random()%1072-2*player[i].radius;
 			player[i].y=random()%679-2*player[i].radius;
@@ -206,11 +228,15 @@ void clean()
 		}
 	}
 	snakes = al_create_bitmap(1080,687);
+	quit_menu = al_create_bitmap(1366,768);
 	al_set_target_bitmap(snakes);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
 	for(int i=0;i<number_of_player;i++){
  	al_draw_filled_circle(player[i].x, player[i].y-1, player[i].radius, al_map_rgb(player[i].color0, player[i].color1, player[i].color2));
 	}
+	al_set_target_backbuffer(display);
+	al_set_target_bitmap(quit_menu);
+	al_clear_to_color(al_map_rgba(0, 0, 0, 200));
 	al_set_target_backbuffer(display);
 }
 
@@ -233,10 +259,14 @@ void rysuj_plansze()
 //	WYSWIETLANIE TIMERA
 	ss_time << fixed << setprecision(1) << stoper/100000.0;
 	string tekst =  ss_time.str();
-	al_draw_text(font, al_map_rgb(255,255,255), 1200, 0,ALLEGRO_ALIGN_CENTER, tekst.c_str());
+	int przesuniencie_timera=0;
+	if(tekst.length()==4){przesuniencie_timera=15;}
+	if(tekst.length()==5){przesuniencie_timera=35;}
+	if(tekst.length()==6){przesuniencie_timera=50;}
+	al_draw_text(font, al_map_rgb(255,255,255), 1180-przesuniencie_timera, 0,0, tekst.c_str());
 	ss_time.clear();
 	tekst="sekund";
-	al_draw_text(font1, al_map_rgb(255,255,255), 1200, 70,ALLEGRO_ALIGN_CENTER, tekst.c_str());
+	al_draw_text(font1, al_map_rgb(255,255,255), 1180, 70,0, tekst.c_str());
 	ss_time.str("");
 //	###################
 
@@ -250,8 +280,7 @@ void rysuj_plansze()
 void aktualizuj_plansze()
 {
 	czas++;
-	stoper=clock();
-	//if(stoper>=stoper1+1000){cout<<"ACHTUNG GODZINA "<<stoper/100000<<endl;stoper1=stoper;}
+	stoper=clock()-stoper_przerwa;
 	for(int i=0;i<number_of_player;i++){
 		if(player[i].touch){continue;}
 		player[i].x=player[i].x+player[i].step*cos(player[i].degrees);
@@ -322,6 +351,7 @@ void co_robia_gracze()
                 player[1].degrees=player[1].degrees+player[1].alfa;
                 player[1].lastczas=czas;
 		}
+	
 	}
 
 }
@@ -363,7 +393,7 @@ int main(int argc, char ** argv)
         } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
             key[ev.keyboard.keycode] = false ;
 
-            if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+            if (ev.keyboard.keycode == ALLEGRO_KEY_Q) {
                 wyjdz = true;
             }
         }
