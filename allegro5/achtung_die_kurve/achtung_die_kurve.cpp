@@ -1,8 +1,23 @@
 //
 // Achtung die kurve
 // zrobiony przy pomocy szablonu gry w Allegro 5.
-// (C) Kółko Informatyczne Szkoły Żagle
+// (C) Kółko Informatyczne Szkoły Żagle 
 //
+/*                                                           _____________
+                                                             \  __________\ 
+       ______   ___    ___                                   \\ \_________I
+      /\  _  \ /\_ \  /\_ \                                   \\ \_________
+      \ \ \L\ \\//\ \ \//\ \      __     __   _ __   ___       \\_________ \
+       \ \  __ \ \ \ \  \ \ \   /'__`\ /'_ `\/\`'__\/ __`\      \/_______/\ \
+        \ \ \/\ \ \_\ \_ \_\ \_/\  __//\ \L\ \ \ \//\ \L\ \       _______\_\ \
+         \ \_\ \_\/\____\/\____\ \____\ \____ \ \_\\ \____/      /\___________\
+          \/_/\/_/\/____/\/____/\/____/\/___L\ \/_/ \/___/       \/___________/ 
+                                         /\____/
+                                         \_/__/
+     New mouse API.
+     By Peter Wang. EDITED by Jan Łukomski
+     See readme.txt for copyright information.
+*/
 
 #include <iomanip>
 #include <allegro5/allegro.h>
@@ -36,7 +51,7 @@ ALLEGRO_DISPLAY *display = NULL;
 ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 ALLEGRO_TIMER *timer = NULL;
 ALLEGRO_BITMAP * snakes = NULL;
-ALLEGRO_BITMAP * quit_menu = NULL;
+ALLEGRO_BITMAP * pause_menu = NULL;
 ALLEGRO_FONT * font = NULL;
 ALLEGRO_FONT * font1 = NULL;
 
@@ -121,7 +136,8 @@ int init()
 	//licznik
 
 	int czas=0;
-	int stoper=clock();
+	float stoper=clock();
+	int stoper_poczatek_przerwy=0;
 	int stoper_przerwa=0;
 	stringstream ss_time;
 	//klawisze
@@ -158,25 +174,36 @@ int init()
 //
 	bool przegrales=false;
     bool dotyka=false;
+    bool wyjdz = false;
+    int cursor_x;
+    int cursor_y;
     
 //
 //Czyszczenie
 //
 void menu_quit()
 {
-	cout<<"jestem w quit_menu\n";
-	al_draw_bitmap(quit_menu, 0, 0, 0);
+	ALLEGRO_EVENT ev;
+	al_draw_bitmap(pause_menu, 0, 0, 0);
 	al_flip_display();
+	stoper_poczatek_przerwy=clock();
 	while(true){
-		cout<<"wszedle, do pentli\n";
-		stoper_przerwa=clock();
-		if(key[ALLEGRO_KEY_ESCAPE]){
-			wcisnienty_escape=true;
-		}else if(wcisnienty_escape=true){
-			wcisnienty_escape=false;
-			break;
-		}
+		al_wait_for_event(event_queue, &ev);
+		if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+            key[ev.keyboard.keycode] = true;
+        } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
+            key[ev.keyboard.keycode] = false ;
+
+            if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+                break;
+            }
+            if (ev.keyboard.keycode == ALLEGRO_KEY_Q) {
+                wyjdz = true;
+                break;
+            }
+        }
 	}
+	stoper_przerwa=stoper_przerwa+(clock()-stoper_poczatek_przerwy)/100000;
 }
 void clean()
 {
@@ -202,7 +229,7 @@ void clean()
 	for(int i=0;i<number_of_player;i++){
 		player[i].x=5;//pozycja x;
 		player[i].y=5;//pozycja y;
-		player[i].radius=10;//promien weza
+		player[i].radius=5;//promien weza
 		player[i].step=0.11;//dlugosc kroku weza
 		player[i].space=420;//czas ponizej ktorego jest naliczana kolizja
 		player[i].spacetime=100;//co jaki czas oczytuje czy klawisz jedt wcisnienty
@@ -228,14 +255,14 @@ void clean()
 		}
 	}
 	snakes = al_create_bitmap(1080,687);
-	quit_menu = al_create_bitmap(1366,768);
+	pause_menu = al_create_bitmap(1366,768);
 	al_set_target_bitmap(snakes);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
 	for(int i=0;i<number_of_player;i++){
  	al_draw_filled_circle(player[i].x, player[i].y-1, player[i].radius, al_map_rgb(player[i].color0, player[i].color1, player[i].color2));
 	}
 	al_set_target_backbuffer(display);
-	al_set_target_bitmap(quit_menu);
+	al_set_target_bitmap(pause_menu);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 200));
 	al_set_target_backbuffer(display);
 }
@@ -257,7 +284,7 @@ void rysuj_plansze()
 	al_draw_bitmap(snakes, 20, 20, 0);
 //	#################
 //	WYSWIETLANIE TIMERA
-	ss_time << fixed << setprecision(1) << stoper/100000.0;
+	ss_time << fixed << setprecision(1) << stoper;
 	string tekst =  ss_time.str();
 	int przesuniencie_timera=0;
 	if(tekst.length()==4){przesuniencie_timera=15;}
@@ -280,7 +307,7 @@ void rysuj_plansze()
 void aktualizuj_plansze()
 {
 	czas++;
-	stoper=clock()-stoper_przerwa;
+	stoper=(clock()/100000.0)-stoper_przerwa;
 	for(int i=0;i<number_of_player;i++){
 		if(player[i].touch){continue;}
 		player[i].x=player[i].x+player[i].step*cos(player[i].degrees);
@@ -366,7 +393,6 @@ int main(int argc, char ** argv)
     }
 
     bool przerysuj = true;
-    bool wyjdz = false;
 
 	clean();
     //
@@ -395,6 +421,9 @@ int main(int argc, char ** argv)
 
             if (ev.keyboard.keycode == ALLEGRO_KEY_Q) {
                 wyjdz = true;
+            }
+            if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
+            	menu_quit();
             }
         }
 
