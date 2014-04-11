@@ -4,7 +4,6 @@ using namespace std;
 int main()
 {
 int h;
-cout<<"podaj wysokość i szerokość płóz helikoptera: \n";
 cin>> h;
 	for(int i=0; i<h; i++)
 	{
