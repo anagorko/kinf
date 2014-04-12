@@ -1,6 +1,6 @@
 // (C) Benedykt Kula
 
-#include "../kinf/network/websockets/client.h" // ścierzka może uledz zmnie
+#include "../../network/websockets/client.h"
 
 #include <sstream>
 #include <vector>
@@ -726,7 +726,7 @@ void miejsce::wykryj_uklad() {
     }
     sort (kombo.begin(), kombo.end(), wg_kolor);
 
-    // Wlasciwe wykrycie kart
+    // Wykrycie układu
     if (czy_poker) {
         uklad.push_back(8);
         uklad.push_back(k[strit_start].liczba);
