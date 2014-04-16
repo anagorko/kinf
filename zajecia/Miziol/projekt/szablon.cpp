@@ -30,6 +30,9 @@ bool pressed_keys[ALLEGRO_KEY_MAX];
 //
 
 int a=0,b=0,w;
+char z;
+bool nl=true;
+bool wyjdz = false;
 
 //
 // Rysowanie planszy
@@ -97,6 +100,31 @@ void co_robia_gracze()
 	if(pressed_keys[ALLEGRO_KEY_PAD_9]||pressed_keys[ALLEGRO_KEY_9])
 		{
 		a=a*10+9;
+		}
+	if(pressed_keys[ALLEGRO_KEY_PAD_ASTERISK]/*||pressed_keys[ALLEGRO_KEY_9]*/)
+		{
+		nl=false;
+		z='*';
+		}
+	if(pressed_keys[ALLEGRO_KEY_PAD_SLASH]/*||pressed_keys[ALLEGRO_KEY_9]*/)
+		{
+		nl=false;
+		z='/';
+		}
+	if(pressed_keys[ALLEGRO_KEY_PAD_PLUS]/*||pressed_keys[ALLEGRO_KEY_9]*/)
+		{
+		nl=false;
+		z='+';
+		}
+	if(pressed_keys[ALLEGRO_KEY_PAD_MINUS]/*||pressed_keys[ALLEGRO_KEY_9]*/)
+		{
+		nl=false;
+		z='-';
+		}
+	if(pressed_keys[ALLEGRO_KEY_PAD_ENTER]/*||pressed_keys[ALLEGRO_KEY_9]*/)
+		{
+		wyjdz=true;
+		return;
 		}
 
 cerr<<a<<"\n";
@@ -177,7 +205,6 @@ int main(int argc, char ** argv)
     }
  
     bool przerysuj = true;
-    bool wyjdz = false;  
 
     //
     // Event loop - główna pętla programu
@@ -216,6 +243,23 @@ int main(int argc, char ** argv)
             al_flip_display();
          }    
     }
+
+if(z=='+')
+	{
+	cerr<<"="<<a+b<<"\n";
+	}
+if(z=='/')
+	{
+	cerr<<"="<<a/b<<"\n";
+	}
+if(z=='-')
+	{
+	cerr<<"="<<a-b<<"\n";
+	}
+if(z=='*')
+	{
+	cerr<<"="<<a*b<<"\n";
+	}
 
     return 0;
 }
