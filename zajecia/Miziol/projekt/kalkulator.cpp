@@ -65,38 +65,10 @@ for(int i=0;i<s.size();i++)
 		if(t==true){a=a*10+9;}
 		if(t==false){b=b*10+9;}
 		}
-	if(s[i]=='+')
-		{
-		z='+';
-		t=false;
-		}
-	if(s[i]=='-')
-		{
-		z='-';
-		t=false;
-		}
-	if(s[i]=='*')
-		{
-		z='*';
-		t=false;
-		}
-	if(s[i]=='/')
-		{
-		z='/';
-		t=false;
-		}
-	if(s[i]=='^')
-		{
-		z='^';
-		t=false;
-		}
-	if(s[i]=='v')
-		{
-		z='v';
-		t=false;
-		}
 	if(s[i]=='.'||s[i]==',')
 		{
+		i++;
+		r=0;
 		for( ; ; )
 			{
 			if(s[i]=='0')
@@ -147,12 +119,46 @@ for(int i=0;i<s.size();i++)
 			}
 		r2=r;
 		l=r2.size();
-cout<<l<<"\n";
 		r=r/(10.00*l);
-cout<<r<<"\n";
 		a=a+r;
 		i++;
 		}
+	if(s[i]=='+')
+		{
+		z='+';
+		t=false;
+		}
+	if(s[i]=='-')
+		{
+		z='-';
+		t=false;
+		}
+	if(s[i]=='*')
+		{
+		z='*';
+		t=false;
+		}
+	if(s[i]=='/')
+		{
+		z='/';
+		t=false;
+		}
+	if(s[i]=='^')
+		{
+		z='^';
+		t=false;
+		}
+	if(s[i]=='v')
+		{
+		z='v';
+		t=false;
+		}
+	if(s[i]=='!')
+		{
+		z='!';
+		t=false;
+		}
+
 	}
 //koniec wczytywania
 //obliczenia
@@ -183,6 +189,14 @@ if(z=='v'&&a==0)
 if(z=='v'&&a!=0)
 	{
 	w=pow(b,(1/a));
+	}
+if(z=='!'&&a>=1)
+	{
+	w=1;
+	for(int i=1;i<=a;i++)
+		{
+		w=w*i;
+		}
 	}
 
 //wypisywanie wyniku
