@@ -18,7 +18,7 @@
 
 // (C) Benedykt Kula
 
-#include "../kinf/network/websockets/client.h" // ścierzka może uledz zmianie!
+#include "../../network/websockets/client.h"
 
 #include <sstream>
 #include <vector>
@@ -834,7 +834,7 @@ public:
 
 suwak_przebijania suwak;
 
-class okno_czatu {
+class okno_czatu { // klasa do dopracowania
 
     string txt;
 
