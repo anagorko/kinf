@@ -8,7 +8,7 @@ int main ()
 	cin >> i;
 	for (int n=0; n<i; n++)
 	{
-		if ( i== i/2)
+		if ( n == (i-1) /2 )
 		{
 			for (int j=0; j<i; j++)
 			{
