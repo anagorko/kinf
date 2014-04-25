@@ -55,6 +55,7 @@ ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 ALLEGRO_TIMER *timer = NULL;
 ALLEGRO_BITMAP * snakes = NULL;
 ALLEGRO_BITMAP * pause_menu = NULL;
+ALLEGRO_BITMAP * menu0_bitmap = NULL;
 ALLEGRO_FONT * font = NULL;
 ALLEGRO_FONT * font1 = NULL;
 
@@ -140,10 +141,9 @@ int init()
 	//licznik
 
 	int czas=0;
-	float stoper=clock();
-	int stoper_poczatek_przerwy=0;
-	int stoper_przerwa=0;
 	stringstream ss_time;
+
+	bool by_the_network=false;
 	
 //
 // Struktury danych
@@ -183,13 +183,49 @@ int init()
 //
 //Czyszczenie
 //
+void menu0(){
+	
+	while(true)
+    {
+        ALLEGRO_EVENT ev;
+        al_wait_for_event(event_queue, &ev);
+
+        if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+            key[ev.keyboard.keycode] = true;
+        } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
+            key[ev.keyboard.keycode] = false ;
+
+            if (ev.keyboard.keycode == ALLEGRO_KEY_Q) {
+                wyjdz=true;
+                break;
+            }
+            if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
+            	wyjdz=true;
+            	 break;
+            }
+            if (ev.keyboard.keycode == ALLEGRO_KEY_1){
+            	break;
+
+            }
+            if (ev.keyboard.keycode == ALLEGRO_KEY_2){
+            	by_the_network=true;
+            	break;
+            }
+        }
+
+        if(al_is_event_queue_empty(event_queue)) {
+            
+            al_flip_display();
+         }
+	}
+	al_start_timer(timer);
+}
 void menu_quit()
 {
 	ALLEGRO_EVENT ev;
 	al_draw_bitmap(pause_menu, 0, 0, 0);
 	al_flip_display();
 	al_stop_timer(timer);
-	stoper_poczatek_przerwy=clock();
 	while(true){
 		al_wait_for_event(event_queue, &ev);
 		if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
@@ -206,16 +242,12 @@ void menu_quit()
             }
         }
 	}
-	stoper_przerwa=stoper_przerwa+(clock()-stoper_poczatek_przerwy)/100000;
+	al_start_timer(timer);
 }
-void clean()
+	void clean()
 {
-	//usleep(50);
 	system ("../../network/websockets/./server&");
-	//system ("ps -x | pgrep server");
-	//int zabijanie_serwera;
-	//cin>>zabijanie_serwera;
-	//cout << "zabijanie serwera = "<<zabijanie_serwera<<"\n";
+	system ("i=`ps a | pgrep server`; kill $i");
 	srandom(time(NULL)+getpid());
 	for(int i=1;i<xpl;i++){
 		for(int a=1;a<ypl;a++){
@@ -264,7 +296,8 @@ void clean()
 		}
 	}
 	snakes = al_create_bitmap(1080,687);
-	pause_menu = al_create_bitmap(1366,768);
+	pause_menu = al_create_bitmap(screen_w,screen_h);
+	menu0_bitmap = al_create_bitmap(screen_w,screen_h);
 	al_set_target_bitmap(snakes);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
 	for(int i=0;i<number_of_player;i++){
@@ -274,7 +307,9 @@ void clean()
 	al_set_target_bitmap(pause_menu);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 200));
 	al_set_target_backbuffer(display);
-	al_start_timer(timer);
+	al_set_target_bitmap(menu0_bitmap);
+	al_clear_to_color(al_map_rgb(0, 0, 0));
+	al_set_target_backbuffer(display);
 }
 
 //
@@ -294,6 +329,7 @@ void rysuj_plansze()
 	al_draw_bitmap(snakes, 20, 20, 0);
 //	#################
 //	WYSWIETLANIE TIMERA
+	float stoper=clock()/100000.0;
 	ss_time << fixed << setprecision(1) << stoper;
 	string tekst =  ss_time.str();
 	int przesuniencie_timera=0;
@@ -317,7 +353,6 @@ void rysuj_plansze()
 void aktualizuj_plansze()
 {
 	czas++;
-	stoper=(clock()/100000.0)-stoper_przerwa;
 	for(int i=0;i<number_of_player;i++){
 		if(player[i].touch){continue;}
 		player[i].x=player[i].x+player[i].step*cos(player[i].degrees);
@@ -404,8 +439,10 @@ int main(int argc, char ** argv)
     }
 
     bool przerysuj = true;
-
+    
 	clean();
+
+	menu0();
     
    	//
     // Event loop - główna pętla programu
