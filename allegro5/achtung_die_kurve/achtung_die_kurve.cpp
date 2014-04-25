@@ -32,6 +32,9 @@
 #include <time.h>
 #include <sstream>
 
+#include <stdio.h>
+#include <string.h>
+
 
 #include <iostream>
 using namespace std;
@@ -44,7 +47,7 @@ const int screen_h = 768;   // wysokość ekranu (screen height)
  * Kod poniżej jest w miarę generyczny  *
  ****************************************/
  
-const float FPS = 1100; //60      // Frames Per Second
+const float FPS = 1000; //60      // Frames Per Second
 bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 
 ALLEGRO_DISPLAY *display = NULL;
@@ -120,6 +123,7 @@ int init()
   
     al_flip_display();  
     al_start_timer(timer);
+ 
 
     return 0;
 }
@@ -186,6 +190,7 @@ void menu_quit()
 	ALLEGRO_EVENT ev;
 	al_draw_bitmap(pause_menu, 0, 0, 0);
 	al_flip_display();
+	al_stop_timer(timer);
 	stoper_poczatek_przerwy=clock();
 	while(true){
 		al_wait_for_event(event_queue, &ev);
@@ -207,6 +212,11 @@ void menu_quit()
 }
 void clean()
 {
+	//system ("../../network/websockets/./server&");
+	//system ("ps -x | pgrep server");
+	//int zabijanie_serwera;
+	//cin>>zabijanie_serwera;
+	//cout << "zabijanie serwera = "<<zabijanie_serwera<<"\n";
 	srandom(time(NULL)+getpid());
 	for(int i=1;i<xpl;i++){
 		for(int a=1;a<ypl;a++){
@@ -230,7 +240,7 @@ void clean()
 		player[i].x=5;//pozycja x;
 		player[i].y=5;//pozycja y;
 		player[i].radius=5;//promien weza
-		player[i].step=0.11;//dlugosc kroku weza
+		player[i].step=0.10;//dlugosc kroku weza
 		player[i].space=420;//czas ponizej ktorego jest naliczana kolizja
 		player[i].spacetime=100;//co jaki czas oczytuje czy klawisz jedt wcisnienty
 		player[i].alfa=0.5;//wrazliwosc skrecania
@@ -387,6 +397,8 @@ void co_robia_gracze()
 
 int main(int argc, char ** argv)
 {
+   
+ 	  
     if (init() != 0) {
         cerr << "Inicjalizacja nie powiodła się." << endl;
         return -1;
@@ -395,7 +407,8 @@ int main(int argc, char ** argv)
     bool przerysuj = true;
 
 	clean();
-    //
+    
+   	//
     // Event loop - główna pętla programu
     //
         
@@ -434,8 +447,7 @@ int main(int argc, char ** argv)
 
             al_flip_display();
          }
-	if(przegrales){cout<<"YOU LOST BABY ON X= "<<player[0].x<<" and Y= "<<player[0].y<<endl;}
-    }
+	}
 
     return 0;
 }
