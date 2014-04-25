@@ -123,7 +123,7 @@ int init()
   
     al_flip_display();  
     al_start_timer(timer);
- 
+ 	al_stop_timer(timer);
 
     return 0;
 }
@@ -144,9 +144,7 @@ int init()
 	int stoper_poczatek_przerwy=0;
 	int stoper_przerwa=0;
 	stringstream ss_time;
-	//klawisze
-	bool wcisnienty_escape=false;
-
+	
 //
 // Struktury danych
 //
@@ -212,7 +210,8 @@ void menu_quit()
 }
 void clean()
 {
-	//system ("../../network/websockets/./server&");
+	//usleep(50);
+	system ("../../network/websockets/./server&");
 	//system ("ps -x | pgrep server");
 	//int zabijanie_serwera;
 	//cin>>zabijanie_serwera;
@@ -275,6 +274,7 @@ void clean()
 	al_set_target_bitmap(pause_menu);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 200));
 	al_set_target_backbuffer(display);
+	al_start_timer(timer);
 }
 
 //
@@ -398,8 +398,7 @@ void co_robia_gracze()
 int main(int argc, char ** argv)
 {
    
- 	  
-    if (init() != 0) {
+ 	if (init() != 0) {
         cerr << "Inicjalizacja nie powiodła się." << endl;
         return -1;
     }
