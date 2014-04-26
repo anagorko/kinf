@@ -35,6 +35,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "run.cpp"
 
 #include <iostream>
 using namespace std;
@@ -56,6 +57,7 @@ ALLEGRO_TIMER *timer = NULL;
 ALLEGRO_BITMAP * snakes = NULL;
 ALLEGRO_BITMAP * pause_menu = NULL;
 ALLEGRO_BITMAP * menu0_bitmap = NULL;
+ALLEGRO_BITMAP * gameroom_bitmap = NULL;
 ALLEGRO_FONT * font = NULL;
 ALLEGRO_FONT * font1 = NULL;
 
@@ -144,6 +146,7 @@ int init()
 	stringstream ss_time;
 
 	bool by_the_network=false;
+	bool stawiam_serwer=false;
 	
 //
 // Struktury danych
@@ -183,6 +186,54 @@ int init()
 //
 //Czyszczenie
 //
+void gameroom(){
+
+
+
+	al_draw_bitmap(gameroom_bitmap, 0, 0, 0);
+	al_flip_display();
+
+	bool przerysuj=false;
+	
+	while(true)
+    {
+        ALLEGRO_EVENT ev;
+        al_wait_for_event(event_queue, &ev);
+
+        if(ev.type == ALLEGRO_EVENT_TIMER){
+
+        	przerysuj = true;
+
+        } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+            key[ev.keyboard.keycode] = true;
+        } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
+            key[ev.keyboard.keycode] = false ;
+
+            if (ev.keyboard.keycode == ALLEGRO_KEY_Q) {
+                wyjdz=true;
+                break;
+            }
+            if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
+            	wyjdz=true;
+            	break;
+            }
+            if (ev.keyboard.keycode == ALLEGRO_KEY_1){
+            	break;
+
+            }
+            if (ev.keyboard.keycode == ALLEGRO_KEY_2){
+            	break;
+            }
+            if(przerysuj && al_is_event_queue_empty(event_queue)) {
+            	przerysuj = false;
+
+            	al_draw_bitmap(gameroom_bitmap, 0, 0, 0);
+
+            	al_flip_display();
+         	}
+        }
+	}
+}
 void menu0(){
 
 	al_draw_bitmap(menu0_bitmap, 0, 0, 0);
@@ -212,6 +263,8 @@ void menu0(){
             }
             if (ev.keyboard.keycode == ALLEGRO_KEY_2){
             	by_the_network=true;
+            	if(run_server()==1){stawiam_serwer=true;}
+            	gameroom();
             	break;
             }
         }
@@ -242,10 +295,11 @@ void menu_quit()
 	}
 	al_start_timer(timer);
 }
-	void clean()
+void clean()
 {
-	system ("../../network/websockets/./server&");
-	system ("i=`ps a | pgrep server`; kill $i");
+	
+	//system ("../../network/websockets/./server&");
+	//system ("i=`ps a | pgrep server`; kill $i");
 	srandom(time(NULL)+getpid());
 	for(int i=1;i<xpl;i++){
 		for(int a=1;a<ypl;a++){
@@ -296,6 +350,7 @@ void menu_quit()
 	snakes = al_create_bitmap(1080,687);
 	pause_menu = al_create_bitmap(screen_w,screen_h);
 	menu0_bitmap = al_create_bitmap(screen_w,screen_h);
+	gameroom_bitmap = al_create_bitmap(screen_w,screen_h);
 	al_set_target_bitmap(snakes);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
 	for(int i=0;i<number_of_player;i++){
@@ -308,8 +363,13 @@ void menu_quit()
 	al_set_target_bitmap(menu0_bitmap);
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	string tekst="Aby zagrać na komputerze, naciśnij '1'";
-	al_draw_text(font1, al_map_rgb(255,255,255), 100, 90,0, tekst.c_str());
+	al_draw_text(font1, al_map_rgb(255,255,255), 90, 100,0, tekst.c_str());
 	tekst="Aby zagrać po sieci, naciśnij '2'";
+	al_draw_text(font1, al_map_rgb(255,255,255), 100, 150,0, tekst.c_str());
+	al_set_target_backbuffer(display);
+	al_set_target_bitmap(gameroom_bitmap);
+	al_clear_to_color(al_map_rgb(0, 0, 0));
+	tekst="Gracze:";
 	al_draw_text(font1, al_map_rgb(255,255,255), 100, 150,0, tekst.c_str());
 	al_set_target_backbuffer(display);
 }
@@ -408,26 +468,27 @@ void aktualizuj_plansze()
 
 void co_robia_gracze()
 {
-	if(key[ALLEGRO_KEY_LEFT] && czas-player[0].lastczas>player[0].spacetime){
-	player[0].degrees=player[0].degrees-player[0].alfa;
-	player[0].lastczas=czas;
-	}
-	if(key[ALLEGRO_KEY_RIGHT] && czas-player[0].lastczas>player[0].spacetime){
-	player[0].degrees=player[0].degrees+player[0].alfa;
-	player[0].lastczas=czas;
-	}
-	if(number_of_player>=2){
-		if(key[ALLEGRO_KEY_Z] && czas-player[1].lastczas>player[1].spacetime){
-		player[1].degrees=player[1].degrees-player[1].alfa;
-		player[1].lastczas=czas;
+	if(!by_the_network){
+		if(key[ALLEGRO_KEY_LEFT] && czas-player[0].lastczas>player[0].spacetime){
+			player[0].degrees=player[0].degrees-player[0].alfa;
+			player[0].lastczas=czas;
 		}
-		if(key[ALLEGRO_KEY_X] && czas-player[1].lastczas>player[1].spacetime){
-                player[1].degrees=player[1].degrees+player[1].alfa;
-                player[1].lastczas=czas;
+		if(key[ALLEGRO_KEY_RIGHT] && czas-player[0].lastczas>player[0].spacetime){
+			player[0].degrees=player[0].degrees+player[0].alfa;
+			player[0].lastczas=czas;
 		}
+		if(number_of_player>=2){
+			if(key[ALLEGRO_KEY_Z] && czas-player[1].lastczas>player[1].spacetime){
+				player[1].degrees=player[1].degrees-player[1].alfa;
+				player[1].lastczas=czas;
+			}
+			if(key[ALLEGRO_KEY_X] && czas-player[1].lastczas>player[1].spacetime){
+    	            player[1].degrees=player[1].degrees+player[1].alfa;
+    	            player[1].lastczas=czas;
+			}
 	
+		}
 	}
-
 }
 
 
@@ -485,6 +546,10 @@ int main(int argc, char ** argv)
 
             al_flip_display();
          }
+	}
+	if(stawiam_serwer){
+		cout<<"zabijam serwer\n";
+		system ("i=`ps a | pgrep server`; kill $i");
 	}
 
     return 0;
