@@ -184,6 +184,9 @@ int init()
 //Czyszczenie
 //
 void menu0(){
+
+	al_draw_bitmap(menu0_bitmap, 0, 0, 0);
+	al_flip_display();
 	
 	while(true)
     {
@@ -212,11 +215,6 @@ void menu0(){
             	break;
             }
         }
-
-        if(al_is_event_queue_empty(event_queue)) {
-            
-            al_flip_display();
-         }
 	}
 	al_start_timer(timer);
 }
@@ -309,6 +307,10 @@ void menu_quit()
 	al_set_target_backbuffer(display);
 	al_set_target_bitmap(menu0_bitmap);
 	al_clear_to_color(al_map_rgb(0, 0, 0));
+	string tekst="Aby zagrać na komputerze, naciśnij '1'";
+	al_draw_text(font1, al_map_rgb(255,255,255), 100, 90,0, tekst.c_str());
+	tekst="Aby zagrać po sieci, naciśnij '2'";
+	al_draw_text(font1, al_map_rgb(255,255,255), 100, 150,0, tekst.c_str());
 	al_set_target_backbuffer(display);
 }
 
