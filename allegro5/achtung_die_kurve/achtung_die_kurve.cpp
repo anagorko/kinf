@@ -31,6 +31,7 @@
 #include <math.h>
 #include <time.h>
 #include <sstream>
+#include <string>
 
 #include <stdio.h>
 #include <string.h>
@@ -58,6 +59,7 @@ ALLEGRO_BITMAP * snakes = NULL;
 ALLEGRO_BITMAP * pause_menu = NULL;
 ALLEGRO_BITMAP * menu0_bitmap = NULL;
 ALLEGRO_BITMAP * gameroom_bitmap = NULL;
+ALLEGRO_BITMAP * gameroom_player_bitmap = NULL;
 ALLEGRO_FONT * font = NULL;
 ALLEGRO_FONT * font1 = NULL;
 
@@ -137,7 +139,8 @@ int init()
 //
 //kofiguracja gry
 //
-	const int number_of_player=2;
+ 	int number_of_player=2;
+	const int max_number_of_player=10;
 	const int xpl=1082;//1071
 	const int ypl=690;//688
 	//licznik
@@ -167,7 +170,7 @@ int init()
 		bool touch;
 		float spacetime;
 	};
-	type_of_player player[number_of_player];
+	type_of_player player[max_number_of_player];
 	struct type{
 		int nrplayer;
 		int time;
@@ -186,15 +189,45 @@ int init()
 //
 //Czyszczenie
 //
+void nowy_gracz(){
+	number_of_player++;
+	stringstream ss;
+	ss << "number_of_player=" << number_of_player;
+	cout<<"number_of_player++\n";
+	send_packet(ss.str());
+	service_websockets();
+}
+
+
+
 void gameroom(){
 
 
 
+
+	int n = service_websockets();
+	
+		stringstream ss;
+		ss.str(""); ss.clear();
+	if(stawiam_serwer){
+		ss << "GRACZ 0";
+		cout<<"GRACZ 0\n";
+		send_packet(ss.str());
+		service_websockets();
+		number_of_player=1;
+	}else{
+		ss << "NOWY GRACZ";
+		cout<<"NOWY GRACZ\n";
+		send_packet(ss.str());
+		service_websockets();
+	}
+		
+
 	al_draw_bitmap(gameroom_bitmap, 0, 0, 0);
+	al_draw_bitmap(gameroom_player_bitmap, 500, 0, 0);
+
 	al_flip_display();
 
-	bool przerysuj=false;
-	
 	while(true)
     {
         ALLEGRO_EVENT ev;
@@ -202,7 +235,26 @@ void gameroom(){
 
         if(ev.type == ALLEGRO_EVENT_TIMER){
 
-        	przerysuj = true;
+        	al_draw_bitmap(gameroom_bitmap, 0, 0, 0);
+
+            al_flip_display();
+
+            string packet;
+
+            while(receive_packet(packet)){
+            	if(stawiam_serwer && packet=="NOWY GRACZ"){
+            		cout<<"nowygracz\n";
+            		nowy_gracz();
+
+            	}
+            	if(packet.length()>=18 && packet.substr(0,17)=="number_of_player="){
+            		if(packet.length()==18){
+            			number_of_player=(int)packet[17]-'0';
+            		}else{
+            			number_of_player=((int)packet[17]-'0')*10+((int)packet[18]-'0');
+            		}
+            	}
+            }
 
         } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
             key[ev.keyboard.keycode] = true;
@@ -222,14 +274,7 @@ void gameroom(){
 
             }
             if (ev.keyboard.keycode == ALLEGRO_KEY_2){
-            	break;
-            }
-            if(przerysuj && al_is_event_queue_empty(event_queue)) {
-            	przerysuj = false;
-
-            	al_draw_bitmap(gameroom_bitmap, 0, 0, 0);
-
-            	al_flip_display();
+            	break;         	
          	}
         }
 	}
@@ -319,7 +364,7 @@ void clean()
 		board[xpl-1][i].time=-100;
 		}
 	}
-	for(int i=0;i<number_of_player;i++){
+	for(int i=0;i<max_number_of_player;i++){
 		player[i].x=5;//pozycja x;
 		player[i].y=5;//pozycja y;
 		player[i].radius=5;//promien weza
@@ -351,9 +396,10 @@ void clean()
 	pause_menu = al_create_bitmap(screen_w,screen_h);
 	menu0_bitmap = al_create_bitmap(screen_w,screen_h);
 	gameroom_bitmap = al_create_bitmap(screen_w,screen_h);
+	gameroom_player_bitmap = al_create_bitmap(1000, 768);
 	al_set_target_bitmap(snakes);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
-	for(int i=0;i<number_of_player;i++){
+	for(int i=0;i<max_number_of_player;i++){
  	al_draw_filled_circle(player[i].x, player[i].y-1, player[i].radius, al_map_rgb(player[i].color0, player[i].color1, player[i].color2));
 	}
 	al_set_target_backbuffer(display);
@@ -372,7 +418,13 @@ void clean()
 	tekst="Gracze:";
 	al_draw_text(font1, al_map_rgb(255,255,255), 100, 150,0, tekst.c_str());
 	al_set_target_backbuffer(display);
+	al_set_target_bitmap(gameroom_player_bitmap);
+	al_clear_to_color(al_map_rgb(0, 0, 0));
+	tekst="GRACZ0";
+	al_draw_text(font1, al_map_rgb(255,255,255), 100, 150,0, tekst.c_str());
+	al_set_target_backbuffer(display);
 }
+
 
 //
 // Rysowanie planszy
