@@ -205,7 +205,6 @@ void gameroom(){
 
 
 
-	int n = service_websockets();
 	
 		stringstream ss;
 		ss.str(""); ss.clear();
@@ -230,6 +229,8 @@ void gameroom(){
 
 	while(true)
     {
+    	service_websockets();
+    	
         ALLEGRO_EVENT ev;
         al_wait_for_event(event_queue, &ev);
 
