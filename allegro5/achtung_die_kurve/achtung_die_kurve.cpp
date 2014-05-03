@@ -128,7 +128,7 @@ int init()
   
     al_flip_display();  
     al_start_timer(timer);
- 	al_stop_timer(timer);
+ 	
 
     return 0;
 }
@@ -197,14 +197,14 @@ void skrecanie(string packet){
 	service_websockets();
 	stringstream ss;
 	ss.str("");ss.clear();
-	if(packet.substr(0,13)=="SKRECAM_LEWO_" && (int)packet[14]-'0'!=nr_gracza){
-		int nr_gr=(int)packet[14]-'0';
+	if(packet.substr(0,13)=="SKRECAM_LEWO_" && (int)packet[13]-'0'!=nr_gracza){
+		int nr_gr=(int)packet[13]-'0';
 		if(czas-player[nr_gr].lastczas>player[nr_gr].spacetime){
 			player[nr_gr].degrees=player[nr_gr].degrees-player[nr_gr].alfa;
 			player[nr_gr].lastczas=czas;
 		}
-	}else if(packet.substr(0,14)=="SKRECAM_PRAWO_" && (int)packet[15]-'0'!=nr_gracza){
-		int nr_gr=(int)packet[15]-'0';
+	}else if(packet.substr(0,14)=="SKRECAM_PRAWO_" && (int)packet[14]-'0'!=nr_gracza){
+		int nr_gr=(int)packet[14]-'0';
 		if(czas-player[nr_gr].lastczas>player[nr_gr].spacetime){
 			player[nr_gr].degrees=player[nr_gr].degrees+player[nr_gr].alfa;
 			player[nr_gr].lastczas=czas;
@@ -229,16 +229,16 @@ void odbieranie_paczek(){
 		cout<<"zlapalem paczke: "<<packet<<endl;
 		int mnozenie_dziesiatek=1;
 		if(packet.substr(0,17)=="POZYCJA_X_GRACZA_"){
-			player[(int)packet[19]-'0'].x=0;
-			for(int i=packet.length()-1;i>19;i--){
-				player[(int)packet[19]-'0'].x=player[(int)packet[19]-'0'].x+((int)packet[i]-'0')*mnozenie_dziesiatek;
+			player[(int)packet[17]-'0'].x=0;
+			for(int i=packet.length()-1;i>18;i--){
+				player[(int)packet[17]-'0'].x=player[(int)packet[17]-'0'].x+((int)packet[i]-'0')*mnozenie_dziesiatek;
 				mnozenie_dziesiatek=mnozenie_dziesiatek*10;
 			}				
 			ile_odebralem_pozycji_graczy++;
 		}else if(packet.substr(0,17)=="POZYCJA_Y_GRACZA_"){
-			player[(int)packet[19]-'0'].y=0;
-			for(int i=packet.length()-1;i>19;i--){
-				player[(int)packet[19]-'0'].y=player[(int)packet[19]-'0'].y+((int)packet[i]-'0')*mnozenie_dziesiatek;
+			player[(int)packet[17]-'0'].y=0;
+			for(int i=packet.length()-1;i>18;i--){
+				player[(int)packet[17]-'0'].y=player[(int)packet[17]-'0'].y+((int)packet[i]-'0')*mnozenie_dziesiatek;
 				mnozenie_dziesiatek=mnozenie_dziesiatek*10;
 			}
 			ile_odebralem_pozycji_graczy++;
@@ -385,16 +385,12 @@ void clean1(){
 void gameroom(){
 
 
-
-		
-	
 		stringstream ss;
 		ss.str(""); ss.clear();
 	if(stawiam_serwer){
 		ss << "GRACZ 0";
 		cout<<"GRACZ 0\n";
 		send_packet(ss.str());
-		//cout<<"";///////////PO CO to muszi byc!!!!!!	 
 		service_websockets();
 		number_of_player=1;
 		nr_gracza=0;
@@ -411,10 +407,8 @@ void gameroom(){
 
 	al_flip_display();
 	
-
 	while(true)
-    {
-   	
+    {  	
         ALLEGRO_EVENT ev;
         al_wait_for_event(event_queue, &ev);
 
@@ -426,6 +420,8 @@ void gameroom(){
 
      	    odbieranie_paczek();
      	    if(start){
+     	    	start=false;
+     	    	cout<<"zaczynamy"<<endl;
      	    	break;
      	    }
 
@@ -666,25 +662,15 @@ void co_robia_gracze()
 	service_websockets();
 	stringstream ss;
 	ss.str("");ss.clear();
-	if(key[ALLEGRO_KEY_LEFT] && czas-player[0].lastczas>player[0].spacetime){
-		player[0].degrees=player[0].degrees-player[0].alfa;
-		player[0].lastczas=czas;
-		if(by_the_network){
-			ss << "SKRECAM_LEWO_"<<nr_gracza;
-			send_packet(ss.str());
-			service_websockets();
-		}
-	}
-	if(key[ALLEGRO_KEY_RIGHT] && czas-player[0].lastczas>player[0].spacetime){
-		player[0].degrees=player[0].degrees+player[0].alfa;
-		player[0].lastczas=czas;
-		if(by_the_network){
-			ss << "SKRECAM_PRAWO_"<<nr_gracza;
-			send_packet(ss.str());
-			service_websockets();
-		}
-	}
 	if(!by_the_network){
+		if(key[ALLEGRO_KEY_LEFT] && czas-player[0].lastczas>player[0].spacetime){
+			player[0].degrees=player[0].degrees-player[0].alfa;
+			player[0].lastczas=czas;
+		}
+		if(key[ALLEGRO_KEY_RIGHT] && czas-player[0].lastczas>player[0].spacetime){
+			player[0].degrees=player[0].degrees+player[0].alfa;
+			player[0].lastczas=czas;
+		}
 		if(number_of_player>=2){
 			if(key[ALLEGRO_KEY_Z] && czas-player[1].lastczas>player[1].spacetime){
 				player[1].degrees=player[1].degrees-player[1].alfa;
@@ -695,8 +681,17 @@ void co_robia_gracze()
     	            player[1].lastczas=czas;
 			}
 		}
-	}
-	if(by_the_network){
+	}else{
+		if(key[ALLEGRO_KEY_LEFT] && czas-player[0].lastczas>player[0].spacetime){
+			ss << "SKRECAM_LEWO_"<<nr_gracza;
+			send_packet(ss.str());
+			service_websockets();
+		}
+		if(key[ALLEGRO_KEY_RIGHT] && czas-player[0].lastczas>player[0].spacetime){
+			ss << "SKRECAM_PRAWO_"<<nr_gracza;
+			send_packet(ss.str());
+			service_websockets();
+		}
 		odbieranie_paczek();
 	}
 }
