@@ -42,8 +42,8 @@
 using namespace std;
 
 
-const int screen_w = 600;   // szerokość ekranu (screen width)
-const int screen_h = 768;   // wysokość ekranu (screen height)
+const int screen_w = 1366;   // szerokość ekranu (screen width)
+const int screen_h = 768;   //wysokość ekranu (screen height)
 
 /****************************************
  * Kod poniżej jest w miarę generyczny  *
@@ -197,18 +197,14 @@ void skrecanie(string packet){
 	service_websockets();
 	stringstream ss;
 	ss.str("");ss.clear();
-	if(packet.substr(0,13)=="SKRECAM_LEWO_" && (int)packet[13]-'0'!=nr_gracza){
+	if(packet.substr(0,13)=="SKRECAM_LEWO_"){
 		int nr_gr=(int)packet[13]-'0';
-		if(czas-player[nr_gr].lastczas>player[nr_gr].spacetime){
-			player[nr_gr].degrees=player[nr_gr].degrees-player[nr_gr].alfa;
-			player[nr_gr].lastczas=czas;
-		}
-	}else if(packet.substr(0,14)=="SKRECAM_PRAWO_" && (int)packet[14]-'0'!=nr_gracza){
+		player[nr_gr].degrees=player[nr_gr].degrees-player[nr_gr].alfa;
+		player[nr_gr].lastczas=czas;
+	}else if(packet.substr(0,14)=="SKRECAM_PRAWO_"){
 		int nr_gr=(int)packet[14]-'0';
-		if(czas-player[nr_gr].lastczas>player[nr_gr].spacetime){
-			player[nr_gr].degrees=player[nr_gr].degrees+player[nr_gr].alfa;
-			player[nr_gr].lastczas=czas;
-		}
+		player[nr_gr].degrees=player[nr_gr].degrees+player[nr_gr].alfa;
+		player[nr_gr].lastczas=czas;
 	}
 
 }
@@ -313,8 +309,8 @@ void clean1(){
 			player[i].radius=5;//promien weza
 			player[i].step=0.10;//dlugosc kroku weza
 			player[i].space=420;//czas ponizej ktorego jest naliczana kolizja
-			player[i].spacetime=100;//co jaki czas oczytuje czy klawisz jedt wcisnienty
-			player[i].alfa=0.5;//wrazliwosc skrecania
+			player[i].spacetime=10000;//co jaki czas oczytuje czy klawisz jedt wcisnienty
+			player[i].alfa=0.1;//wrazliwosc skrecania
 			player[i].degrees=0;//kierunek poczatkowy gracza
 			player[i].touch=false;
 			player[i].lastczas=0;//czas ostatniego wcisniencia klawisza
@@ -329,7 +325,7 @@ void clean1(){
 				player[i].color2=155;
 				break;
 			case 1:
-					player[i].color0=37;
+				player[i].color0=37;
 				player[i].color1=164;
 				player[i].color2=40;
 				break;
@@ -337,13 +333,11 @@ void clean1(){
 		}
 	}else{
 		for(int i=0;i<number_of_player;i++){
-			player[i].x=5;//pozycja x;
-			player[i].y=5;//pozycja y;
 			player[i].radius=5;//promien weza
 			player[i].step=0.10;//dlugosc kroku weza
 			player[i].space=420;//czas ponizej ktorego jest naliczana kolizja
-			player[i].spacetime=100;//co jaki czas oczytuje czy klawisz jedt wcisnienty
-			player[i].alfa=0.5;//wrazliwosc skrecania
+			player[i].spacetime=70;//co jaki czas oczytuje czy klawisz jedt wcisnienty
+			player[i].alfa=0.1;//wrazliwosc skrecania
 			player[i].degrees=0;//kierunek poczatkowy gracza
 			player[i].touch=false;
 			player[i].lastczas=0;//czas ostatniego wcisniencia klawisza
@@ -371,7 +365,7 @@ void clean1(){
 				player[i].color2=155;
 				break;
 			case 1:
-					player[i].color0=37;
+				player[i].color0=37;
 				player[i].color1=164;
 				player[i].color2=40;
 				break;
@@ -439,7 +433,6 @@ void gameroom(){
            	}
            	if (stawiam_serwer && ev.keyboard.keycode == ALLEGRO_KEY_S){
            		komenda_start();
-           		cout<<"wychodze z rooma"<<endl;
            		break;
        		}
   		}
@@ -659,9 +652,6 @@ void aktualizuj_plansze()
 
 void co_robia_gracze()
 {
-	service_websockets();
-	stringstream ss;
-	ss.str("");ss.clear();
 	if(!by_the_network){
 		if(key[ALLEGRO_KEY_LEFT] && czas-player[0].lastczas>player[0].spacetime){
 			player[0].degrees=player[0].degrees-player[0].alfa;
@@ -682,15 +672,23 @@ void co_robia_gracze()
 			}
 		}
 	}else{
+		stringstream ss;
+		ss.str("");ss.clear();
 		if(key[ALLEGRO_KEY_LEFT] && czas-player[0].lastczas>player[0].spacetime){
-			ss << "SKRECAM_LEWO_"<<nr_gracza;
-			send_packet(ss.str());
-			service_websockets();
+			if(czas-player[nr_gracza].lastczas>player[nr_gracza].spacetime){
+				service_websockets();
+				ss << "SKRECAM_LEWO_"<<nr_gracza;
+				send_packet(ss.str());
+				service_websockets();
+			}
 		}
 		if(key[ALLEGRO_KEY_RIGHT] && czas-player[0].lastczas>player[0].spacetime){
-			ss << "SKRECAM_PRAWO_"<<nr_gracza;
-			send_packet(ss.str());
-			service_websockets();
+			if(czas-player[nr_gracza].lastczas>player[nr_gracza].spacetime){
+				service_websockets();
+				ss << "SKRECAM_PRAWO_"<<nr_gracza;
+				send_packet(ss.str());
+				service_websockets();
+			}
 		}
 		odbieranie_paczek();
 	}
