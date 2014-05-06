@@ -30,7 +30,7 @@ enum KIERUNEK {brak = 0, N, E, S, W};
 
 vector <ALLEGRO_FONT*> font;
 
-string int_to_string(int n) {
+template <class typ> string to_string(typ n) {
     stringstream ss;
     ss << n;
     string s;
@@ -77,7 +77,7 @@ public:
     void rysuj() {
 
         al_draw_filled_rounded_rectangle(x, y, x+bok, y+bok, wciecie, wciecie, kolor());
-        if (w != 0) al_draw_text(font[font_size], al_map_rgb(0,0,0), x+bok/2, y-font_size/2+bok/2, ALLEGRO_ALIGN_CENTRE, int_to_string(w).c_str());
+        if (w != 0) al_draw_text(font[font_size], al_map_rgb(0,0,0), x+bok/2, y-font_size/2+bok/2, ALLEGRO_ALIGN_CENTRE, to_string(w).c_str());
         al_draw_rounded_rectangle(x, y, x+bok, y+bok, wciecie, wciecie, al_map_rgb(0,0,0), 2);
     }
 
@@ -133,16 +133,7 @@ class PLANSZA {
         } else dodaj_kafelek();
     }
 
-    bool przegrana() {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (tab[i][j].w == 0) return false;
-            }
-        }
-        return true;
-    }
-
-    void podsun(KAFELEK * k[SIZE]) {
+    void podsun(KAFELEK * k[4]) {
         vector <int> v;
         for (int i = 0; i < SIZE; i++) {
             if (k[i]->w != 0) {
@@ -155,13 +146,29 @@ class PLANSZA {
         }
     }
 
-    void polacz(KAFELEK * k[SIZE]) {
+    void polacz(KAFELEK * k[4]) {
         for (int i = 0; i < SIZE-1; i++) {
-            if (k[i]->w == k[i+1]->w) {
+            if (k[i]->w != 0 && k[i]->w == k[i+1]->w) {
                 k[i]->w *= 2;
                 k[i+1]->w = 0;
             }
         }
+    }
+
+    bool mozliwy_ruch(KAFELEK * k[4]) {
+
+        bool bylo_puste = 0;
+        for (int i = 0; i < SIZE; i++) {
+            if (k[i]->w != 0) {
+                if (bylo_puste) return true;
+            } else bylo_puste = 1;
+        }
+
+        for (int i = 0; i < SIZE-1; i++) {
+            if (k[i]->w != 0 && k[i]->w == k[i+1]->w) return true;
+        }
+
+        return false;
     }
 
 public:
@@ -198,54 +205,68 @@ public:
 
     int pkt;
 
-    void ruch(KIERUNEK k) {
+    void ruch(KIERUNEK kierunek) {
 
         pkt = 0;
+        KIERUNEK * k[SIZE];
+        bool przegrana = true;
+        bool nie_mozliwy_ruch = true;
 
-        if (k == N) {
-            for (int x = 0; x < SIZE; x++) {
-                KAFELEK * k[SIZE];
-                for (int y = 0; y < SIZE; y++) {
-                    k[y] = &tab[x][y];
-                }
-                podsun(k);
-                polacz(k);
-                podsun(k);
-            }
-        } else if (k == S) {
-            for (int x = 0; x < SIZE; x++) {
-                KAFELEK * k[SIZE];
-                for (int y = 0; y < SIZE; y++) {
-                    k[y] = &tab[x][SIZE-1-y];
-                }
-                podsun(k);
-                polacz(k);
-                podsun(k);
-            }
-        } else if (k == W) {
+        for (int x = 0; x < SIZE; x++) {
+            KAFELEK * k[SIZE];
             for (int y = 0; y < SIZE; y++) {
-                KAFELEK * k[SIZE];
-                for (int x = 0; x < SIZE; x++) {
-                    k[x] = &tab[x][y];
-                }
+                k[y] = &tab[x][y];
+            }
+            if (przegrana && mozliwy_ruch(k)) przegrana = false;
+            if (kierunek == N) {
+                if (nie_mozliwy_ruch && mozliwy_ruch(k)) nie_mozliwy_ruch = false;
                 podsun(k);
                 polacz(k);
                 podsun(k);
             }
-        } else if (k == E) {
+        }
+        for (int x = 0; x < SIZE; x++) {
+            KAFELEK * k[SIZE];
             for (int y = 0; y < SIZE; y++) {
-                KAFELEK * k[SIZE];
-                for (int x = 0; x < SIZE; x++) {
-                    k[x] = &tab[SIZE-1-x][y];
-                }
+                k[y] = &tab[x][SIZE-1-y];
+            }
+            if (przegrana && mozliwy_ruch(k)) przegrana = false;
+            if (kierunek == S) {
+                if (nie_mozliwy_ruch && mozliwy_ruch(k)) nie_mozliwy_ruch = false;
+                podsun(k);
+                polacz(k);
+                podsun(k);
+            }
+        }
+        for (int y = 0; y < SIZE; y++) {
+            KAFELEK * k[SIZE];
+            for (int x = 0; x < SIZE; x++) {
+                k[x] = &tab[x][y];
+            }
+            if (przegrana && mozliwy_ruch(k)) przegrana = false;
+            if (kierunek == W) {
+                if (nie_mozliwy_ruch && mozliwy_ruch(k)) nie_mozliwy_ruch = false;
+                podsun(k);
+                polacz(k);
+                podsun(k);
+            }
+        }
+        for (int y = 0; y < SIZE; y++) {
+            KAFELEK * k[SIZE];
+            for (int x = 0; x < SIZE; x++) {
+                k[x] = &tab[SIZE-1-x][y];
+            }
+            if (przegrana && mozliwy_ruch(k)) przegrana = false;
+            if (kierunek == E) {
+                if (nie_mozliwy_ruch && mozliwy_ruch(k)) nie_mozliwy_ruch = false;
                 podsun(k);
                 polacz(k);
                 podsun(k);
             }
         }
 
-        if (przegrana()) wyjdz = true;
-        else dodaj_kafelek();
+        if (!nie_mozliwy_ruch) dodaj_kafelek();
+        else if (przegrana) wyjdz = true;
     }
 };
 
@@ -456,7 +477,7 @@ public:
             if (przerysuj && al_is_event_queue_empty(event_queue)) {
                 przerysuj = false;
 
-                al_clear_to_color(al_map_rgb(235,220,205));
+                al_clear_to_color(al_map_rgb(240,220,200));
                 rysuj_obiekty();
                 al_flip_display();
             }

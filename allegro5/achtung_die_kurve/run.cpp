@@ -11,8 +11,10 @@ int run_server(){
         	    licznik++;
             	usleep(500);
         	}
+          cout<<"poloczony z serwerem!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
         	return 1;
-  	}else{
+  }else{
+
   		return 0;
   	}
 }
