@@ -3,15 +3,15 @@
 // zrobiony przy pomocy szablonu gry w Allegro 5.
 // (C) Kółko Informatyczne Szkoły Żagle 
 //
-/*                                                           _____________
-                                                             \  __________\ 
-       ______   ___    ___                                   \\ \_________I
+/*                                                           ____________
+                                                             \  _________\ 
+       ______   ___    ___                                   \\ \________I
       /\  _  \ /\_ \  /\_ \                                   \\ \_________
       \ \ \L\ \\//\ \ \//\ \      __     __   _ __   ___       \\_________ \
-       \ \  __ \ \ \ \  \ \ \   /'__`\ /'_ `\/\`'__\/ __`\      \/_______/\ \
-        \ \ \/\ \ \_\ \_ \_\ \_/\  __//\ \L\ \ \ \//\ \L\ \       _______\_\ \
-         \ \_\ \_\/\____\/\____\ \____\ \____ \ \_\\ \____/      /\___________\
-          \/_/\/_/\/____/\/____/\/____/\/___L\ \/_/ \/___/       \/___________/ 
+       \ \  __ \ \ \ \  \ \ \   /'__`\ /'_ `\/\`'__\/ __`\      V________/\ \
+        \ \ \/\ \ \_\ \_ \_\ \_/\  __//\ \L\ \ \ \//\ \L\ \        ______\_\ \
+         \ \_\ \_\/\____\/\____\ \____\ \____ \ \_\\ \____/       /\__________\
+          \/_/\/_/\/____/\/____/\/____/\/___L\ \/_/ \/___/        \/__________/ 
                                          /\____/
                                          \_/__/
      New mouse API.
@@ -49,7 +49,7 @@ const int screen_h = 768;   //wysokość ekranu (screen height)
  * Kod poniżej jest w miarę generyczny  *
  ****************************************/
  
-const float FPS = 1000; //60      // Frames Per Second
+const float FPS = 60; //60      // Frames Per Second
 bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 
 ALLEGRO_DISPLAY *display = NULL;
@@ -60,6 +60,7 @@ ALLEGRO_BITMAP * pause_menu = NULL;
 ALLEGRO_BITMAP * menu0_bitmap = NULL;
 ALLEGRO_BITMAP * gameroom_bitmap = NULL;
 ALLEGRO_BITMAP * gameroom_player_bitmap = NULL;
+ALLEGRO_BITMAP * podsumowanie_wynikow_bitmap = NULL;
 ALLEGRO_FONT * font = NULL;
 ALLEGRO_FONT * font1 = NULL;
 
@@ -124,6 +125,7 @@ int init()
     al_register_event_source(event_queue, al_get_display_event_source(display));  
     al_register_event_source(event_queue, al_get_timer_event_source(timer));  
     al_register_event_source(event_queue, al_get_keyboard_event_source());
+    al_register_event_source(event_queue, al_get_mouse_event_source());
     al_clear_to_color(al_map_rgb(0,0,0));
   
     al_flip_display();  
@@ -150,6 +152,7 @@ int init()
 
 	bool by_the_network=false;
 	bool stawiam_serwer=false;
+	bool ktos_postawil_serwer=false;
 	int nr_gracza=-1;
 	int ile_odebralem_pozycji_graczy=0;
 	int ilu_gotowych=0;
@@ -171,7 +174,7 @@ int init()
 		int color0;
 		int color1;
 		int color2;
-		bool touch;
+		int touch;
 		float spacetime;
 	};
 	type_of_player player[max_number_of_player];
@@ -184,15 +187,91 @@ int init()
 //
 // Zmienne
 //
-	bool przegrales=false;
-    bool dotyka=false;
+	int przegranych=0;
     bool wyjdz = false;
     int cursor_x;
     int cursor_y;
+    bool cursor_pressed=false;
+
+    int pocz_zakresu_x_0 = 100;
+	int kon_zakresu_x_0 = 300;
+	int pocz_zakresu_x_1 = 400;
+	int kon_zakresu_x_1 = 600;
+	int pocz_zakresu_y = 90;
+	int kon_zakresu_y = 500;
     
 //
 //Czyszczenie
 //
+void podsumowanie_wynikow(){
+
+	bool przerysuj=false;
+
+	
+	stringstream ss;
+	
+
+	int przesuniecie=90;
+	int przesuniecie_kwadratow=400;
+
+	al_set_target_bitmap(podsumowanie_wynikow_bitmap);
+	for(int i=0;i<number_of_player;i++){
+		for(int a=0;a<number_of_player;a++){
+			if(player[a].touch==i){
+				ss.str("");ss.clear();
+				ss<<i+1;
+				string tekst =  ss.str();
+				al_draw_text(font, al_map_rgb(255,255,255), 400, przesuniecie, 0, tekst.c_str());
+				al_draw_filled_rectangle(450,przesuniecie+30,500,przesuniecie+60,al_map_rgb(player[a].color0,player[a].color1,player[a].color2));
+				przesuniecie=przesuniecie+60;
+			}
+		}
+	}
+	al_set_target_backbuffer(display);
+
+	al_draw_bitmap(podsumowanie_wynikow_bitmap, 0, 0, 0);
+
+	while(!wyjdz)
+   	{
+   		ALLEGRO_EVENT ev;
+   	  	al_wait_for_event(event_queue, &ev);
+
+    	if(ev.type == ALLEGRO_EVENT_TIMER) {
+	   	   //
+      	   // minęła 1/60 (1/FPS) część sekundy
+       	   //
+       	   przerysuj = true;
+
+       	   
+
+
+       	} else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+           key[ev.keyboard.keycode] = true;
+       	} else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
+       	    key[ev.keyboard.keycode] = false ;
+        
+            if (ev.keyboard.keycode == ALLEGRO_KEY_Q) {
+       	        wyjdz = true;
+       	    }
+       	    if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
+       	    	break;
+       	    }
+   		}   
+       	if(przerysuj && al_is_event_queue_empty(event_queue)) {
+       	    przerysuj = false;
+ 
+           	al_flip_display();
+       	}
+	}
+}
+void clean0(){
+	snakes = al_create_bitmap(1080,687);
+	pause_menu = al_create_bitmap(screen_w,screen_h);
+	menu0_bitmap = al_create_bitmap(screen_w,screen_h);
+	gameroom_bitmap = al_create_bitmap(screen_w,screen_h);
+	gameroom_player_bitmap = al_create_bitmap(1000, 768);
+	podsumowanie_wynikow_bitmap = al_create_bitmap(1366, 768);
+}
 void skrecanie(string packet){
 	service_websockets();
 	stringstream ss;
@@ -265,7 +344,8 @@ void odbieranie_paczek(){
         	start=true;
         }else if(packet.substr(0,7)=="SKRECAM"){
         	skrecanie(packet);
-
+        }else if(packet == "STAWIAM_SERWER"){
+        	ktos_postawil_serwer=true;
         }
 	}
 }
@@ -297,22 +377,23 @@ void sprawdzenie_gotowosci(){
 		if(ilu_gotowych==number_of_player){break;}
 	}
 }
-void clean1(){
+void clean2(){
 	cout<<"jesetem w cleanie1"<<endl;
 	stringstream ss;
 	ss.str(""); ss.clear();
+
 
 	if(!by_the_network){
 		for(int i=0;i<number_of_player;i++){
 			player[i].x=5;//pozycja x;
 			player[i].y=5;//pozycja y;
 			player[i].radius=5;//promien weza
-			player[i].step=0.10;//dlugosc kroku weza
-			player[i].space=420;//czas ponizej ktorego jest naliczana kolizja
-			player[i].spacetime=10000;//co jaki czas oczytuje czy klawisz jedt wcisnienty
+			player[i].step=2.0;//dlugosc kroku weza
+			player[i].space=10;//czas ponizej ktorego jest naliczana kolizja
+			player[i].spacetime=0;//co jaki czas oczytuje czy klawisz jedt wcisnienty
 			player[i].alfa=0.1;//wrazliwosc skrecania
 			player[i].degrees=0;//kierunek poczatkowy gracza
-			player[i].touch=false;
+			player[i].touch=-1;
 			player[i].lastczas=0;//czas ostatniego wcisniencia klawisza
 			while(player[i].x<=20+player[i].radius || player[i].y<=20+player[i].radius){
 				player[i].x=random()%1072-2*player[i].radius;
@@ -334,14 +415,14 @@ void clean1(){
 	}else{
 		for(int i=0;i<number_of_player;i++){
 			player[i].radius=5;//promien weza
-			player[i].step=0.10;//dlugosc kroku weza
-			player[i].space=420;//czas ponizej ktorego jest naliczana kolizja
-			player[i].spacetime=70;//co jaki czas oczytuje czy klawisz jedt wcisnienty
+			player[i].step=2.0;//dlugosc kroku weza
+			player[i].space=10;//czas ponizej ktorego jest naliczana kolizja
+			player[i].spacetime=0;//co jaki czas oczytuje czy klawisz jedt wcisnienty
 			player[i].alfa=0.1;//wrazliwosc skrecania
 			player[i].degrees=0;//kierunek poczatkowy gracza
-			player[i].touch=false;
+			player[i].touch=-1;
 			player[i].lastczas=0;//czas ostatniego wcisniencia klawisza
-			if(stawiam_serwer){
+			if(nr_gracza==0){
 				while(player[i].x<=20+player[i].radius || player[i].y<=20+player[i].radius){
 					player[i].x=random()%1072-2*player[i].radius;
 					player[i].y=random()%679-2*player[i].radius;
@@ -381,9 +462,10 @@ void gameroom(){
 
 		stringstream ss;
 		ss.str(""); ss.clear();
-	if(stawiam_serwer){
-		ss << "GRACZ 0";
-		cout<<"GRACZ 0\n";
+		odbieranie_paczek();
+	if(stawiam_serwer || !ktos_postawil_serwer){
+		ss << "STAWIAM_SERWER";
+		cout<<"STAWIAM_SERWER\n";
 		send_packet(ss.str());
 		service_websockets();
 		number_of_player=1;
@@ -431,24 +513,87 @@ void gameroom(){
            		wyjdz=true;
            		break;
            	}
-           	if (stawiam_serwer && ev.keyboard.keycode == ALLEGRO_KEY_S){
+           	if (nr_gracza==0 && ev.keyboard.keycode == ALLEGRO_KEY_S){
            		komenda_start();
            		break;
        		}
   		}
   	}
 }
+int kursor_w_menu0(){
+	
+	if(cursor_y>pocz_zakresu_y && cursor_y<kon_zakresu_y){
+		if(cursor_x>pocz_zakresu_x_1 && cursor_x<kon_zakresu_x_1){
+			return 1;
+		}else{
+			return -1;
+		}
+		if(cursor_x>pocz_zakresu_x_0 && cursor_x<kon_zakresu_x_0){
+			return 0;
+		}else{
+			return -1;
+		}
+	}else{
+		return -1;
+	}
+}
 void menu0(){
 
 	al_draw_bitmap(menu0_bitmap, 0, 0, 0);
 	al_flip_display();
+
+	bool przerysuj=false;
+
+	
 	
 	while(true)
     {
+    	cout<<cursor_x<<" "<<cursor_y<<endl;
         ALLEGRO_EVENT ev;
         al_wait_for_event(event_queue, &ev);
+        if(ev.type == ALLEGRO_EVENT_TIMER) {
+        	//
+        	// minęła 1/60 (1/FPS) część sekundy
+        	//
+        	przerysuj = true;
+       		int n=kursor_w_menu0();
+       		if(n!=-1){
+        		al_set_target_bitmap(menu0_bitmap);
+        		al_clear_to_color(al_map_rgb(0, 0, 0));
+         	  	al_set_target_backbuffer(display);
+         	}
+         	if(n==0){
+         		al_set_target_bitmap(menu0_bitmap);
+         		al_draw_filled_rectangle(pocz_zakresu_x_0,pocz_zakresu_y,kon_zakresu_x_0,kon_zakresu_y,al_map_rgb(34,100,23));
+         		al_set_target_backbuffer(display);
 
-        if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+         	}else{
+         		al_set_target_bitmap(menu0_bitmap);
+         		al_draw_filled_rectangle(pocz_zakresu_x_0,pocz_zakresu_y,kon_zakresu_x_0,kon_zakresu_y,al_map_rgb(50,100,23));
+         		al_set_target_backbuffer(display);
+         	}
+         	if(n==1){
+         		al_set_target_bitmap(menu0_bitmap);
+         		al_draw_filled_rectangle(pocz_zakresu_x_1,pocz_zakresu_y,kon_zakresu_x_1,kon_zakresu_y,al_map_rgb(34,100,23));
+         		al_set_target_backbuffer(display);
+
+         	}else{
+         		al_set_target_bitmap(menu0_bitmap);
+         		al_draw_filled_rectangle(pocz_zakresu_x_1,pocz_zakresu_y,kon_zakresu_x_1,kon_zakresu_y,al_map_rgb(50,100,23));
+         		al_set_target_backbuffer(display);
+         	}
+         	if(cursor_pressed){
+         		if(n==0){
+         			break;
+         		}else if(n==1){
+         			by_the_network=true;
+            		if(run_server()==1){stawiam_serwer=true;}
+            		gameroom();
+            		break;
+         		}
+         	}
+
+        }else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
             key[ev.keyboard.keycode] = true;
         } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
             key[ev.keyboard.keycode] = false ;
@@ -471,9 +616,20 @@ void menu0(){
             	gameroom();
             	break;
             }
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {
+            cursor_x = ev.mouse.x;
+            cursor_y = ev.mouse.y;
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
+            cursor_pressed = false;
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
+            cursor_pressed = true;
         }
+        if(przerysuj && al_is_event_queue_empty(event_queue)) {
+       	    przerysuj = false;
+       	    al_draw_bitmap(menu0_bitmap, 0, 0, 0);
+          	al_flip_display();
+    	}
 	}
-	al_start_timer(timer);
 }
 void menu_quit()
 {
@@ -497,13 +653,10 @@ void menu_quit()
             }
         }
 	}
-	al_start_timer(timer);
 }
-void clean0()
+void clean1()
 {
 	
-	//system ("../../network/websockets/./server&");
-	//system ("i=`ps a | pgrep server`; kill $i");
 	srandom(time(NULL)+getpid());
 	for(int i=1;i<xpl;i++){
 		for(int a=1;a<ypl;a++){
@@ -524,16 +677,10 @@ void clean0()
 		}
 	}
 
-	snakes = al_create_bitmap(1080,687);
-	pause_menu = al_create_bitmap(screen_w,screen_h);
-	menu0_bitmap = al_create_bitmap(screen_w,screen_h);
-	gameroom_bitmap = al_create_bitmap(screen_w,screen_h);
-	gameroom_player_bitmap = al_create_bitmap(1000, 768);
 	al_set_target_bitmap(snakes);
+	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
-	for(int i=0;i<max_number_of_player;i++){
- 	al_draw_filled_circle(player[i].x, player[i].y-1, player[i].radius, al_map_rgb(player[i].color0, player[i].color1, player[i].color2));
-	}
+	al_set_target_backbuffer(display);
 	al_set_target_backbuffer(display);
 	al_set_target_bitmap(pause_menu);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 200));
@@ -555,6 +702,23 @@ void clean0()
 	tekst="GRACZ0";
 	al_draw_text(font1, al_map_rgb(255,255,255), 100, 150,0, tekst.c_str());
 	al_set_target_backbuffer(display);
+	al_set_target_bitmap(podsumowanie_wynikow_bitmap);
+	al_clear_to_color(al_map_rgba(0, 0, 0, 150));
+	al_set_target_backbuffer(display);
+	al_clear_to_color(al_map_rgb(0 ,0 , 0));
+
+	przegranych=0;
+
+	by_the_network=false;
+	stawiam_serwer=false;
+	nr_gracza=-1;
+	ile_odebralem_pozycji_graczy=0;
+	ilu_gotowych=0;
+	start=false;
+	czas=0;
+	przegranych=0;
+	number_of_player=2;
+	ktos_postawil_serwer=false;
 }
 
 
@@ -600,10 +764,10 @@ void aktualizuj_plansze()
 {
 	czas++;
 	for(int i=0;i<number_of_player;i++){
-		if(player[i].touch){continue;}
+		if(player[i].touch!=-1){continue;}
 		player[i].x=player[i].x+player[i].step*cos(player[i].degrees);
 		player[i].y=player[i].y+player[i].step*sin(player[i].degrees);
-		for(int a=0;a<2*player[i].radius;a++){
+		for(int a=0;a<2*player[i].radius && player[i].touch==-1;a++){
 			for(int e=0;e<2*player[i].radius;e++){
 				float f_iks=player[i].x-player[i].radius+a;
 				float f_igrek=player[i].y-player[i].radius+e;
@@ -620,27 +784,27 @@ void aktualizuj_plansze()
 						if(board[iks][igrek].nrplayer==i){
 							if(board[iks][igrek].time<czas-player[i].space){
 								cout<<"GRACZ "<<i<<": wjechales w siebie"<<endl;
-//								przegrales=true;
-         					      	        player[i].touch = true;
+							   	player[i].touch = przegranych;
+         					   	przegranych++;
 								break;
 							}
 						}else if(board[iks][igrek].nrplayer!=100){
 							cout<<"GRACZ "<<i<<": wiechales w kolege"<<endl;
-//							przegrales=true;
-        	        			        player[i].touch = true;
-							break;
+							player[i].touch = przegranych;
+							przegranych++;
+        	        		break;
 						}else if(board[iks][igrek].nrplayer==100){
 							cout<<"GRACZ "<<i<<": wjechales w sciane"<<endl;
-//							przegrales=true;
-        	               				player[i].touch = true;
-							break;
+							player[i].touch = przegranych;
+							przegranych++;
+        	               	break;
 						}
 					}else{
 						board[iks][igrek].nrplayer=i;
 						board[iks][igrek].time=czas;
 					}
 				}
-			if(player[i].touch){break;}
+			if(player[i].touch!=-1){break;}
 			}
 		}
 	}
@@ -703,61 +867,74 @@ int main(int argc, char ** argv)
         cerr << "Inicjalizacja nie powiodła się." << endl;
         return -1;
     }
+    clean0();
 
-    bool przerysuj = true;
-    
-	clean0();
+    while(!wyjdz){
+	
+		bool przerysuj = true;
 
-	menu0();
-    
-    if(!wyjdz){
-    	clean1();
-   	}
+		clean1();
 
-   	//
-    // Event loop - główna pętla programu
-    //
+		menu0();
+	//	al_set_target_bitmap(snakes);
+	//	al_clear_to_color(al_map_rgb(0, 0, 0));
+	//	al_set_target_backbuffer(display);
+	    
+    	if(!wyjdz){
+    		clean2();
+   		}
+
+   		//
+    	// Event loop - główna pętla programu
+    	//
         
-    while(!wyjdz && !przegrales)
-    {
-        ALLEGRO_EVENT ev;
-        al_wait_for_event(event_queue, &ev);
+   		 while(!wyjdz)
+   		 {
+   	   		 ALLEGRO_EVENT ev;
+   	    	 al_wait_for_event(event_queue, &ev);
 
-        if(ev.type == ALLEGRO_EVENT_TIMER) {
-            //
-            // minęła 1/60 (1/FPS) część sekundy
-            //
-            przerysuj = true;
+       		 if(ev.type == ALLEGRO_EVENT_TIMER) {
+        	    //
+        	    // minęła 1/60 (1/FPS) część sekundy
+        	    //
+        	    przerysuj = true;
 
-            co_robia_gracze();
+            	co_robia_gracze();
 
-            aktualizuj_plansze();
+            	aktualizuj_plansze();
 
-        } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+            	if(przegranych>=number_of_player){
+            		podsumowanie_wynikow();
+            		by_the_network=false;
+            		break;
+            	}
+
+        	} else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
             key[ev.keyboard.keycode] = true;
-        } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
-            key[ev.keyboard.keycode] = false ;
+        	} else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
+        	    key[ev.keyboard.keycode] = false ;
 
-            if (ev.keyboard.keycode == ALLEGRO_KEY_Q) {
-                wyjdz = true;
-            }
-            if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
-            	menu_quit();
-            }
-        }
+        	    if (ev.keyboard.keycode == ALLEGRO_KEY_Q) {
+        	        wyjdz = true;
+        	    }
+        	    if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
+        	    	menu_quit();
+        	    }
+     		}   
+           	if(przerysuj && al_is_event_queue_empty(event_queue)) {
+        	    przerysuj = false;
 
-        if(przerysuj && al_is_event_queue_empty(event_queue)) {
-            przerysuj = false;
+            	rysuj_plansze();
 
-            rysuj_plansze();
-
-            al_flip_display();
-         }
+            	al_flip_display();
+        	 }
+		}
+		if(stawiam_serwer){
+			cout<<"zabijam serwer\n";
+			system ("i=`ps a | pgrep server`; kill $i");
+		}
 	}
-	if(stawiam_serwer){
-		cout<<"zabijam serwer\n";
-		system ("i=`ps a | pgrep server`; kill $i");
-	}
+
 
     return 0;
 }
