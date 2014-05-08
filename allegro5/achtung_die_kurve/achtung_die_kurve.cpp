@@ -92,7 +92,6 @@ int init()
         cerr << "Błąd podczas inicjalizacji zegara." << endl;
         return -1;
     }
- 
     display = al_create_display(screen_w, screen_h);
     if(!display) {
         cerr << "Błąd podczas inicjalizacji ekranu." << endl;
@@ -149,6 +148,8 @@ int init()
 
 	int czas=0;
 	stringstream ss_time;
+	int przesuniecie_czasu=0;
+
 
 	bool by_the_network=false;
 	bool stawiam_serwer=false;
@@ -184,7 +185,13 @@ int init()
 	};
 	type board[xpl][ypl];//+2
 
-//
+	 struct type_color{
+	 	int _r;
+	 	int _g;
+	 	int _b;
+	};
+	type_color colors[10];
+	//
 // Zmienne
 //
 	int przegranych=0;
@@ -193,12 +200,13 @@ int init()
     int cursor_y;
     bool cursor_pressed=false;
 
-    int pocz_zakresu_x_0 = 100;
-	int kon_zakresu_x_0 = 300;
-	int pocz_zakresu_x_1 = 400;
-	int kon_zakresu_x_1 = 600;
-	int pocz_zakresu_y = 90;
-	int kon_zakresu_y = 500;
+    int pocz_zakresu_x_0 = 200;
+	int kon_zakresu_x_0 = 600;
+	int pocz_zakresu_x_1 = 700;
+	int kon_zakresu_x_1 = 1100;
+	int pocz_zakresu_y = 200;
+	int kon_zakresu_y = 700;
+
     
 //
 //Czyszczenie
@@ -213,17 +221,18 @@ void podsumowanie_wynikow(){
 
 	int przesuniecie=90;
 	int przesuniecie_kwadratow=400;
-
+	int licznik=1;
 	al_set_target_bitmap(podsumowanie_wynikow_bitmap);
-	for(int i=0;i<number_of_player;i++){
+	for(int i=number_of_player-1;i>=0;i--){
 		for(int a=0;a<number_of_player;a++){
 			if(player[a].touch==i){
 				ss.str("");ss.clear();
-				ss<<i+1;
+				ss<<licznik;
 				string tekst =  ss.str();
 				al_draw_text(font, al_map_rgb(255,255,255), 400, przesuniecie, 0, tekst.c_str());
 				al_draw_filled_rectangle(450,przesuniecie+30,500,przesuniecie+60,al_map_rgb(player[a].color0,player[a].color1,player[a].color2));
 				przesuniecie=przesuniecie+60;
+				licznik++;
 			}
 		}
 	}
@@ -242,7 +251,10 @@ void podsumowanie_wynikow(){
        	   //
        	   przerysuj = true;
 
-       	   
+       	   if(cursor_pressed){
+       	   	cursor_pressed=false;
+       	   	break;
+       	   }
 
 
        	} else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
@@ -256,7 +268,15 @@ void podsumowanie_wynikow(){
        	    if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
        	    	break;
        	    }
-   		}   
+       	} else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {
+            cursor_x = ev.mouse.x;
+            cursor_y = ev.mouse.y;
+   		} else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
+            cursor_pressed = false;
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
+            cursor_pressed = true;
+        } 
+
        	if(przerysuj && al_is_event_queue_empty(event_queue)) {
        	    przerysuj = false;
  
@@ -269,8 +289,61 @@ void clean0(){
 	pause_menu = al_create_bitmap(screen_w,screen_h);
 	menu0_bitmap = al_create_bitmap(screen_w,screen_h);
 	gameroom_bitmap = al_create_bitmap(screen_w,screen_h);
-	gameroom_player_bitmap = al_create_bitmap(1000, 768);
+	gameroom_player_bitmap = al_create_bitmap(1300, 514);
 	podsumowanie_wynikow_bitmap = al_create_bitmap(1366, 768);
+	for(int i=0;i<10;i++){
+		switch(i){
+			case 0://niebieski
+				colors[i]._r = 0;
+				colors[i]._g = 23;
+				colors[i]._b = 155;
+				break;
+			case 1://zielony
+				colors[i]._r = 37;
+				colors[i]._g = 164;
+				colors[i]._b = 40;
+				break;
+			case 2://szary
+				colors[i]._r = 126;
+				colors[i]._g = 126;
+				colors[i]._b = 126;
+				break;
+			case 3://czerwony
+				colors[i]._r = 222;
+				colors[i]._g = 26;
+				colors[i]._b = 26;
+				break;
+			case 4://zolty
+				colors[i]._r = 222;
+				colors[i]._g = 210;
+				colors[i]._b = 23;
+				break;
+			case 5://fioletowy
+				colors[i]._r = 124;
+				colors[i]._g = 48;
+				colors[i]._b = 124;
+				break;
+			case 6://rozowy
+				colors[i]._r = 234;
+				colors[i]._g = 34;
+				colors[i]._b = 185;
+				break;
+			case 7://pomaranczowy
+				colors[i]._r = 236;
+				colors[i]._g = 156;
+				colors[i]._b = 0;
+				break;
+			case 8://brazowy
+				colors[i]._r = 130;
+				colors[i]._g = 90;
+				colors[i]._b = 30;
+				break;
+			case 9://blekitny
+				colors[i]._r = 150;
+				colors[i]._g = 110;
+				colors[i]._b = 240;
+			}
+	}
 }
 void skrecanie(string packet){
 	service_websockets();
@@ -440,22 +513,78 @@ void clean2(){
 				
 			}
 			switch(i){
-			case 0:
+			case 0://niebieski
 				player[i].color0=0;
 				player[i].color1=23;
 				player[i].color2=155;
 				break;
-			case 1:
+			case 1://zielony
 				player[i].color0=37;
 				player[i].color1=164;
 				player[i].color2=40;
 				break;
+			case 2://szary
+				player[i].color0=126;
+				player[i].color1=126;
+				player[i].color2=126;
+				break;
+			case 3://czerwony
+				player[i].color0=222;
+				player[i].color1=26;
+				player[i].color2=26;
+				break;
+			case 4://zolty
+				player[i].color0=222;
+				player[i].color1=210;
+				player[i].color2=23;
+				break;
+			case 5://fioletowy
+				player[i].color0=124;
+				player[i].color1=48;
+				player[i].color2=124;
+				break;
+			case 6://rozowy
+				player[i].color0=234;
+				player[i].color1=34;
+				player[i].color2=185;
+				break;
+			case 7://pomaranczowy
+				player[i].color0=236;
+				player[i].color1=156;
+				player[i].color2=0;
+				break;
+			case 8://brazowy
+				player[i].color0=130;
+				player[i].color1=90;
+				player[i].color2=30;
+				break;
+			case 9://blekitny
+				player[i].color0=150;
+				player[i].color1=110;
+				player[i].color2=240;
 			}
 		}
 		sprawdzenie_gotowosci();
 	}
+	przesuniecie_czasu=clock()-10000;
 }
+void rysowanie_kolorow(){
+	al_set_target_bitmap(gameroom_player_bitmap);
+	int a,b,c;
+	al_clear_to_color(al_map_rgba( 0, 0, 0, 0));
+	int px=0;
+	int py=0;
+	for(int i=0;i<10;i++){
+		if(i==5){
+			px=0;
+			py=262;
+		}
+		al_draw_filled_rectangle(px, py, px+252, py+252,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
+		px=px+262;
+	}
+	al_set_target_backbuffer(display);
 
+}
 
 void gameroom(){
 
@@ -476,6 +605,7 @@ void gameroom(){
 		send_packet(ss.str());
 		service_websockets();
 	}
+	bool przerysuj=true;
 		
 
 	al_draw_bitmap(gameroom_bitmap, 0, 0, 0);
@@ -493,13 +623,18 @@ void gameroom(){
         	//al_draw_bitmap(gameroom_bitmap, 0, 0, 0);
 
             //al_flip_display();
+       		przerysuj=true;
 
      	    odbieranie_paczek();
+     	  	
+     	  	rysowanie_kolorow();
+
      	    if(start){
      	    	start=false;
      	    	cout<<"zaczynamy"<<endl;
      	    	break;
      	    }
+
 
         }else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
        	    key[ev.keyboard.keycode] = true;
@@ -517,7 +652,21 @@ void gameroom(){
            		komenda_start();
            		break;
        		}
-  		}
+  		} else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {
+            cursor_x = ev.mouse.x;
+            cursor_y = ev.mouse.y;
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
+            cursor_pressed = false;
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
+            cursor_pressed = true;
+        }
+
+        if(przerysuj && al_is_event_queue_empty(event_queue)) {
+       	    przerysuj = false;
+       	    al_draw_bitmap(gameroom_bitmap, 0, 0, 0);
+       	    al_draw_bitmap(gameroom_player_bitmap, 33, 200, 0);//234
+          	al_flip_display();
+    	}
   	}
 }
 int kursor_w_menu0(){
@@ -525,10 +674,7 @@ int kursor_w_menu0(){
 	if(cursor_y>pocz_zakresu_y && cursor_y<kon_zakresu_y){
 		if(cursor_x>pocz_zakresu_x_1 && cursor_x<kon_zakresu_x_1){
 			return 1;
-		}else{
-			return -1;
-		}
-		if(cursor_x>pocz_zakresu_x_0 && cursor_x<kon_zakresu_x_0){
+		}else if(cursor_x>pocz_zakresu_x_0 && cursor_x<kon_zakresu_x_0){
 			return 0;
 		}else{
 			return -1;
@@ -543,55 +689,65 @@ void menu0(){
 	al_flip_display();
 
 	bool przerysuj=false;
-
-	
-	
 	while(true)
     {
-    	cout<<cursor_x<<" "<<cursor_y<<endl;
         ALLEGRO_EVENT ev;
         al_wait_for_event(event_queue, &ev);
         if(ev.type == ALLEGRO_EVENT_TIMER) {
         	//
         	// minęła 1/60 (1/FPS) część sekundy
-        	//
+        	//       	
         	przerysuj = true;
-       		int n=kursor_w_menu0();
-       		if(n!=-1){
-        		al_set_target_bitmap(menu0_bitmap);
-        		al_clear_to_color(al_map_rgb(0, 0, 0));
-         	  	al_set_target_backbuffer(display);
-         	}
-         	if(n==0){
-         		al_set_target_bitmap(menu0_bitmap);
-         		al_draw_filled_rectangle(pocz_zakresu_x_0,pocz_zakresu_y,kon_zakresu_x_0,kon_zakresu_y,al_map_rgb(34,100,23));
-         		al_set_target_backbuffer(display);
+        	string tekst;
+        	
+      		int n=kursor_w_menu0();
+      		int przesuniecie=-36;
+      		al_set_target_bitmap(menu0_bitmap);
+       		al_clear_to_color(al_map_rgb(0, 0, 0));
+       		tekst="Achtung die kurve";
+			al_draw_text(font, al_map_rgb(225,100,225), 350, 50, 0, tekst.c_str());	
+       		al_set_target_backbuffer(display);
+       		if(n==0){
+       			al_set_target_bitmap(menu0_bitmap);
+       			al_draw_filled_rectangle(pocz_zakresu_x_0-5,pocz_zakresu_y-5,kon_zakresu_x_0+5,kon_zakresu_y+5,al_map_rgb(20,100,23));//129,215,120
+       			tekst="Na komputerze";
+       			al_draw_text(font1, al_map_rgb(255,255,255), pocz_zakresu_x_0+90, (kon_zakresu_y-pocz_zakresu_y)/2+pocz_zakresu_y+przesuniecie, 0, tekst.c_str());
 
-         	}else{
-         		al_set_target_bitmap(menu0_bitmap);
-         		al_draw_filled_rectangle(pocz_zakresu_x_0,pocz_zakresu_y,kon_zakresu_x_0,kon_zakresu_y,al_map_rgb(50,100,23));
-         		al_set_target_backbuffer(display);
-         	}
-         	if(n==1){
-         		al_set_target_bitmap(menu0_bitmap);
-         		al_draw_filled_rectangle(pocz_zakresu_x_1,pocz_zakresu_y,kon_zakresu_x_1,kon_zakresu_y,al_map_rgb(34,100,23));
-         		al_set_target_backbuffer(display);
-
-         	}else{
-         		al_set_target_bitmap(menu0_bitmap);
-         		al_draw_filled_rectangle(pocz_zakresu_x_1,pocz_zakresu_y,kon_zakresu_x_1,kon_zakresu_y,al_map_rgb(50,100,23));
-         		al_set_target_backbuffer(display);
-         	}
-         	if(cursor_pressed){
-         		if(n==0){
-         			break;
-         		}else if(n==1){
-         			by_the_network=true;
-            		if(run_server()==1){stawiam_serwer=true;}
-            		gameroom();
-            		break;
-         		}
-         	}
+       			al_set_target_backbuffer(display);
+       	   	}else{
+       			al_set_target_bitmap(menu0_bitmap);
+       			al_draw_filled_rectangle(pocz_zakresu_x_0,pocz_zakresu_y,kon_zakresu_x_0,kon_zakresu_y,al_map_rgb(50,100,23));
+       			tekst="Na komputerze";
+      	 		al_draw_text(font1, al_map_rgb(255,255,255), pocz_zakresu_x_0+90, (kon_zakresu_y-pocz_zakresu_y)/2+pocz_zakresu_y+przesuniecie, 0, tekst.c_str());
+       			al_set_target_backbuffer(display);
+       			al_set_target_backbuffer(display);
+       		}
+       		if(n==1){
+       			al_set_target_bitmap(menu0_bitmap);
+       			al_draw_filled_rectangle(pocz_zakresu_x_1-5,pocz_zakresu_y-5,kon_zakresu_x_1+5,kon_zakresu_y+5,al_map_rgb(20,100,23));
+       			tekst="Przez Sieć";
+       			al_draw_text(font1, al_map_rgb(255,255,255), pocz_zakresu_x_1+90, (kon_zakresu_y-pocz_zakresu_y)/2+pocz_zakresu_y+przesuniecie, 0, tekst.c_str());
+       			al_set_target_backbuffer(display);
+       		}else{
+       			al_set_target_bitmap(menu0_bitmap);
+       			al_draw_filled_rectangle(pocz_zakresu_x_1,pocz_zakresu_y,kon_zakresu_x_1,kon_zakresu_y,al_map_rgb(50,100,23));
+       			tekst="Przez Sieć";
+       			al_draw_text(font1, al_map_rgb(255,255,255), pocz_zakresu_x_1+90, (kon_zakresu_y-pocz_zakresu_y)/2+pocz_zakresu_y+przesuniecie, 0, tekst.c_str());
+       			al_set_target_backbuffer(display);
+       		}
+       		
+       		if(cursor_pressed){
+       			cursor_pressed=false;
+       			if(n==0){
+       				break;
+       			}else if(n==1){
+       					by_the_network=true;
+          		if(run_server()==1){stawiam_serwer=true;}
+          			gameroom();
+          			break;
+       			}
+       		}
+       	
 
         }else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
             key[ev.keyboard.keycode] = true;
@@ -676,7 +832,7 @@ void clean1()
 		board[xpl-1][i].time=-100;
 		}
 	}
-
+	string tekst;
 	al_set_target_bitmap(snakes);
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
@@ -687,20 +843,16 @@ void clean1()
 	al_set_target_backbuffer(display);
 	al_set_target_bitmap(menu0_bitmap);
 	al_clear_to_color(al_map_rgb(0, 0, 0));
-	string tekst="Aby zagrać na komputerze, naciśnij '1'";
-	al_draw_text(font1, al_map_rgb(255,255,255), 90, 100,0, tekst.c_str());
-	tekst="Aby zagrać po sieci, naciśnij '2'";
-	al_draw_text(font1, al_map_rgb(255,255,255), 100, 150,0, tekst.c_str());
+	tekst="Achtung die kurve";
+	al_draw_text(font, al_map_rgb(255,100,255), 350, 50, 0, tekst.c_str());
 	al_set_target_backbuffer(display);
 	al_set_target_bitmap(gameroom_bitmap);
 	al_clear_to_color(al_map_rgb(0, 0, 0));
-	tekst="Gracze:";
-	al_draw_text(font1, al_map_rgb(255,255,255), 100, 150,0, tekst.c_str());
+	tekst="Wybierz swój kolor";
+	al_draw_text(font1, al_map_rgb(255,255,255), 500, 100,0, tekst.c_str());
 	al_set_target_backbuffer(display);
 	al_set_target_bitmap(gameroom_player_bitmap);
 	al_clear_to_color(al_map_rgb(0, 0, 0));
-	tekst="GRACZ0";
-	al_draw_text(font1, al_map_rgb(255,255,255), 100, 150,0, tekst.c_str());
 	al_set_target_backbuffer(display);
 	al_set_target_bitmap(podsumowanie_wynikow_bitmap);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 150));
@@ -739,7 +891,7 @@ void rysuj_plansze()
 	al_draw_bitmap(snakes, 20, 20, 0);
 //	#################
 //	WYSWIETLANIE TIMERA
-	float stoper=clock()/100000.0;
+	float stoper=(clock()-przesuniecie_czasu)/100000.0;
 	ss_time << fixed << setprecision(1) << stoper;
 	string tekst =  ss_time.str();
 	int przesuniencie_timera=0;
@@ -920,7 +1072,10 @@ int main(int argc, char ** argv)
         	    if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
         	    	menu_quit();
         	    }
-     		}   
+     		} else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {
+            	cursor_x = ev.mouse.x;
+            	cursor_y = ev.mouse.y;
+            }
            	if(przerysuj && al_is_event_queue_empty(event_queue)) {
         	    przerysuj = false;
 
