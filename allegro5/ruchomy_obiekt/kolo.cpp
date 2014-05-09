@@ -6,33 +6,77 @@
 #include <allegro5/allegro_primitives.h>
 
 #include <iostream>
+#include <cmath>
+
 using namespace std;
 
 //
 // Konfiguracja gry
 //
 
-const int screen_w = 1000;   // szerokość ekranu (screen width)
-const int screen_h = 700;   // wysokość ekranu (screen height)
+ALLEGRO_DISPLAY_MODE disp_data;
+int screen_w = 1000;   // szerokość ekranu (screen width)
+int screen_h = 562;   // wysokość ekranu (screen height)
+
+bool key[ALLEGRO_KEY_MAX];
+int mouse_x, mouse_y;
+bool mouse_pressed;
 
 /****************************************
  * Tu rozpoczyna się istotna część kodu *
  ****************************************/
 
-bool pressed_keys[ALLEGRO_KEY_MAX];
-
 //
 // Struktury danych
 //
+
+class ruchomy_obiekt {
+
+    float speed;
+    float x, y;
+    float r;
+    float cel_x, cel_y;
+
+public:
+
+    void init() {
+        r = 20;
+        speed = 2.5;
+        x = screen_w/2;
+        y = screen_h/2;
+        cel_x = x;
+        cel_y = y;
+    }
+
+    void draw() {
+        al_draw_line (cel_x-8,cel_y-8,cel_x+8,cel_y+8,al_map_rgb(128,0,0),3);
+        al_draw_line (cel_x+8,cel_y-8,cel_x-8,cel_y+8,al_map_rgb(128,0,0),3);
+        al_draw_filled_circle (x, y, r, al_map_rgb(128,0,128));
+    }
+
+    void ustaw_cel(float a, float b) {
+        cel_x = a, cel_y = b;
+    }
+
+    void ruch() {
+
+        float odleglosc_x = cel_x-x;
+        float odleglosc_y = cel_y-y;
+
+        if (x!=cel_x) x += odleglosc_x/abs(odleglosc_x) * speed * (pow(odleglosc_x,2) / (pow(odleglosc_x,2) + pow(odleglosc_y,2)));
+        if (y!=cel_y) y += odleglosc_y/abs(odleglosc_y) * speed * (pow(odleglosc_y,2) / (pow(odleglosc_x,2) + pow(odleglosc_y,2)));
+    }
+};
+
+ruchomy_obiekt * kolo = new ruchomy_obiekt;
 
 //
 // Zmienne
 //
 
-int a=0,b=0,w;
-char z;
-bool nl=true;
-bool wyjdz = false;
+void inicjalizuj_obiekty() {
+    kolo->init();
+}
 
 //
 // Rysowanie planszy
@@ -41,6 +85,7 @@ bool wyjdz = false;
 void rysuj_plansze()
 {
     al_clear_to_color(al_map_rgb(0,0,0));
+    kolo->draw();
 }
 
 //
@@ -49,9 +94,7 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
-
-
-
+    kolo->ruch();
 }
 
 //
@@ -60,77 +103,7 @@ void aktualizuj_plansze()
 
 void co_robia_gracze()
 {
-
-    a=a%100000000; // nie chcemy żeby a przekroczyło rozmiar int
-
-	if(pressed_keys[ALLEGRO_KEY_PAD_0]||pressed_keys[ALLEGRO_KEY_0])
-		{
-		a=a*10;
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_1]||pressed_keys[ALLEGRO_KEY_1])
-		{
-		a=a*10+1;
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_2]||pressed_keys[ALLEGRO_KEY_2])
-		{
-		a=a*10+2;
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_3]||pressed_keys[ALLEGRO_KEY_3])
-		{
-		a=a*10+3;
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_4]||pressed_keys[ALLEGRO_KEY_4])
-		{
-		a=a*10+4;
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_5]||pressed_keys[ALLEGRO_KEY_5])
-		{
-		a=a*10+5;
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_6]||pressed_keys[ALLEGRO_KEY_6])
-		{
-		a=a*10+6;
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_7]||pressed_keys[ALLEGRO_KEY_7])
-		{
-		a=a*10+7;
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_8]||pressed_keys[ALLEGRO_KEY_8])
-		{
-		a=a*10+8;
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_9]||pressed_keys[ALLEGRO_KEY_9])
-		{
-		a=a*10+9;
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_ASTERISK]/*||pressed_keys[ALLEGRO_KEY_9]*/)
-		{
-		nl=false;
-		z='*';
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_SLASH]/*||pressed_keys[ALLEGRO_KEY_9]*/)
-		{
-		nl=false;
-		z='/';
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_PLUS]/*||pressed_keys[ALLEGRO_KEY_9]*/)
-		{
-		nl=false;
-		z='+';
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_MINUS]/*||pressed_keys[ALLEGRO_KEY_9]*/)
-		{
-		nl=false;
-		z='-';
-		}
-	if(pressed_keys[ALLEGRO_KEY_PAD_ENTER]/*||pressed_keys[ALLEGRO_KEY_9]*/)
-		{
-		wyjdz=true;
-		return;
-		}
-
-cerr<<a<<"\n";
-
+    if (mouse_pressed) kolo->ustaw_cel(mouse_x,mouse_y);
 }
 
 /****************************************
@@ -138,7 +111,6 @@ cerr<<a<<"\n";
  ****************************************/
 
 const float FPS = 60;       // Frames Per Second
-//bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 
 ALLEGRO_DISPLAY *display = NULL;
 ALLEGRO_EVENT_QUEUE *event_queue = NULL;
@@ -172,6 +144,11 @@ int init()
         return -1;
     }
 
+    al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
+    al_get_display_mode(0, &disp_data);
+    screen_w = disp_data.width;
+    screen_h = disp_data.height;
+
     display = al_create_display(screen_w, screen_h);
     if(!display) {
         cerr << "Błąd podczas inicjalizacji ekranu." << endl;
@@ -187,9 +164,12 @@ int init()
         return -1;
     }
 
+    inicjalizuj_obiekty();
+
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
+    al_register_event_source(event_queue, al_get_mouse_event_source());
     al_clear_to_color(al_map_rgb(0,0,0));
 
     al_flip_display();
@@ -206,10 +186,7 @@ int main(int argc, char ** argv)
     }
 
     bool przerysuj = true;
-<<<<<<< HEAD
-=======
     bool wyjdz = false;
->>>>>>> c0d293bf40f735e5f1c9eac43d3802fb61f2d4ce
 
     //
     // Event loop - główna pętla programu
@@ -231,13 +208,22 @@ int main(int argc, char ** argv)
             aktualizuj_plansze();
 
         } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
-            pressed_keys[ev.keyboard.keycode] = true;
+            key[ev.keyboard.keycode] = true;
         } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
-            pressed_keys[ev.keyboard.keycode] = false;
+            key[ev.keyboard.keycode] = false;
 
             if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
                 wyjdz = true;
             }
+        } else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+            wyjdz = true;
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {
+            mouse_x = ev.mouse.x;
+            mouse_y = ev.mouse.y;
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
+            mouse_pressed = false;
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
+            mouse_pressed = true;
         }
 
         if(przerysuj && al_is_event_queue_empty(event_queue)) {
@@ -248,23 +234,6 @@ int main(int argc, char ** argv)
             al_flip_display();
          }
     }
-
-if(z=='+')
-	{
-	cerr<<"="<<a+b<<"\n";
-	}
-if(z=='/')
-	{
-	cerr<<"="<<a/b<<"\n";
-	}
-if(z=='-')
-	{
-	cerr<<"="<<a-b<<"\n";
-	}
-if(z=='*')
-	{
-	cerr<<"="<<a*b<<"\n";
-	}
 
     return 0;
 }

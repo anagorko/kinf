@@ -1,10 +1,11 @@
 #include<iostream>
-#include<string.h>
 #include<math.h>
 using namespace std;
-int main()
+
+void kalkulator()
 {
-cout<<"Podaj swoje działanie\n";
+
+cout<<"Witaj w kalkulatorze klasycznym.\nPodaj swoje działanie\n";
 //zmienne
 float a=0,b=0,w=0,l,r=0;
 string s,r2;
@@ -200,7 +201,8 @@ if(z=='!'&&a>=1)
 	}
 
 //wypisywanie wyniku
-cout<<"="<<w<<"\n";
+cout<<"Wynikiem działania "<<a<<z<<b<<" jest "<<w<<"\n";
+cout<<a<<z<<b<<"="<<w<<"\n";
 
-return 0;
+return;
 }
