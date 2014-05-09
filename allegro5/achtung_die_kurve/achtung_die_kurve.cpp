@@ -738,16 +738,25 @@ void menu0(){
        			al_draw_text(font1, al_map_rgb(255,255,255), pocz_zakresu_x_1+90, (kon_zakresu_y-pocz_zakresu_y)/2+pocz_zakresu_y+przesuniecie, 0, tekst.c_str());
        			al_set_target_backbuffer(display);
        		}
-       		
        		if(cursor_pressed){
        			cursor_pressed=false;
        			if(n==0){
        				break;
        			}else if(n==1){
+       				int a=run_server();
        				by_the_network=true;
-          			if(run_server()==1){stawiam_serwer=true;cout<<"postwaielmesvsdvsdvsdv"<<endl;}
+          			if(a==1){
+          				stawiam_serwer=true;
+          			}else if(a==0){
+          				cout<<"Nie udalo sie poloczenie z serwerem\n";
+          				wyjdz=true;
+          				break;
+          			}else if(a==2){
+          				ktos_postawil_serwer=true;
+          			}
           			gameroom();
           			break;
+
        			}
        		}
        	
