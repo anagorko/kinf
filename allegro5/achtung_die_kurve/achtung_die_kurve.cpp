@@ -417,7 +417,7 @@ void odbieranie_paczek(){
         	start=true;
         }else if(packet.substr(0,7)=="SKRECAM"){
         	skrecanie(packet);
-        }else if(packet == "STAWIAM_SERWER"){
+        }else if(nr_gracza!=0 && packet == "STAWIAM_SERWER"){
         	ktos_postawil_serwer=true;
         }
 	}
@@ -588,11 +588,13 @@ void rysowanie_kolorow(){
 
 void gameroom(){
 
-
+		service_websockets();
 		stringstream ss;
 		ss.str(""); ss.clear();
+
 		odbieranie_paczek();
-	if(stawiam_serwer || !ktos_postawil_serwer){
+	if(stawiam_serwer){
+		service_websockets();
 		ss << "STAWIAM_SERWER";
 		cout<<"STAWIAM_SERWER\n";
 		send_packet(ss.str());
@@ -600,6 +602,7 @@ void gameroom(){
 		number_of_player=1;
 		nr_gracza=0;
 	}else{
+		service_websockets();
 		ss << "NOWY GRACZ";
 		cout<<"NOWY GRACZ\n";
 		send_packet(ss.str());
@@ -741,8 +744,8 @@ void menu0(){
        			if(n==0){
        				break;
        			}else if(n==1){
-       					by_the_network=true;
-          		if(run_server()==1){stawiam_serwer=true;}
+       				by_the_network=true;
+          			if(run_server()==1){stawiam_serwer=true;cout<<"postwaielmesvsdvsdvsdv"<<endl;}
           			gameroom();
           			break;
        			}
@@ -768,7 +771,7 @@ void menu0(){
             }
             if (ev.keyboard.keycode == ALLEGRO_KEY_2){
             	by_the_network=true;
-            	if(run_server()==1){stawiam_serwer=true;}
+            	if(run_server()==1){stawiam_serwer=true;cout<<"dafsjdjnsldjkvnskdv"<<endl;}
             	gameroom();
             	break;
             }
