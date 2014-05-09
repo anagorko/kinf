@@ -31,9 +31,9 @@ enum kolory {
 struct karta {
     short liczba;
     short kolor;
+    static bool wg_liczba (karta a, karta b) {return a.liczba > b.liczba;}
+    static bool wg_kolor (karta a, karta b) {return a.kolor > b.kolor;}
 };
-bool wg_liczba (karta a, karta b) {return a.liczba > b.liczba;}
-bool wg_kolor (karta a, karta b) {return a.kolor > b.kolor;}
 
 struct miejsce {
     short status;
@@ -482,7 +482,7 @@ void licytacja() {
     for (;; grajacy++) {
 
         if (faza != 0) ciemne = 0;
-        grajacy = abs(grajacy) % liczba_miejsc;
+        grajacy = int(abs(grajacy)) % int(liczba_miejsc);
 
         if (ile_statusow(3)+ile_statusow(1) < 2 || ile_statusow(3) == 0) break;
 
@@ -672,7 +672,7 @@ void miejsce::wykryj_uklad() {
     k[5] = karty[0];
     k[6] = karty[1];
 
-    sort (k, k+7, wg_liczba);
+    sort (k, k+7, karta::wg_liczba);
 
     // Kolor
     bool czy_kolor=0;
@@ -720,11 +720,11 @@ void miejsce::wykryj_uklad() {
     for (int i = 1, kombos = 0; i < 8; i++) {
         if (k[i-1].liczba == k[i].liczba && i!=7) kombos++;
         else {
-            kombo.push_back({k[i-1].liczba,kombos});
+            kombo.push_back({k[i-1].liczba,short(kombos)});
             kombos = 0;
         }
     }
-    sort (kombo.begin(), kombo.end(), wg_kolor);
+    sort (kombo.begin(), kombo.end(), karta::wg_kolor);
 
     // Wykrycie układu
     if (czy_poker) {

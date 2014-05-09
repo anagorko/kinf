@@ -316,7 +316,7 @@ public:
     }
 };
 
-eliptyczny_stol stol;
+eliptyczny_stol stolik;
 
 class tablica_gracza {
 
@@ -447,15 +447,15 @@ public:
         switch (liczba_miejsc) {
 
         case 8:
-            cx0 = screen_w / 2, cy0 = stol.cy - stol.h/2;
-            cx3 = screen_w / 2, cy1 = stol.cy + stol.h/2;
-            cx2 = stol.cx - stol.w/2, cy2 = stol.cy;
-            cx1 = stol.cx + stol.w/2, cy3 = stol.cy;
+            cx0 = screen_w / 2, cy0 = stolik.cy - stolik.h/2;
+            cx3 = screen_w / 2, cy1 = stolik.cy + stolik.h/2;
+            cx2 = stolik.cx - stolik.w/2, cy2 = stolik.cy;
+            cx1 = stolik.cx + stolik.w/2, cy3 = stolik.cy;
             switch (i) {
-            case 4: cx = screen_w / 2; cy = stol.cy - stol.h/2; kupka_xy(1,5,true); break;
-            case 0: cx = screen_w / 2; cy = stol.cy + stol.h/2; kupka_xy(2,0,true); break;
-            case 2: cx = stol.cx - stol.w/2; cy = stol.cy; kupka_xy(3,2,true); break;
-            case 6: cx = stol.cx + stol.w/2; cy = stol.cy; kupka_xy(0,2,false); break;
+            case 4: cx = screen_w / 2; cy = stolik.cy - stolik.h/2; kupka_xy(1,5,true); break;
+            case 0: cx = screen_w / 2; cy = stolik.cy + stolik.h/2; kupka_xy(2,0,true); break;
+            case 2: cx = stolik.cx - stolik.w/2; cy = stolik.cy; kupka_xy(3,2,true); break;
+            case 6: cx = stolik.cx + stolik.w/2; cy = stolik.cy; kupka_xy(0,2,false); break;
             case 3: cx = cx0/2 + cx2/2 - 50; cy = cy0/2 + cy2/2 - 50; kupka_xy(1,5,true); break;
             case 5: cx = cx0/2 + cx1/2 + 50; cy = cy0/2 + cy3/2 - 50; kupka_xy(2,5,false); break;
             case 1: cx = cx3/2 + cx2/2 - 50; cy = cy1/2 + cy2/2 + 50; kupka_xy(2,0,true); break;
@@ -465,17 +465,17 @@ public:
 
         case 4:
             switch (i) {
-            case 2: cx = screen_w / 2; cy = stol.cy - stol.h/2; break;
-            case 0: cx = screen_w / 2; cy = stol.cy + stol.h/2; break;
-            case 1: cx = stol.cx - stol.w/2; cy = stol.cy; break;
-            case 3: cx = stol.cx + stol.w/2; cy = stol.cy; break;
+            case 2: cx = screen_w / 2; cy = stolik.cy - stolik.h/2; break;
+            case 0: cx = screen_w / 2; cy = stolik.cy + stolik.h/2; break;
+            case 1: cx = stolik.cx - stolik.w/2; cy = stolik.cy; break;
+            case 3: cx = stolik.cx + stolik.w/2; cy = stolik.cy; break;
             }
             break;
 
         case 2:
             switch (i) {
-            case 1: cx = stol.cx - stol.w/2; cy = stol.cy; break;
-            case 0: cx = stol.cx + stol.w/2; cy = stol.cy; break;
+            case 1: cx = stolik.cx - stolik.w/2; cy = stolik.cy; break;
+            case 0: cx = stolik.cx + stolik.w/2; cy = stolik.cy; break;
             }
             break;
 
@@ -1092,9 +1092,9 @@ void rysuj_tlo() {
 
     float przekatna = sqrt(pow(screen_h-centrum_y,2)+pow(screen_w/2,2));
     float szary = 255;
-    float grubosc = (przekatna-stol.h/2) / szary;
+    float grubosc = (przekatna-stolik.h/2) / szary;
 
-    float r = stol.h/2;
+    float r = stolik.h/2;
     for (int i = szary; r < przekatna; i--) {
         al_draw_circle(screen_w/2,centrum_y,r,al_map_rgb(i,i,i),grubosc+1);
         r += grubosc;
@@ -1347,7 +1347,7 @@ void rysowanie() {
 
     rysuj_tlo();
 
-    stol.rysuj();
+    stolik.rysuj();
 
     for (int i = 0; i < liczba_miejsc; i++) {
         tablica[i].rysuj();
