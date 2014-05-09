@@ -12,6 +12,7 @@ string s,r2;
 bool t=true;
 char z;
 //głowna część programu
+cin.ignore(1,'\n');
 getline (cin,s);
 //wczytywanie
 for(int i=0;i<s.size();i++)
