@@ -3,9 +3,18 @@ using namespace std;
 
 void ulamki()
 {
-cout<<"Witaj w kalkulatorze klasycznym.\nPodaj swoje działanie\n";
+cout<<"Witaj w kalkulatorze który operuje na ułamkach zwykłych.\nPodaj swoje działanie\n";
 //zmienne
 int a[2],b[2],w[2];
+int wa[2],wb[2];
+//zerowanie
+for(int i=0;i<2;i++)
+	{
+	a[i]=0;
+	b[i]=0;
+	w[i]=0;
+	}
+//zerowanie
 string s;
 int l=0;
 char z;
@@ -92,82 +101,78 @@ for(int i=0;i<s.size();i++)
 	if(s[i]=='+')
 		{
 		z='+';
-		t=false;
+		l++;
 		}
 	if(s[i]=='-')
 		{
 		z='-';
-		t=false;
+		l++;
 		}
 	if(s[i]=='*')
 		{
 		z='*';
-		t=false;
+		l++;
 		}
 	if(s[i]=='/')
 		{
 		z='/';
-		t=false;
+		l++;
 		}
-	if(s[i]=='^')
-		{
-		z='^';
-		t=false;
-		}
-	if(s[i]=='v')
-		{
-		z='v';
-		t=false;
-		}
-	if(s[i]=='!')
-		{
-		z='!';
-		t=false;
-		}
-
 	}
 //koniec wczytywania
+
+for(int i=0;i<2;i++)
+	{
+	wa[i]=a[i];
+	wb[i]=b[i];
+	}
+
 //obliczenia
 if(z=='+')
 	{
-	w=a+b;
+	if(a[1]==b[1])
+		{
+		w[1]=a[0];
+		}
+	else
+		{
+		a[0]=a[0]*b[1];
+		b[0]=b[0]*a[1];
+		w[1]=a[1]*b[1];
+		}
+	w[0]=a[0]+b[0];
 	}
 if(z=='-')
 	{
-	w=a-b;
+	if(a[1]==b[1])
+		{
+		w[1]=a[0];
+		}
+	else
+		{
+		a[0]=a[0]*b[1];
+		b[0]=b[0]*a[1];
+		w[1]=a[1]*b[1];
+		}
+	w[0]=a[0]+b[0];
 	}
 if(z=='*')
 	{
-	w=a*b;
+	w[0]=a[0]*b[0];
+	w[1]=a[1]*b[1];
 	}
 if(z=='/')
 	{
-	w=a/b;
+	w[0]=a[0]*b[1];
+	w[1]=a[1]*b[0];
 	}
-if(z=='^')
-	{
-	w=pow(a,b);
-	}
-if(z=='v'&&a==0)
-	{
-	w=sqrt(b);
-	}
-if(z=='v'&&a!=0)
-	{
-	w=pow(b,(1/a));
-	}
-if(z=='!'&&a>=1)
-	{
-	w=1;
-	for(int i=1;i<=a;i++)
-		{
-		w=w*i;
-		}
-	}
+//koniec obliczenia
+//poczatek skracanie
 
+//koniec skracanie
 //wypisywanie wyniku
-cout<<"Wynikiem działania "<<a<<z<<b<<" jest "<<w<<"\n";
-cout<<a<<z<<b<<"="<<w<<"\n";
+cout<<"Wynikiem działania "<<wa[0]<<"|"<<wa[1]<<z<<wb[0]<<"|"<<wb[1]<<" jest "<<w[0]<<"|"<<w[1]<<"\n";
+cout<<wa[0]<<"|"<<wa[1]<<z<<wb[0]<<"|"<<wb[1]<<"="<<w[0]<<"|"<<w[1]<<"\n";
 
 return;
 }
