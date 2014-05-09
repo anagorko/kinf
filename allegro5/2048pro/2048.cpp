@@ -7,6 +7,7 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include <fstream>
 #include <sstream>
 #include <iostream>
 using namespace std;
@@ -250,7 +251,8 @@ void rysuj_plansze()
 		}	
 	}
 	if(no_move){
-		al_draw_text(game_over_arial, al_map_rgb(255,247,255), screen_w/2, screen_h/2 - 40, ALLEGRO_ALIGN_CENTRE, game_over.c_str());
+		al_draw_filled_rounded_rectangle(square_x, screen_h/2 - tile_size - break_size, square_x + square_size, screen_h/2 + tile_size + break_size, square_size/50, square_size/50, al_map_rgb(112,108,99));
+		al_draw_text(game_over_arial, al_map_rgb(255,247,255), screen_w/2, screen_h/2 - 30, ALLEGRO_ALIGN_CENTRE, game_over.c_str());
 	}
 	
 }
@@ -272,11 +274,11 @@ void gen_new (){
 	a = random()%4;
 	b = random()%4;
 	if(tiles[a][b].number == 0){
-		if(random()%2 == 0){
-			tiles[a][b].number = 2;
+		if(random()%3 == 0){
+			tiles[a][b].number = 4;
 			tiles[a][b].animation = 0;
 		}else{
-			tiles[a][b].number = 4;
+			tiles[a][b].number = 2;
 			tiles[a][b].animation = 0;
 		}
 	}else{
@@ -452,9 +454,15 @@ void aktualizuj_plansze()
 		if(no_undo == true)no_undo = false;
 	}
 	move_done = false;
-
+	
+	ifstream highscore_in("highscore.txt");
+	highscore_in >> highscore;
+	highscore_in.close();
 	if(score > highscore){
 		highscore = score;
+		ofstream highscore_out("highscore.txt");
+		highscore_out << score;
+		highscore_out.close();
 	}
 	
 
