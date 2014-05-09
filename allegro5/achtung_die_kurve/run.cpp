@@ -11,8 +11,12 @@ int run_server(){
         	    licznik++;
             	usleep(500);
         	}
-          cout<<"poloczony z serwerem!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
-        	return 1;
+          if(licznik==20){
+            return 0;
+          }else{
+            cout<<"poloczony z serwerem!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
+        	  return 1;
+          }
   }else{
 
   		return 0;
