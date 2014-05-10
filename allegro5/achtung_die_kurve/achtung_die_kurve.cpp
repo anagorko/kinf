@@ -158,6 +158,9 @@ int init()
 	int ile_odebralem_pozycji_graczy=0;
 	int ilu_gotowych=0;
 	bool start=false;
+	int moment_dolaczenia=-1;
+	bool serwer_byl_wlaczony=false;
+	string addr;//adres serwera
 	
 //
 // Struktury danych
@@ -211,6 +214,10 @@ int init()
 //
 //Czyszczenie
 //
+void odbieranie_adresu(){
+	cout<<"serwer: ";
+	getline(cin, addr);
+}
 void podsumowanie_wynikow(){
 
 	bool przerysuj=false;
@@ -289,7 +296,7 @@ void clean0(){
 	pause_menu = al_create_bitmap(screen_w,screen_h);
 	menu0_bitmap = al_create_bitmap(screen_w,screen_h);
 	gameroom_bitmap = al_create_bitmap(screen_w,screen_h);
-	gameroom_player_bitmap = al_create_bitmap(1300, 514);
+	gameroom_player_bitmap = al_create_bitmap(1310, 524);
 	podsumowanie_wynikow_bitmap = al_create_bitmap(1366, 768);
 	for(int i=0;i<10;i++){
 		switch(i){
@@ -393,11 +400,11 @@ void odbieranie_paczek(){
 		}else if(packet=="GOTOWY"){
 				ilu_gotowych++;
 		}else if(packet=="NOWY GRACZ"){
-       		if(stawiam_serwer){
-        		cout<<"nowygracz\n";
+       		if(nr_gracza==0){
         		nowy_gracz();
            	}
         }else if(!stawiam_serwer && packet.length()>=18 && packet.substr(0,17)=="number_of_player="){
+        	ktos_postawil_serwer=true;
         	if(packet.length()==18){
         		number_of_player=(int)packet[17]-'0';
         		cout<<"number_of_player = "<<number_of_player<<"\n";
@@ -417,8 +424,6 @@ void odbieranie_paczek(){
         	start=true;
         }else if(packet.substr(0,7)=="SKRECAM"){
         	skrecanie(packet);
-        }else if(nr_gracza!=0 && packet == "STAWIAM_SERWER"){
-        	ktos_postawil_serwer=true;
         }
 	}
 }
@@ -572,15 +577,22 @@ void rysowanie_kolorow(){
 	al_set_target_bitmap(gameroom_player_bitmap);
 	int a,b,c;
 	al_clear_to_color(al_map_rgba( 0, 0, 0, 0));
-	int px=0;
-	int py=0;
+	int px=5;
+	int py=5;
+	int bok=252;
+	int przesunieciex=28;
+	int przesunieciey=195;
 	for(int i=0;i<10;i++){
 		if(i==5){
-			px=0;
-			py=262;
+			px=5;
+			py=bok+15;
 		}
-		al_draw_filled_rectangle(px, py, px+252, py+252,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
-		px=px+262;
+		if(cursor_x>px+przesunieciex && cursor_x<px+bok+przesunieciex && cursor_y>py+przesunieciey && cursor_y<py+bok+przesunieciey){
+			al_draw_filled_rectangle(px-5, py-5, px+bok+5, py+bok+5,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
+		}else{
+			al_draw_filled_rectangle(px, py, px+bok, py+bok,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
+		}
+		px=px+bok+10;
 	}
 	al_set_target_backbuffer(display);
 
@@ -592,24 +604,21 @@ void gameroom(){
 		stringstream ss;
 		ss.str(""); ss.clear();
 
-		odbieranie_paczek();
 	if(stawiam_serwer){
-		service_websockets();
-		ss << "STAWIAM_SERWER";
-		cout<<"STAWIAM_SERWER\n";
-		send_packet(ss.str());
-		service_websockets();
+		cout<<"OBSŁUGUJĘ SERWER\n";
 		number_of_player=1;
 		nr_gracza=0;
+		moment_dolaczenia=0;
 	}else{
 		service_websockets();
 		ss << "NOWY GRACZ";
 		cout<<"NOWY GRACZ\n";
 		send_packet(ss.str());
 		service_websockets();
+		moment_dolaczenia=clock();
 	}
 	bool przerysuj=true;
-		
+		//
 
 	al_draw_bitmap(gameroom_bitmap, 0, 0, 0);
 	al_draw_bitmap(gameroom_player_bitmap, 500, 0, 0);
@@ -631,7 +640,17 @@ void gameroom(){
      	    odbieranie_paczek();
      	  	
      	  	rysowanie_kolorow();
-
+     	  	if(moment_dolaczenia!=0 && clock()>=moment_dolaczenia+30){
+     	  		if(!ktos_postawil_serwer){
+     	  			cout<<"OBSŁUGUJĘ SERWER\n";
+					number_of_player=1;
+					nr_gracza=0;
+					moment_dolaczenia=0;
+     	  		}else{
+     	  			cout<<"JESTEM ZWYKLYM UZYTKOWNIKIEM\n";
+     	  			moment_dolaczenia=0;
+     	  		}
+     	  	}
      	    if(start){
      	    	start=false;
      	    	cout<<"zaczynamy"<<endl;
@@ -667,7 +686,7 @@ void gameroom(){
         if(przerysuj && al_is_event_queue_empty(event_queue)) {
        	    przerysuj = false;
        	    al_draw_bitmap(gameroom_bitmap, 0, 0, 0);
-       	    al_draw_bitmap(gameroom_player_bitmap, 33, 200, 0);//234
+       	    al_draw_bitmap(gameroom_player_bitmap, 28, 200, 0);//234
           	al_flip_display();
     	}
   	}
@@ -743,7 +762,7 @@ void menu0(){
        			if(n==0){
        				break;
        			}else if(n==1){
-       				int a=run_server();
+       				int a=run_server(addr);
        				by_the_network=true;
           			if(a==1){
           				stawiam_serwer=true;
@@ -752,7 +771,7 @@ void menu0(){
           				wyjdz=true;
           				break;
           			}else if(a==2){
-          				ktos_postawil_serwer=true;
+          				serwer_byl_wlaczony=true;
           			}
           			gameroom();
           			break;
@@ -780,7 +799,16 @@ void menu0(){
             }
             if (ev.keyboard.keycode == ALLEGRO_KEY_2){
             	by_the_network=true;
-            	if(run_server()==1){stawiam_serwer=true;cout<<"dafsjdjnsldjkvnskdv"<<endl;}
+            	int a=run_server(addr);
+            	if(a==1){
+            		stawiam_serwer=true;
+            	}else if(a==0){
+            		cout<<"Nie udalo sie poloczenie z serwerem\n";
+          			wyjdz=true;
+          			break;
+            	}else if(a==2){
+          				serwer_byl_wlaczony=true;
+          		}
             	gameroom();
             	break;
             }
@@ -1027,10 +1055,14 @@ void co_robia_gracze()
 int main(int argc, char ** argv)
 {
    
+   
+   	odbieranie_adresu();
+
  	if (init() != 0) {
         cerr << "Inicjalizacja nie powiodła się." << endl;
         return -1;
     }
+
     clean0();
 
     while(!wyjdz){
@@ -1096,7 +1128,7 @@ int main(int argc, char ** argv)
             	al_flip_display();
         	 }
 		}
-		if(stawiam_serwer){
+		if(stawiam_serwer && serwer_byl_wlaczony){
 			cout<<"zabijam serwer\n";
 			system ("i=`ps a | pgrep server`; kill $i");
 		}
