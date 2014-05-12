@@ -829,6 +829,7 @@ void menu_quit()
             }
         }
 	}
+	al_start_timer(timer);
 }
 void clean1()
 {
