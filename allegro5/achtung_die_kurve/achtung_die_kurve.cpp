@@ -166,6 +166,7 @@ int init()
 	int wybrane_kolory=0;
 	int licznik_fps=0;//%10;
 	bool opuscic_licznik_graczy=false;
+	int kon_tury_licznik=0;
 
 // Struktury danych
 //
@@ -225,6 +226,22 @@ int init()
 //
 //Czyszczenie
 //
+void wychodzenie_z_multi(){
+	service_websockets();
+	stringstream ss;
+	ss.str("");ss.clear();
+	ss << "WYCHODZE_"<<nr_gracza;
+	send_packet(ss.str());
+	service_websockets();
+}
+void konczenie_tury(){
+	service_websockets();
+	stringstream ss;
+	ss.str("");ss.clear();
+	ss << "KONIEC TURY";
+	send_packet(ss.str());
+	service_websockets();
+}
 void odbieranie_adresu(){
 	cout<<"serwer: ";
 	getline(cin, addr);	
@@ -365,31 +382,17 @@ void clean0(){
 	}
 }
 void skrecanie(string packet){
-	service_websockets();
-	stringstream ss;
-	ss.str("");ss.clear();
-	ss << "POTWIERDZAM_"<<packet;
-	send_packet(ss.str());
-	service_websockets();
-//	if(packet.substr(0,13)=="SKRECAM_LEWO_"){
-//		int nr_gr=(int)packet[13]-'0';
-//		player[nr_gr].degrees=player[nr_gr].degrees-player[nr_gr].alfa;
-//		player[nr_gr].lastczas=czas;
-//	}else if(packet.substr(0,14)=="SKRECAM_PRAWO_"){
-//		int nr_gr=(int)packet[14]-'0';
-//		player[nr_gr].degrees=player[nr_gr].degrees+player[nr_gr].alfa;
-//		player[nr_gr].lastczas=czas;
-//	}
+	if(packet.substr(0,13)=="SKRECAM_LEWO_"){
+		int nr_gr=(int)packet[13]-'0';
+		player[nr_gr].degrees=player[nr_gr].degrees-player[nr_gr].alfa;
+		player[nr_gr].lastczas=czas;
+	}else if(packet.substr(0,14)=="SKRECAM_PRAWO_"){
+		int nr_gr=(int)packet[14]-'0';
+		player[nr_gr].degrees=player[nr_gr].degrees+player[nr_gr].alfa;
+		player[nr_gr].lastczas=czas;
+	}
 
 }
-//############################################
-void skrecanie_potwierdzanie(string packet){
-	cout<<"JAPA"<<endl;
-	if(packet.substr(12,25)=="SKRECAM_LEWO_"){
-		cout<<"skrecam_lewe"<<endl;
-	}
-}
-//############################################
 void nowy_gracz(){
 	service_websockets();
 	number_of_player++;
@@ -460,12 +463,18 @@ void odbieranie_paczek(){
         	start=true;
         }else if(packet.substr(0,7)=="SKRECAM"){
         	skrecanie(packet);
-        ////////////////////////////////////////######################
-        }else if(packet.substr(0,12)=="POTWIERDZAM_"){				//
-        	skrecanie_potwierdzanie(packet);						//TU WCHODZI DO VOIDA 
-        ////////////////////////////////////////######################
         }else if(packet.substr(0,12)=="KOLOR GRACZA"){
         	nadanie_koloru(packet);
+        }else if(packet == "KONIEC TURY"){
+        	kon_tury_licznik++;
+        	if(kon_tury_licznik==number_of_player-przegranych){
+        		kon_tury_licznik=0;
+        		break;
+        	}
+        }else if(packet.substr(0,9)=="WYCHODZE_"){
+        	player[(int)packet[9]-'0'].touch=przegranych;
+        	przegranych++;
+        	cout<<"gracz "<<(int)packet[9]-'0'<<"odszedl z gry\n";
         }
 	}
 }
@@ -1031,41 +1040,45 @@ void aktualizuj_plansze()
 void co_robia_gracze()
 {
 	if(!by_the_network){
-		if(key[ALLEGRO_KEY_LEFT] && czas-player[0].lastczas>player[0].spacetime){
-			player[0].degrees=player[0].degrees-player[0].alfa;
-			player[0].lastczas=czas;
-		}
-		if(key[ALLEGRO_KEY_RIGHT] && czas-player[0].lastczas>player[0].spacetime){
-			player[0].degrees=player[0].degrees+player[0].alfa;
-			player[0].lastczas=czas;
-		}
-		if(number_of_player>=2){
-			if(key[ALLEGRO_KEY_Z] && czas-player[1].lastczas>player[1].spacetime){
-				player[1].degrees=player[1].degrees-player[1].alfa;
-				player[1].lastczas=czas;
+		if(player[nr_gracza].touch==-1){
+			if(key[ALLEGRO_KEY_LEFT] && czas-player[0].lastczas>player[0].spacetime){
+				player[0].degrees=player[0].degrees-player[0].alfa;
+				player[0].lastczas=czas;
 			}
-			if(key[ALLEGRO_KEY_X] && czas-player[1].lastczas>player[1].spacetime){
+			if(key[ALLEGRO_KEY_RIGHT] && czas-player[0].lastczas>player[0].spacetime){
+				player[0].degrees=player[0].degrees+player[0].alfa;
+				player[0].lastczas=czas;
+			}
+			if(number_of_player>=2){
+				if(key[ALLEGRO_KEY_Z] && czas-player[1].lastczas>player[1].spacetime){
+					player[1].degrees=player[1].degrees-player[1].alfa;
+					player[1].lastczas=czas;
+					}
+				if(key[ALLEGRO_KEY_X] && czas-player[1].lastczas>player[1].spacetime){
     	            player[1].degrees=player[1].degrees+player[1].alfa;
     	            player[1].lastczas=czas;
+				}
 			}
 		}
 	}else{
-		stringstream ss;
-		ss.str("");ss.clear();
-		if(key[ALLEGRO_KEY_LEFT] && czas-player[0].lastczas>player[0].spacetime){
-			if(czas-player[nr_gracza].lastczas>player[nr_gracza].spacetime){
-				service_websockets();
-				ss << "SKRECAM_LEWO_"<<nr_gracza;
-				send_packet(ss.str());
-				service_websockets();
+		if(player[nr_gracza].touch==-1){
+			stringstream ss;
+			ss.str("");ss.clear();
+			if(key[ALLEGRO_KEY_LEFT] && czas-player[0].lastczas>player[0].spacetime){
+				if(czas-player[nr_gracza].lastczas>player[nr_gracza].spacetime){
+					service_websockets();
+					ss << "SKRECAM_LEWO_"<<nr_gracza;
+					send_packet(ss.str());
+					service_websockets();
+				}
 			}
-		}
-		if(key[ALLEGRO_KEY_RIGHT] && czas-player[0].lastczas>player[0].spacetime){
-			if(czas-player[nr_gracza].lastczas>player[nr_gracza].spacetime){
-				service_websockets();
-				ss << "SKRECAM_PRAWO_"<<nr_gracza;
-				send_packet(ss.str());
-				service_websockets();
+			if(key[ALLEGRO_KEY_RIGHT] && czas-player[0].lastczas>player[0].spacetime){
+				if(czas-player[nr_gracza].lastczas>player[nr_gracza].spacetime){
+					service_websockets();
+					ss << "SKRECAM_PRAWO_"<<nr_gracza;
+					send_packet(ss.str());
+					service_websockets();
+				}
 			}
 		}
 		odbieranie_paczek();
@@ -1115,9 +1128,11 @@ int main(int argc, char ** argv)
             //
             // minęła 1/60 (1/FPS) część sekundy
             //
-            if(licznik_fps==0){
-            	co_robia_gracze();
+           		co_robia_gracze();
             	aktualizuj_plansze();
+            if(licznik_fps==0){
+            	
+            	konczenie_tury();
             }
             przerysuj = true;
             
@@ -1125,10 +1140,11 @@ int main(int argc, char ** argv)
            	podsumowanie_wynikow();
            	by_the_network=false;
            	break;
-
+           }
            	licznik_fps=(licznik_fps+1)%10;
-        }
-
+           	
+           	
+        
         } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
         	key[ev.keyboard.keycode] = true;
         } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
@@ -1136,8 +1152,9 @@ int main(int argc, char ** argv)
 
        	    if (ev.keyboard.keycode == ALLEGRO_KEY_Q) {
       	        wyjdz = true;
+      	        wychodzenie_z_multi();
        	    }
-       	    if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
+       	    if (!by_the_network && ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
        	    	menu_quit();
        	    }
    		} else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {
