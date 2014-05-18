@@ -150,6 +150,7 @@ int init()
 	int czas=0;
 	stringstream ss_time;
 	int przesuniecie_czasu=0;
+	int czasomierz=0;
 
 
 	bool by_the_network=false;
@@ -184,6 +185,7 @@ int init()
 		int color1;
 		int color2;
 		int touch;
+		float touch_time;
 		float spacetime;
 	};
 	type_of_player player[max_number_of_player];
@@ -262,10 +264,14 @@ void podsumowanie_wynikow(){
 		for(int a=0;a<number_of_player;a++){
 			if(player[a].touch==i){
 				ss.str("");ss.clear();
-				ss<<licznik;
+				ss<<licznik<<".";
 				string tekst =  ss.str();
 				al_draw_text(font, al_map_rgb(255,255,255), 400, przesuniecie, 0, tekst.c_str());
-				al_draw_filled_rectangle(450,przesuniecie+30,500,przesuniecie+60,al_map_rgb(player[a].color0,player[a].color1,player[a].color2));
+				ss.str("");ss.clear();
+				ss << fixed << setprecision(1) << player[a].touch_time;
+				tekst = ss.str();
+				al_draw_text(font, al_map_rgb(255,255,255), 600, przesuniecie, 0, tekst.c_str());
+				al_draw_filled_rectangle(480, przesuniecie+30,530,przesuniecie+60,al_map_rgb(player[a].color0,player[a].color1,player[a].color2));
 				przesuniecie=przesuniecie+60;
 				licznik++;
 			}
@@ -404,8 +410,8 @@ void nowy_gracz(){
 	service_websockets();
 }
 void nadanie_koloru(string packet){
-	int gr=(int)packet[12]-'0';//numer gracza;
-	int k=(int)packet[14]-'0';//numer koloru;
+	int gr=(int)packet[13]-'0';//numer gracza;
+	int k=(int)packet[15]-'0';//numer koloru;
 	if(player[gr].color0==-1){
 		wybrane_kolory++;
 	}
@@ -438,12 +444,15 @@ void odbieranie_paczek(){
 				ilu_gotowych++;
 		}else if(packet=="NOWY GRACZ"){
        		if(opuscic_licznik_graczy){
+       			cout<<"opuscicilem licznik graczy"<<endl;
        			opuscic_licznik_graczy=false;
        		}else if(nr_gracza==0){
         		nowy_gracz();
            	}
-        }else if(!stawiam_serwer && packet.length()>=18 && packet.substr(0,17)=="number_of_player="){
-        	ktos_postawil_serwer=true;
+        }else if(packet.length()>=18 && packet.substr(0,17)=="number_of_player="){
+        	if(!stawiam_serwer){ 
+        		ktos_postawil_serwer=true;
+        	}
         	if(packet.length()==18){
         		number_of_player=(int)packet[17]-'0';
         		cout<<"number_of_player = "<<number_of_player<<"\n";
@@ -463,7 +472,7 @@ void odbieranie_paczek(){
         	start=true;
         }else if(packet.substr(0,7)=="SKRECAM"){
         	skrecanie(packet);
-        }else if(packet.substr(0,12)=="KOLOR GRACZA"){
+        }else if(packet.substr(0,13)=="KOLOR_GRACZA_"){
         	nadanie_koloru(packet);
         }else if(packet == "KONIEC TURY"){
         	kon_tury_licznik++;
@@ -472,7 +481,10 @@ void odbieranie_paczek(){
         		break;
         	}
         }else if(packet.substr(0,9)=="WYCHODZE_"){
-        	player[(int)packet[9]-'0'].touch=przegranych;
+        	if(player[(int)packet[9]-'0'].touch==-1){
+        		player[(int)packet[9]-'0'].touch = przegranych;
+        		player[(int)packet[9]-'0'].touch_time = czasomierz/60.0;
+        	} 
         	przegranych++;
         	cout<<"gracz "<<(int)packet[9]-'0'<<"odszedl z gry\n";
         }
@@ -507,11 +519,7 @@ void sprawdzenie_gotowosci(){
 	}
 }
 void clean2(){
-	cout<<"jesetem w cleanie1"<<endl;
-	stringstream ss;
-	ss.str(""); ss.clear();
-
-
+	cout<<"jesetem w cleanie2"<<endl;
 	if(!by_the_network){
 		for(int i=0;i<number_of_player;i++){
 			player[i].x=5;//pozycja x;
@@ -524,8 +532,6 @@ void clean2(){
 			player[i].degrees=0;//kierunek poczatkowy gracza
 			player[i].touch=-1;
 			player[i].lastczas=0;//czas ostatniego wcisniencia klawisza
-			potwierdzanie[i].prawo=0;
-			potwierdzanie[i].lewo=0;
 			while(player[i].x<=20+player[i].radius || player[i].y<=20+player[i].radius){
 				player[i].x=random()%1072-2*player[i].radius;
 				player[i].y=random()%679-2*player[i].radius;
@@ -544,6 +550,7 @@ void clean2(){
 			}
 		}
 	}else{
+		stringstream ss;
 		for(int i=0;i<number_of_player;i++){
 			player[i].radius=3;//promien weza
 			player[i].step=2.0;//dlugosc kroku weza
@@ -599,7 +606,7 @@ void rysowanie_kolorow(){
 				//player[nr_gracza].color0=colors[i]._r;
 				//player[nr_gracza].color1=colors[i]._g;
 				//player[nr_gracza].color2=colors[i]._b;
-				ss << "KOLOR GRACZA" << nr_gracza << "="<< i;
+				ss << "KOLOR_GRACZA_" << nr_gracza << "="<< i;
 				send_packet(ss.str());
 				service_websockets();
 
@@ -619,11 +626,11 @@ void gameroom(){
 		ss.str(""); ss.clear();
 
 	if(stawiam_serwer){
-		cout<<"OBSŁUGUJĘ SERWER\n";
+		cout<<"OBSŁUGUJĘ SERWER(serwer nie byl postawiony)\n";
 		number_of_player=1;
 		nr_gracza=0;
 		moment_dolaczenia=0;
-		opuscic_licznik_graczy=true;
+		opuscic_licznik_graczy=false;
 	}else{
 		service_websockets();
 		ss << "NOWY GRACZ";
@@ -647,7 +654,8 @@ void gameroom(){
 	al_draw_bitmap(gameroom_player_bitmap, 500, 0, 0);
 
 	al_flip_display();
-	
+	bool sprawdzalem_czy_obsluguje=false;
+
 	while(true)
     {  	
         ALLEGRO_EVENT ev;
@@ -664,15 +672,15 @@ void gameroom(){
 
      	  	odbieranie_paczek();
 
-     	  	
-     	  	
-     	  	if(moment_dolaczenia!=0 && clock()>=moment_dolaczenia+30){
+     	     	  
+     	  	if(!sprawdzalem_czy_obsluguje && moment_dolaczenia!=0 && clock()>=moment_dolaczenia+100000){
+     	  		sprawdzalem_czy_obsluguje=true;
      	  		if(!ktos_postawil_serwer){
-     	  			cout<<"OBSŁUGUJĘ SERWER\n";
+     	  			cout<<"OBSŁUGUJĘ SERWER(serwer byl postawiony)\n";
 					number_of_player=1;
 					nr_gracza=0;
 					moment_dolaczenia=0;
-					opuscic_licznik_graczy=true;
+					opuscic_licznik_graczy=false;
      	  		}else{
      	  			cout<<"JESTEM ZWYKLYM UZYTKOWNIKIEM\n";
      	  			moment_dolaczenia=0;
@@ -963,7 +971,7 @@ void rysuj_plansze()
 	al_draw_bitmap(snakes, 20, 20, 0);
 //	#################
 //	WYSWIETLANIE TIMERA
-	float stoper=(clock()-przesuniecie_czasu)/100000.0;
+	float stoper=czasomierz/60.0;
 	ss_time << fixed << setprecision(1) << stoper;
 	string tekst =  ss_time.str();
 	int przesuniencie_timera=0;
@@ -1008,17 +1016,20 @@ void aktualizuj_plansze()
 							if(board[iks][igrek].time<czas-player[i].space){
 								cout<<"GRACZ "<<i<<": wjechales w siebie"<<endl;
 							   	player[i].touch = przegranych;
+							   	player[i].touch_time = czasomierz/60.0;
          					   	przegranych++;
 								break;
 							}
 						}else if(board[iks][igrek].nrplayer!=100){
 							cout<<"GRACZ "<<i<<": wiechales w kolege"<<endl;
 							player[i].touch = przegranych;
+							player[i].touch_time = czasomierz/60.0;
 							przegranych++;
         	        		break;
 						}else if(board[iks][igrek].nrplayer==100){
 							cout<<"GRACZ "<<i<<": wjechales w sciane"<<endl;
 							player[i].touch = przegranych;
+							player[i].touch_time = czasomierz/60.0;
 							przegranych++;
         	               	break;
 						}
@@ -1040,7 +1051,7 @@ void aktualizuj_plansze()
 void co_robia_gracze()
 {
 	if(!by_the_network){
-		if(player[nr_gracza].touch==-1){
+		if(player[nr_gracza].touch!=-1){
 			if(key[ALLEGRO_KEY_LEFT] && czas-player[0].lastczas>player[0].spacetime){
 				player[0].degrees=player[0].degrees-player[0].alfa;
 				player[0].lastczas=czas;
@@ -1130,7 +1141,7 @@ int main(int argc, char ** argv)
             //
            		co_robia_gracze();
             	aktualizuj_plansze();
-            if(licznik_fps==0){
+            if(by_the_network && licznik_fps==0){
             	
             	konczenie_tury();
             }
@@ -1142,6 +1153,7 @@ int main(int argc, char ** argv)
            	break;
            }
            	licznik_fps=(licznik_fps+1)%10;
+           	czasomierz++;
            	
            	
         
@@ -1169,7 +1181,7 @@ int main(int argc, char ** argv)
            	al_flip_display();
     	}
 	}
-	if(stawiam_serwer && serwer_byl_wlaczony){
+	if(stawiam_serwer){
 		cout<<"zabijam serwer\n";
 		system ("i=`ps a | pgrep server`; kill $i");
 	}
