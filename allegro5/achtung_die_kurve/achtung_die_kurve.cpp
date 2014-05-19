@@ -43,7 +43,7 @@ using namespace std;
 
 
 const int screen_w = 1366;   // szerokość ekranu (screen width)
-const int screen_h = 768;   //wysokość ekranu (screen height)
+const int screen_h = 350;   //wysokość ekranu (screen height)
 
 /****************************************
  * Kod poniżej jest w miarę generyczny  *
@@ -168,6 +168,7 @@ int init()
 	int licznik_fps=0;//%10;
 	bool opuscic_licznik_graczy=false;
 	int kon_tury_licznik=0;
+	int robie_przerwe=10;
 
 // Struktury danych
 //
@@ -181,12 +182,12 @@ int init()
 		float alfa;
 		float degrees;
 		int lastczas;
-		int color0;
-		int color1;
-		int color2;
+		int color;
 		int touch;
 		float touch_time;
 		float spacetime;
+		int przerwa;//licznik przerwy
+		int przerwa_time;//czas kiedy ma byc wykonywana przerwa
 	};
 	type_of_player player[max_number_of_player];
 	struct type{
@@ -202,13 +203,7 @@ int init()
 	 	bool wykozystany;
 	};
 	type_color colors[10];
-
-	struct type_potwierdzanie{
-		int lewo;
-		int prawo;
-	};
-	type_potwierdzanie potwierdzanie[max_number_of_player];
-	//
+//
 // Zmienne
 //
 	int przegranych=0;
@@ -237,12 +232,29 @@ void wychodzenie_z_multi(){
 	service_websockets();
 }
 void konczenie_tury(){
-	service_websockets();
 	stringstream ss;
-	ss.str("");ss.clear();
-	ss << "KONIEC TURY";
-	send_packet(ss.str());
-	service_websockets();
+	if(nr_gracza==0 || !by_the_network){
+		for(int i=0;i<number_of_player;i++){
+			if(player[i].touch!=-1){continue;}
+			if(player[i].przerwa==0 && player[i].przerwa_time==0){
+				player[i].przerwa_time=(czasomierz+100)+(random()%100);
+				if(by_the_network){
+					service_websockets();
+					ss.str("");ss.clear();
+					ss << "PRZERWA_GRACZA_" <<i<<"="<<player[i].przerwa_time;
+					send_packet(ss.str());
+					service_websockets();
+				}
+			}
+		}
+	}
+	if(by_the_network){
+		service_websockets();
+		ss.str("");ss.clear();
+		ss << "KONIEC TURY";
+		send_packet(ss.str());
+		service_websockets();
+	}
 }
 void odbieranie_adresu(){
 	cout<<"serwer: ";
@@ -256,7 +268,7 @@ void podsumowanie_wynikow(){
 	stringstream ss;
 	
 
-	int przesuniecie=90;
+	int przesuniecie=190;
 	int przesuniecie_kwadratow=400;
 	int licznik=1;
 	al_set_target_bitmap(podsumowanie_wynikow_bitmap);
@@ -271,7 +283,7 @@ void podsumowanie_wynikow(){
 				ss << fixed << setprecision(1) << player[a].touch_time;
 				tekst = ss.str();
 				al_draw_text(font, al_map_rgb(255,255,255), 600, przesuniecie, 0, tekst.c_str());
-				al_draw_filled_rectangle(480, przesuniecie+30,530,przesuniecie+60,al_map_rgb(player[a].color0,player[a].color1,player[a].color2));
+				al_draw_filled_rectangle(480, przesuniecie+30,530,przesuniecie+60,al_map_rgb(colors[player[a].color]._r,colors[player[a].color]._g,colors[player[a].color]._b));
 				przesuniecie=przesuniecie+60;
 				licznik++;
 			}
@@ -412,13 +424,24 @@ void nowy_gracz(){
 void nadanie_koloru(string packet){
 	int gr=(int)packet[13]-'0';//numer gracza;
 	int k=(int)packet[15]-'0';//numer koloru;
-	if(player[gr].color0==-1){
+	if(player[gr].color==-1){
 		wybrane_kolory++;
+	}else{
+		colors[player[gr].color].wykozystany=false;
 	}
-	player[gr].color0=colors[k]._r;
-	player[gr].color1=colors[k]._g;
-	player[gr].color2=colors[k]._b;
+	player[gr].color=k;
 	colors[k].wykozystany=true;
+}
+void odbieranie_przerw(string packet){
+	int gr=(int)packet[15]-'0';
+	int cp=0;//czas przerwy
+	int mnozenie_dziesiatek=1;
+	for(int i=packet.length()-1;i>16;i--){
+		cp=cp+((int)packet[i]-'0')*mnozenie_dziesiatek;
+		mnozenie_dziesiatek=mnozenie_dziesiatek*10;
+	}
+	cout<<"cp="<<cp<<endl;
+	player[gr].przerwa_time=cp;
 }
 void odbieranie_paczek(){
 	service_websockets();
@@ -487,6 +510,8 @@ void odbieranie_paczek(){
         	} 
         	przegranych++;
         	cout<<"gracz "<<(int)packet[9]-'0'<<"odszedl z gry\n";
+        }else if(packet.substr(0,15)== "PRZERWA_GRACZA_"){
+        	odbieranie_przerw(packet);
         }
 	}
 }
@@ -524,7 +549,7 @@ void clean2(){
 		for(int i=0;i<number_of_player;i++){
 			player[i].x=5;//pozycja x;
 			player[i].y=5;//pozycja y;
-			player[i].radius=5;//promien weza
+			player[i].radius=3;//promien weza
 			player[i].step=2.0;//dlugosc kroku weza
 			player[i].space=10;//czas ponizej ktorego jest naliczana kolizja
 			player[i].spacetime=0;//co jaki czas oczytuje czy klawisz jedt wcisnienty
@@ -532,20 +557,18 @@ void clean2(){
 			player[i].degrees=0;//kierunek poczatkowy gracza
 			player[i].touch=-1;
 			player[i].lastczas=0;//czas ostatniego wcisniencia klawisza
+			player[i].przerwa==0;//licznik przerwy
+			player[i].przerwa_time=0;//czas kiedy ma byc przerwa gracza
 			while(player[i].x<=20+player[i].radius || player[i].y<=20+player[i].radius){
 				player[i].x=random()%1072-2*player[i].radius;
 				player[i].y=random()%679-2*player[i].radius;
 			}
 			switch(i){
 			case 0:
-				player[i].color0=0;
-				player[i].color1=23;
-				player[i].color2=155;
+				player[i].color=0;
 				break;
 			case 1:
-				player[i].color0=37;
-				player[i].color1=164;
-				player[i].color2=40;
+				player[i].color=1;
 				break;
 			}
 		}
@@ -560,6 +583,8 @@ void clean2(){
 			player[i].degrees=0;//kierunek poczatkowy gracza
 			player[i].touch=-1;
 			player[i].lastczas=0;//czas ostatniego wcisniencia klawisza
+			player[i].przerwa==0;//licznik przerwy
+			player[i].przerwa_time=0;//czas kiedy ma byc przerwa gracza
 			if(nr_gracza==0){
 				while(player[i].x<=20+player[i].radius || player[i].y<=20+player[i].radius){
 					player[i].x=random()%1072-2*player[i].radius;
@@ -574,8 +599,7 @@ void clean2(){
 				ss.str("");ss.clear();
 				ss << "POZYCJA_Y_GRACZA_" <<i<<"="<<player[i].y;
 				send_packet(ss.str());
-				service_websockets();
-				
+				service_websockets();				
 			}
 		}
 		sprawdzenie_gotowosci();
@@ -591,28 +615,48 @@ void rysowanie_kolorow(){
 	int bok=252;
 	int przesunieciex=28;
 	int przesunieciey=195;
+	string tekst;
 	for(int i=0;i<10;i++){
 		if(i==5){
 			px=5;
 			py=bok+15;
 		}
 		if(cursor_x>px+przesunieciex && cursor_x<px+bok+przesunieciex && cursor_y>py+przesunieciey && cursor_y<py+bok+przesunieciey){
-			al_draw_filled_rectangle(px-5, py-5, px+bok+5, py+bok+5,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
-			if(klik_down && !cursor_pressed){
-				stringstream ss;
-				ss.str("");ss.clear();
-				service_websockets();
-				klik_down=false;
-				//player[nr_gracza].color0=colors[i]._r;
-				//player[nr_gracza].color1=colors[i]._g;
-				//player[nr_gracza].color2=colors[i]._b;
-				ss << "KOLOR_GRACZA_" << nr_gracza << "="<< i;
-				send_packet(ss.str());
-				service_websockets();
-
+			if(!colors[i].wykozystany){
+				al_draw_filled_rectangle(px-5, py-5, px+bok+5, py+bok+5,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
+				if(klik_down && !cursor_pressed){
+					klik_down=false;
+					stringstream ss;
+					ss.str("");ss.clear();
+					service_websockets();
+					ss << "KOLOR_GRACZA_" << nr_gracza << "="<< i;
+					send_packet(ss.str());
+					service_websockets();
+				}
+			}else{
+				if(klik_down && !cursor_pressed){
+					klik_down=false;
+				}
+				al_draw_filled_rectangle(px-5, py-5, px+bok+5, py+bok+5,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
+				if(i==player[nr_gracza].color){
+					tekst="Twój kolor";
+					al_draw_text(font2, al_map_rgb(255,255,255),px+60,py+bok/2-15, 0, tekst.c_str());
+				}else{
+					tekst="wykorzystany kolor";
+					al_draw_text(font2, al_map_rgb(255,255,255),px+15,py+bok/2-15, 0, tekst.c_str());
+				}
 			}
 		}else{
 			al_draw_filled_rectangle(px, py, px+bok, py+bok,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
+			if(colors[i].wykozystany){
+				if(i==player[nr_gracza].color){
+					tekst="Twój kolor";
+					al_draw_text(font2, al_map_rgb(255,255,255),px+60,py+bok/2-15, 0, tekst.c_str());
+				}else{
+					tekst="Wykorzystany kolor";
+					al_draw_text(font2, al_map_rgb(255,255,255),px+15,py+bok/2-15, 0, tekst.c_str());
+				}
+			}
 		}
 		px=px+bok+10;
 	}
@@ -933,6 +977,8 @@ void clean1()
 	al_set_target_backbuffer(display);
 	al_set_target_bitmap(podsumowanie_wynikow_bitmap);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 150));
+	tekst="Achtung die kurve";
+	al_draw_text(font, al_map_rgb(255,22,22), 250, 100, 0, tekst.c_str());
 	al_set_target_backbuffer(display);
 	al_clear_to_color(al_map_rgb(0 ,0 , 0));
 
@@ -949,7 +995,7 @@ void clean1()
 	number_of_player=2;
 	ktos_postawil_serwer=false;
 	for(int i=0;i<10;i++){
-		player[i].color0=-1;
+		player[i].color=-1;
 	}
 }
 
@@ -965,7 +1011,8 @@ void rysuj_plansze()
 	al_set_target_bitmap(snakes);
 //	WYSWIETLANIE WEZY
 	for(int i=0;i<number_of_player;i++){
- 		al_draw_filled_circle(player[i].x, player[i].y-1, player[i].radius, al_map_rgb(player[i].color0, player[i].color1, player[i].color2));
+		if(player[i].touch!=-1 || player[i].przerwa!=0){continue;}
+ 		al_draw_filled_circle(player[i].x, player[i].y-1, player[i].radius, al_map_rgb(colors[player[i].color]._r, colors[player[i].color]._g, colors[player[i].color]._b));
 	}
 	al_set_target_backbuffer(display);
 	al_draw_bitmap(snakes, 20, 20, 0);
@@ -996,9 +1043,16 @@ void aktualizuj_plansze()
 	czas++;
 	for(int i=0;i<number_of_player;i++){
 		if(player[i].touch!=-1){continue;}
+		
+		if(player[i].przerwa_time==czasomierz){
+			player[i].przerwa_time=0;
+			player[i].przerwa=10;
+		}
+		if(player[i].przerwa>0){player[i].przerwa--;}
+
 		player[i].x=player[i].x+player[i].step*cos(player[i].degrees);
 		player[i].y=player[i].y+player[i].step*sin(player[i].degrees);
-		for(int a=0;a<2*player[i].radius && player[i].touch==-1;a++){
+		for(int a=0;a<2*player[i].radius && player[i].touch==-1 && player[i].przerwa==0;a++){
 			for(int e=0;e<2*player[i].radius;e++){
 				float f_iks=player[i].x-player[i].radius+a;
 				float f_igrek=player[i].y-player[i].radius+e;
@@ -1006,18 +1060,16 @@ void aktualizuj_plansze()
 				if (f_igrek < 0) { f_igrek = 0; }
 				if (f_iks > xpl-1) { f_iks = xpl-1; }
 				if (f_igrek > ypl-1) { f_igrek = ypl-1; }
-
-				if((f_igrek-player[i].y)*(f_igrek-player[i].y)+(player[i].x-f_iks)*(player[i].x-f_iks)<player[i].radius*player[i].radius){
-					int iks = (int) f_iks;
-					int igrek = (int) f_igrek;
-
-					if(board[iks][igrek].nrplayer!=-1){
+					if((f_igrek-player[i].y)*(f_igrek-player[i].y)+(player[i].x-f_iks)*(player[i].x-f_iks)<player[i].radius*player[i].radius){
+				int iks = (int) f_iks;
+				int igrek = (int) f_igrek;
+						if(board[iks][igrek].nrplayer!=-1){
 						if(board[iks][igrek].nrplayer==i){
 							if(board[iks][igrek].time<czas-player[i].space){
 								cout<<"GRACZ "<<i<<": wjechales w siebie"<<endl;
 							   	player[i].touch = przegranych;
 							   	player[i].touch_time = czasomierz/60.0;
-         					   	przegranych++;
+        					   	przegranych++;
 								break;
 							}
 						}else if(board[iks][igrek].nrplayer!=100){
@@ -1025,13 +1077,13 @@ void aktualizuj_plansze()
 							player[i].touch = przegranych;
 							player[i].touch_time = czasomierz/60.0;
 							przegranych++;
-        	        		break;
-						}else if(board[iks][igrek].nrplayer==100){
+       	    	    		break;
+							}else if(board[iks][igrek].nrplayer==100){
 							cout<<"GRACZ "<<i<<": wjechales w sciane"<<endl;
 							player[i].touch = przegranych;
 							player[i].touch_time = czasomierz/60.0;
 							przegranych++;
-        	               	break;
+       	       	        	break;
 						}
 					}else{
 						board[iks][igrek].nrplayer=i;
@@ -1141,8 +1193,8 @@ int main(int argc, char ** argv)
             //
            		co_robia_gracze();
             	aktualizuj_plansze();
-            if(by_the_network && licznik_fps==0){
-            	
+            if(licznik_fps==0){
+
             	konczenie_tury();
             }
             przerysuj = true;
