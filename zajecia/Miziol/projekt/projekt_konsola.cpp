@@ -3,16 +3,16 @@
 #include<string.h>
 #include"kalkulator.h"
 #include"pola.h"
+#include"ulamki.h"
 using namespace std;
 int main()
 {
-cout<<"Witaj w programie kalkulator. Program ten dysponuje dwoma możliwościami obliczeń.\n1. Klasyczny kalkulator\n2. Obliczanie pól\n3.Przypomnij możliwości\n4.Zakończ\n";
+cout<<"Witaj w programie kalkulator. Program ten dysponuje dwoma możliwościami obliczeń.\n1. Klasyczny kalkulator\n2. Obliczanie pól\n3. Kalkulator działający na ułamkach zwykłych\n4. Przypomnij możliwości\n5. Zakończ\n";
 int kalpo=0;
 bool korzystanie=false;
 cout<<"Którą opcję wybierasz?\n";
 while(1)
 	{
-	cout<<"Witaj w programie kalkulator. Program tan dysponuje dwoma możliwościami obliczeń.\n1. Klasyczny kalkulator\n2. Obliczanie pól\n3.Zakończ\n";
 	cin>>kalpo;
 	if(kalpo==1)
 		{
@@ -26,9 +26,14 @@ while(1)
 		}
 	if(kalpo==3)
 		{
-
+		korzystanie=true;
+		ulamki();
 		}
 	if(kalpo==4)
+		{
+		cout<<"Witaj w programie kalkulator. Program tan dysponuje dwoma możliwościami obliczeń.\n1. Klasyczny kalkulator\n2. Obliczanie pól\n3. Kalkulator działający na ułamkach zwykłych\n4. Przypomnij możliwości\n5. Zakończ\n";
+		}
+	if(kalpo==5)
 		{
 		if(korzystanie==false)
 			{
@@ -40,7 +45,7 @@ while(1)
 			}
 		break;
 		}
-	cout<<"3.Przypomnij możliwości\nKtórą opcję wybierasz?";
+	cout<<"4.Przypomnij możliwości\nKtórą opcję wybierasz?";
 	}
 
 return 0;
