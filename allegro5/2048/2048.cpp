@@ -388,11 +388,14 @@ class GRA {
                 return -1;
             }
         }
-        al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
+        al_set_new_display_flags(ALLEGRO_WINDOWED);
         al_get_display_mode(0, &disp_data);
         SCREEN_W = disp_data.width;
         SCREEN_H = disp_data.height;
 
+        SCREEN_W = 800;
+        SCREEN_H = 600;
+        
         display = al_create_display(SCREEN_W, SCREEN_H);
         if(!display) {
             cout << "Błąd podczas inicjalizacji ekranu." << endl;
@@ -437,7 +440,7 @@ public:
 
     void run() {
 
-        if (!init()) wyjdz == true;
+        if (!init()) wyjdz = true;
 
         bool przerysuj = true;
 
@@ -482,7 +485,7 @@ public:
     }
 };
 
-int main() {
+int main(int, char**) {
     srandom(time(NULL)+getpid());
     GRA gra;
     gra.run();

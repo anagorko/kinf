@@ -104,7 +104,7 @@ callback_lws_mirror(struct libwebsocket_context *context,
 	case LWS_CALLBACK_CLIENT_WRITEABLE:
         if (outgoing_packets.empty()) break;
                 
-        while (!outgoing_packets.empty()) {
+        if (!outgoing_packets.empty()) {
             string p = outgoing_packets.front();
             outgoing_packets.pop_front();
             
@@ -162,6 +162,8 @@ bool receive_packet(string &payload)
     payload = incoming_packets.front();
     incoming_packets.pop_front();
     
+    cout << "Received: " << payload << endl;
+
     return true;
 }
 
