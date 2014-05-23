@@ -7,6 +7,7 @@ cout<<"Witaj w kalkulatorze który operuje na ułamkach zwykłych.\nPodaj swoje 
 //zmienne
 int a[2],b[2],w[2];
 int wa[2],wb[2];
+int x=w[0],y=w[1];
 //zerowanie
 for(int i=0;i<2;i++)
 	{
@@ -168,6 +169,42 @@ if(z=='/')
 	}
 //koniec obliczenia
 //poczatek skracanie
+
+if(w[0]==w[1])
+	{
+	w[0]=1;
+	w[1]=1;
+	}
+else
+	{
+	x=w[0];
+	y=w[1];
+	while(true)
+		{
+		if(x==0||y==0)
+			{
+			if(x==0)
+				{
+				w[0]=w[0]/y;
+				w[1]=w[1]/y;
+				}
+			if(y==0)
+				{
+				w[0]=w[0]/x;
+				w[1]=w[1]/x;
+				}
+			break;
+			}
+		if(x<y)
+			{
+			y=y%x;
+			}
+		else
+			{
+			x=x%y;
+			}
+		}
+	}
 
 //koniec skracanie
 //wypisywanie wyniku
