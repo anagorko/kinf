@@ -22,6 +22,7 @@ bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 ALLEGRO_FONT * arial = NULL;
 ALLEGRO_FONT * howtoarial = NULL;
 ALLEGRO_FONT * titlearial = NULL;
+ALLEGRO_FONT * bigtitlearial = NULL;
 ALLEGRO_FONT * scorearial = NULL;
 ALLEGRO_FONT * game_over_arial = NULL;
 int mouse_x;
@@ -49,6 +50,7 @@ class tile
 	int g;
 	int b;
 	int animation;
+	int animation_size;
 	void init ()
 	{
 		number = 0;
@@ -56,6 +58,13 @@ class tile
 	void calculate ()
 	{
 		if(animation < 10)animation++;
+		if(animation > 10)animation--;
+		if(animation <= 17){
+			animation_size = animation;
+		}
+		else{
+			animation_size = animation - 2 * (animation - 17);
+		}
 		if(number > 0){
 			switch (number)
 			{
@@ -267,7 +276,7 @@ void rysuj_plansze()
 	for(int a = 0; a < 4; a++){
 		for(int b = 0; b < 4; b++){
 			if(tiles[a][b].number > 0){
-				al_draw_filled_rounded_rectangle(square_x + a * break_size + break_size + a * tile_size + 10 * tile_size/20 - tiles[a][b].animation * tile_size/20, square_y + b * break_size + break_size + b * tile_size + 10 * tile_size/20 - tiles[a][b].animation * tile_size/20, square_x + a * break_size + break_size + a * tile_size + tile_size - 10 * tile_size/20 + tiles[a][b].animation * tile_size/20, square_y + b * break_size + break_size + b * tile_size + tile_size - 10 * tile_size/20 + tiles[a][b].animation * tile_size/20, square_size/50, square_size/50, al_map_rgb(tiles[a][b].r,tiles[a][b].g,tiles[a][b].b));
+				al_draw_filled_rounded_rectangle(square_x + a * break_size + break_size + a * tile_size + 10 * tile_size/20 - tiles[a][b].animation_size * tile_size/20, square_y + b * break_size + break_size + b * tile_size + 10 * tile_size/20 - tiles[a][b].animation_size * tile_size/20, square_x + a * break_size + break_size + a * tile_size + tile_size - 10 * tile_size/20 + tiles[a][b].animation_size * tile_size/20, square_y + b * break_size + break_size + b * tile_size + tile_size - 10 * tile_size/20 + tiles[a][b].animation_size * tile_size/20, square_size/50, square_size/50, al_map_rgb(tiles[a][b].r,tiles[a][b].g,tiles[a][b].b));
 				ss.clear();
 				ss << tiles[a][b].number;
 				ss >> text;
@@ -343,6 +352,8 @@ void n_move (int a, int b)
 		if(tiles[a][b - 1].number == 0){
 			tiles[a][b - 1].number = tiles[a][b].number;
 			tiles[a][b].number = 0;
+			tiles[a][b - 1].animation = tiles[a][b].animation;
+			tiles[a][b].animation = 0;
 			n_move(a, b - 1);
 		}
 	}
@@ -354,6 +365,8 @@ void s_move (int a, int b)
 		if(tiles[a][b + 1].number == 0){
 			tiles[a][b + 1].number = tiles[a][b].number;
 			tiles[a][b].number = 0;
+			tiles[a][b + 1].animation = tiles[a][b].animation;
+			tiles[a][b].animation = 0;
 			s_move(a, b + 1);
 		}
 	}
@@ -365,6 +378,8 @@ void w_move (int a, int b)
 		if(tiles[a - 1][b].number == 0){
 			tiles[a - 1][b].number = tiles[a][b].number;
 			tiles[a][b].number = 0;
+			tiles[a - 1][b].animation = tiles[a][b].animation;
+			tiles[a][b].animation = 0;
 			w_move(a - 1, b);
 		}
 	}
@@ -376,6 +391,8 @@ void e_move (int a, int b)
 		if(tiles[a + 1][b].number == 0){
 			tiles[a + 1][b].number = tiles[a][b].number;
 			tiles[a][b].number = 0;
+			tiles[a + 1][b].animation = tiles[a][b].animation;
+			tiles[a][b].animation = 0;
 			e_move(a + 1, b);
 		}
 	}
@@ -399,6 +416,7 @@ void vertical (int a, int w)
 				if(tiles[a][b - 1].number == tiles[a][b].number){
 					score += (tiles[a][b - 1].number + tiles[a][b].number);
 					tiles[a][b - 1].number += tiles[a][b].number;
+					tiles[a][b - 1].animation = 24;
 					tiles[a][b].number = 0;
 				}
 			}
@@ -409,6 +427,7 @@ void vertical (int a, int w)
 				if(tiles[a][b + 1].number == tiles[a][b].number){
 					score += (tiles[a][b + 1].number + tiles[a][b].number);
 					tiles[a][b + 1].number += tiles[a][b].number;
+					tiles[a][b + 1].animation = 24;
 					tiles[a][b].number = 0;
 				}
 			}
@@ -444,6 +463,7 @@ void horizontal (int b, int w)
 				if(tiles[a - 1][b].number == tiles[a][b].number){
 					score += (tiles[a - 1][b].number + tiles[a][b].number);
 					tiles[a - 1][b].number += tiles[a][b].number;
+					tiles[a - 1][b].animation = 24;
 					tiles[a][b].number = 0;
 				}
 			}
@@ -454,6 +474,7 @@ void horizontal (int b, int w)
 				if(tiles[a + 1][b].number == tiles[a][b].number){
 					score += (tiles[a + 1][b].number + tiles[a][b].number);
 					tiles[a + 1][b].number += tiles[a][b].number;
+					tiles[a + 1][b].animation = 24;
 					tiles[a][b].number = 0;
 				}
 			}
@@ -638,6 +659,7 @@ void co_robia_gracze()
 
 void rysuj_menu(){
 	 al_clear_to_color(al_map_rgb(255,247,255));
+	al_draw_text(titlearial, al_map_rgb(112,108,99), screen_w/2, break_size * 4, ALLEGRO_ALIGN_CENTRE, title.c_str());
 	play.draw();
 	settings.draw();
 	about.draw();
@@ -793,6 +815,7 @@ int init()
 	scorearial = al_load_ttf_font("ArialBlack.ttf", 20, 0);
 	game_over_arial = al_load_ttf_font("ArialBlack.ttf", 38, 0);
 	titlearial = al_load_ttf_font("ArialBlack.ttf", tile_size * 7/8, 0);
+	titlearial = al_load_ttf_font("ArialBlack.ttf", tile_size * 1.5, 0);
 	for(int i = 9; i >= 0; i--){
 			for(int a = 0; a < 4; a++){
 				for(int b = 0; b < 4; b++){
