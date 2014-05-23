@@ -659,7 +659,7 @@ void co_robia_gracze()
 
 void rysuj_menu(){
 	 al_clear_to_color(al_map_rgb(255,247,255));
-	al_draw_text(titlearial, al_map_rgb(112,108,99), screen_w/2, break_size * 4, ALLEGRO_ALIGN_CENTRE, title.c_str());
+	al_draw_text(bigtitlearial, al_map_rgb(112,108,99), screen_w/2, break_size * 4, ALLEGRO_ALIGN_CENTRE, title.c_str());
 	play.draw();
 	settings.draw();
 	about.draw();
@@ -815,7 +815,7 @@ int init()
 	scorearial = al_load_ttf_font("ArialBlack.ttf", 20, 0);
 	game_over_arial = al_load_ttf_font("ArialBlack.ttf", 38, 0);
 	titlearial = al_load_ttf_font("ArialBlack.ttf", tile_size * 7/8, 0);
-	titlearial = al_load_ttf_font("ArialBlack.ttf", tile_size * 1.5, 0);
+	bigtitlearial = al_load_ttf_font("ArialBlack.ttf", tile_size * 1.5, 0);
 	for(int i = 9; i >= 0; i--){
 			for(int a = 0; a < 4; a++){
 				for(int b = 0; b < 4; b++){
