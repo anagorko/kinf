@@ -15,7 +15,7 @@ struct stos
 		{
 		return p==0;
 		}
-	void insert(int r)
+	void insert(float r)
 		{
 		t[p]=r;
 		p++;
