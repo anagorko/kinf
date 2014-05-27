@@ -1,2 +1,1 @@
-> git clone git://git.libwebsockets.org/libwebsockets
-
+> Jak zainstalować: https://github.com/anagorko/kinf/wiki/Jak-zainstalowa%C4%87
