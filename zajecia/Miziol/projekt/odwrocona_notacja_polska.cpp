@@ -38,8 +38,10 @@ int a,b;
 bool z=false;
 //zmienne
 //wczytywanie i liczenie
-cin.ignore(1,'\n');
+//cin.ignore(1,'\n');
 getline (cin,s);
+
+cout<<s<<"\n";
 
 for(int i=0;i<s.size();i++)
 	{
