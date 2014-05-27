@@ -6,42 +6,41 @@ int main()
 struct stos
 	{
 	float t[1000];
-	int i;
+	int p;
 	void init()
 		{
-		i=0;
+		p=0;
 		}
 	bool empty()
 		{
-		return i==0;
+		return p==0;
 		}
 	void insert(int r)
 		{
-		t[i]=r;
-		i++;
+		t[p]=r;
+		p++;
 		}
 	float top()
 		{
-		return t[i];
+		return t[p-1];
 		}
 	void remove()
 		{
-		i--;
+		p--;
 		}
 	};
 
 stos st;
 st.init();
-string s;
-float r=0;
-int a,b;
+int l;
+string s,s2;
+float r=0,r2=0;
+float a,b;
 bool z=false;
 //zmienne
 //wczytywanie i liczenie
 //cin.ignore(1,'\n');
 getline (cin,s);
-
-cout<<s<<"\n";
 
 for(int i=0;i<s.size();i++)
 	{
@@ -95,14 +94,76 @@ for(int i=0;i<s.size();i++)
 		r=r*10+9;
 		z=false;
 		}
+	if(s[i]=='.'||s[i]==',')
+		{
+		i++;
+		r2=0;
+		for( ; ; )
+			{
+			if(s[i]=='0')
+				{
+				r2=r2*10+0;
+				}
+			if(s[i]=='1')
+				{
+				r2=r2*10+1;
+				}
+			if(s[i]=='2')
+				{
+				r2=r2*10+2;
+				}
+			if(s[i]=='3')
+				{
+				r2=r2*10+3;
+				}
+			if(s[i]=='4')
+				{
+				r2=r2*10+4;
+				}
+			if(s[i]=='5')
+				{
+				r2=r2*10+5;
+				}
+			if(s[i]=='6')
+				{
+				r2=r2*10+6;
+				}
+			if(s[i]=='7')
+				{
+				r2=r2*10+7;
+				}
+			if(s[i]=='8')
+				{
+				r2=r2*10+8;
+				}
+			if(s[i]=='9')
+				{
+				r2=r2*10+9;
+				}
+			if(s[i]!='0'||s[i]!='1'||s[i]!='2'||s[i]!='3'||s[i]!='4'||s[i]!='5'||s[i]!='6'||s[i]!='7'||s[i]!='8'||s[i]!='9')
+				{
+				break;
+				}
+			i++;
+			}
+		s2=r2;
+		l=s2.size();
+		r2=r2/(10.00*l);
+		r=r+r2;
+		i++;
+		}
+
+
+
+//element liczący
 	if(s[i]==' ')
 		{
-		if(z=false)
+		if(z==false)
 			{
 			st.insert(r);
 			r=0;
 			}
-		if(z=true)
+		if(z==true)
 			{
 			r=0;
 			}
@@ -113,8 +174,7 @@ for(int i=0;i<s.size();i++)
 		st.remove();
 		b=st.top();
 		st.remove();
-		r=a+b;
-		st.insert(r);
+		st.insert(a+b);
 		r=0;
 		z=true;
 		}
@@ -148,6 +208,7 @@ for(int i=0;i<s.size();i++)
 		r=0;
 		z=true;
 		}
+//element liczący
 	}
 //wczytywanie i liczenie
 
