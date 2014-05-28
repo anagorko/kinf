@@ -61,9 +61,11 @@ ALLEGRO_BITMAP * menu0_bitmap = NULL;
 ALLEGRO_BITMAP * gameroom_bitmap = NULL;
 ALLEGRO_BITMAP * gameroom_player_bitmap = NULL;
 ALLEGRO_BITMAP * podsumowanie_wynikow_bitmap = NULL;
+ALLEGRO_BITMAP * zaciemnienie_bitmap = NULL;
 ALLEGRO_FONT * font = NULL;
 ALLEGRO_FONT * font1 = NULL;
 ALLEGRO_FONT * font2 = NULL;
+ALLEGRO_FONT * font3 = NULL;
 
 int init()
 {
@@ -113,6 +115,7 @@ int init()
 	font=al_load_ttf_font("FreeMono.ttf", 60, 12);
 	font1=al_load_ttf_font("FreeMono.ttf", 30, 12);
 	font2=al_load_ttf_font("FreeMono.ttf", 20, 12);
+	font3=al_load_ttf_font("FreeMono.ttf", 60, 12);
 
    if (!font) {
        cerr << "Nie mogę załadować czcionki FreeMono.ttf" << endl;
@@ -215,6 +218,7 @@ void rysowanie_kolorow();
 void gameroom()
 {
 
+	cout<<"GAMEROOM\n";
     	
 	bool przerysuj = true;
 
@@ -243,6 +247,7 @@ void gameroom()
        	    }
        	    if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
        	    	wyjdz = true;
+       	    	koncz_gre = true;
        	    	break;
        	    }
        	    if (ev.keyboard.keycode == ALLEGRO_KEY_S && wybrane_kolory==2){
@@ -286,8 +291,12 @@ void podsumowanie_wynikow(){
 	stringstream ss;
 	
 
-	int przesuniecie=190;
-	int przesuniecie_kwadratow=400;
+	int przesuniecie_tekstu=215;
+	
+	int bok=70;
+	int px=480,py=220;
+	int odstep=40;
+
 	int licznik=1;
 	al_set_target_bitmap(podsumowanie_wynikow_bitmap);
 	for(int i=number_of_player-1;i>=0;i--){
@@ -296,14 +305,16 @@ void podsumowanie_wynikow(){
 				ss.str("");ss.clear();
 				ss<<licznik<<".";
 				string tekst =  ss.str();
-				al_draw_text(font, al_map_rgb(255,255,255), 400, przesuniecie, 0, tekst.c_str());
+				al_draw_text(font, al_map_rgb(255,255,255), 400, przesuniecie_tekstu, 0, tekst.c_str());
 				ss.str("");ss.clear();
 				ss << fixed << setprecision(1) << player[a].touch_time;
 				tekst = ss.str();
-				al_draw_text(font, al_map_rgb(255,255,255), 600, przesuniecie, 0, tekst.c_str());
-				al_draw_filled_rectangle(480, przesuniecie+30,530,przesuniecie+60,al_map_rgb(colors[player[a].color]._r,colors[player[a].color]._g,colors[player[a].color]._b));
-				przesuniecie=przesuniecie+60;
+				al_draw_text(font, al_map_rgb(255,255,255), 600, przesuniecie_tekstu, 0, tekst.c_str());
+				//al_draw_filled_rectangle(480, przesuniecie+30,530,przesuniecie+60,al_map_rgb(colors[player[a].color]._r,colors[player[a].color]._g,colors[player[a].color]._b));
+				al_draw_filled_rectangle(px, py,px+bok,py+bok,al_map_rgb(colors[player[a].color]._r,colors[player[a].color]._g,colors[player[a].color]._b));
+				przesuniecie_tekstu=przesuniecie_tekstu+110;
 				licznik++;
+				py=py+bok+odstep;
 			}
 		}
 	}
@@ -351,7 +362,6 @@ void podsumowanie_wynikow(){
 
        	if(przerysuj && al_is_event_queue_empty(event_queue)) {
        	    przerysuj = false;
- 
            	al_flip_display();
        	}
 	}
@@ -363,6 +373,7 @@ void clean0(){
 	gameroom_bitmap = al_create_bitmap(screen_w,screen_h);
 	gameroom_player_bitmap = al_create_bitmap(1310, 524);
 	podsumowanie_wynikow_bitmap = al_create_bitmap(1366, 768);
+	zaciemnienie_bitmap = al_create_bitmap(1366, 768);
 	
 }
 void clean2(){
@@ -462,13 +473,30 @@ void rysowanie_kolorow(){
 
 void menu_quit()
 {
+	int licznik_czasu=0;
 	ALLEGRO_EVENT ev;
+	al_stop_timer(timer);
+	al_draw_bitmap(zaciemnienie_bitmap, 0, 0, 0);
+	int px=400;
+	int py=100;
+	int bokx=300;
+	int boky=50;
+	al_set_target_bitmap(pause_menu);
+	string tekst="kontynuj";
+	al_draw_filled_rectangle(px, py, px+bokx, py+boky,al_map_rgb(126 , 126, 126));
+	al_draw_text(font1, al_map_rgb(255,100,255), 400, 100, 0, tekst.c_str());
+	al_set_target_backbuffer(display);
+
 	al_draw_bitmap(pause_menu, 0, 0, 0);
 	al_flip_display();
-	al_stop_timer(timer);
+	
 	while(true){
 		al_wait_for_event(event_queue, &ev);
-		if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+		if(licznik_czasu==0) {
+
+		
+
+		}else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
             key[ev.keyboard.keycode] = true;
         } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
             key[ev.keyboard.keycode] = false ;
@@ -480,7 +508,20 @@ void menu_quit()
                 wyjdz = true;
                 break;
             }
-        }
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {
+            cursor_x = ev.mouse.x;
+            cursor_y = ev.mouse.y;
+   		} else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
+            cursor_pressed = false;
+        } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
+            cursor_pressed = true;
+        } 
+
+       	if(licznik_czasu==0 && al_is_event_queue_empty(event_queue)) {
+ 			al_draw_bitmap(pause_menu, 0, 0, 0);
+           	al_flip_display();
+       	}
+       	licznik_czasu=(licznik_czasu+1)%20;
 	}
 	al_start_timer(timer);
 }
@@ -513,7 +554,7 @@ void clean1()
 	al_set_target_backbuffer(display);
 	al_set_target_backbuffer(display);
 	al_set_target_bitmap(pause_menu);
-	al_clear_to_color(al_map_rgba(0, 0, 0, 200));
+	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
 	al_set_target_backbuffer(display);
 	al_set_target_bitmap(menu0_bitmap);
 	al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -528,10 +569,13 @@ void clean1()
 	al_set_target_bitmap(gameroom_player_bitmap);
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_set_target_backbuffer(display);
+	al_set_target_bitmap(zaciemnienie_bitmap);
+	al_clear_to_color(al_map_rgba(0, 0, 0, 200));
+	al_set_target_backbuffer(display);
 	al_set_target_bitmap(podsumowanie_wynikow_bitmap);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 150));
 	tekst="Achtung die kurve";
-	al_draw_text(font, al_map_rgb(255,22,22), 250, 100, 0, tekst.c_str());
+	al_draw_text(font3, al_map_rgb(255,22,22), 250, 100, 0, tekst.c_str());
 	al_set_target_backbuffer(display);
 	al_clear_to_color(al_map_rgb(0 ,0 , 0));
 
