@@ -36,7 +36,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "run.cpp"
+//#include "run.cpp"
 
 #include <iostream>
 using namespace std;
@@ -389,7 +389,7 @@ void clean2(){
 		player[i].degrees=0;//kierunek poczatkowy gracza
 		player[i].touch=-1;
 		player[i].lastczas=0;//czas ostatniego wcisniencia klawisza
-		player[i].przerwa==0;//licznik przerwy
+		player[i].przerwa=0;//licznik przerwy
 		player[i].przerwa_time=0;//czas kiedy ma byc przerwa gracza
 		while(player[i].x<=20+player[i].radius || player[i].y<=20+player[i].radius){
 			player[i].x=random()%1072-2*player[i].radius;
