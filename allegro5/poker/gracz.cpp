@@ -1,22 +1,16 @@
 
- /// LISTA ZADAŃ:
+/// LISTA ZADAŃ:
+/// animacja wejścia karty
+/// okienko czatu
+/// info w lg rogu
+/// hierarchia kart w pg rogu
+/// server, stolik, nick wpisywany w allegro
+/// wyłączenie gry po przegranej (okno dialogowe)
+/// jesteś pewien, że chcesz opuścić grę? (okno dialogowe)
+/// zagranie jako dymek (tam gdzie kupka, kupka przesunięta)
+/// pasek czasu (gdzie?)
 
- // avatar ustawiany
- // ew. przybliżony czat gdy piszesz
- // opcja: zmień nick
- // allegro_dialog gdy chcę opuścić grę po ( (x) || Esc )
- // mouse_y źle działa
- // pasek uruchamiania zle działa
- // gdy przycisk najechany wyświetl ile srwdz/przeb (linijka ok.617)
- // ew. jaśniejszy przycisk przy najechaniu
- // ew. tryb przesuwania po kliknięciu suwaka
- // klasa czat
- // klasa pomoc
- // All in zgarnia tylko swoją kasę | stolik.cpp
- // dopracować funkcję zbierz_zaklady() | stolik.cpp
- // rozwinąć klasę czat
-
-// (C) Benedykt Kula
+/// Poker Texas Holdem Online (C) Benedykt Kula
 
 #include "../../network/websockets/client.h"
 
@@ -91,7 +85,7 @@ int PULA() {
     return zwrot;
 }
 
-const short czas_na_zagranie = 8;
+const short czas_na_zagranie = 10;
 
 //
 // Inne
@@ -146,6 +140,74 @@ int screen_w;
 int screen_h;
 int centrum_y;
 
+class FONT;
+
+class SKALOWANIE
+{
+public:
+    int w;
+    int h;
+    SKALOWANIE()
+    {
+        w = 1024;
+        h = 600;
+    }
+    int operator() (int n)
+    {
+        return int(double(n) * max(double(screen_w)/double(w), double(screen_h)/double(h)));
+    }
+};
+
+SKALOWANIE na_moim_kompie;
+
+class FONT
+{
+private:
+
+    vector <ALLEGRO_FONT*> f;
+
+public:
+
+    int init()
+    {
+        /*
+        if (!al_init_font_addon()) {
+            cerr << "Nie mogę załadować dodatku font." << endl;
+            return -1;
+        }
+        if (!al_init_ttf_addon()) {
+            cerr << "Nie mogę załadować dodatku ttf." << endl;
+            return -1;
+        }
+        */
+
+        al_init_font_addon();
+        al_init_ttf_addon();
+
+        f.reserve(1);
+        f[0] = al_load_ttf_font("bitmapy/arial.ttf",8,0);
+        if (!f[0]) {
+            cerr << "Nie mogę załadować czcionki arial.ttf" << endl;
+            return -1;
+        }
+
+        return 0;
+    }
+
+    ALLEGRO_FONT* operator() (int n)
+    {
+        while (f.size() <= n-8) {
+            f.push_back(al_load_ttf_font("bitmapy/arial.ttf",f.size()+8,0));
+        }
+
+        n -= 8;
+        n = zakres(n, 0, f.size()-1);
+        return f[n];
+    }
+};
+
+FONT font;
+
 short moje_miejsce;
 short moje_siedzenie = 0;
 
@@ -162,8 +224,6 @@ ALLEGRO_DISPLAY_MODE disp_data;
 ALLEGRO_DISPLAY * display = NULL;
 ALLEGRO_EVENT_QUEUE * event_queue = NULL;
 ALLEGRO_TIMER * timer = NULL;
-
-ALLEGRO_FONT * font[50];
 
 struct bitmapa {
     ALLEGRO_BITMAP * wsk;
@@ -257,11 +317,11 @@ public:
 int moneta_r;
 void rysuj_kupke (int kasa, bool czy_prawo, int x, int y) {
     al_draw_bitmap (moneta, x, y, 0);
-    int font_size = 15;
+    int font_size = na_moim_kompie(15);
     if (!czy_prawo) {
-        al_draw_text(font[font_size], black, x - moneta_r*0.5, y, ALLEGRO_ALIGN_RIGHT, tysiace(kasa).c_str());
+        al_draw_text(font(font_size), black, x - moneta_r*0.5, y, ALLEGRO_ALIGN_RIGHT, tysiace(kasa).c_str());
     } else {
-        al_draw_text(font[font_size], black, x + moneta_r*2.5, y, ALLEGRO_ALIGN_LEFT, tysiace(kasa).c_str());
+        al_draw_text(font(font_size), black, x + moneta_r*2.5, y, ALLEGRO_ALIGN_LEFT, tysiace(kasa).c_str());
     }
 }
 
@@ -291,14 +351,14 @@ public:
     int w, h;
     int cx, cy;
 
-    eliptyczny_stol() {
+    void init() {
         pomiedzy_kartami = 10;
-        font_size = 17;
+        font_size = na_moim_kompie(17);
     }
 
     void rysuj() {
 
-        w = 375*2, h = 175*2;
+        w = na_moim_kompie(375)*2, h = na_moim_kompie(175)*2;
         cx = screen_w/2, cy = centrum_y;
 
         for (int i = 0; i < h/2; i++) {
@@ -312,7 +372,7 @@ public:
         }
 
         if (komunikat == "X") rysuj_karty();
-        else al_draw_text(font[font_size], black, cx, cy-font_size/2, ALLEGRO_ALIGN_CENTRE, bez_(komunikat).c_str());
+        else al_draw_text(font(font_size), black, cx, cy-font_size/2, ALLEGRO_ALIGN_CENTRE, bez_(komunikat).c_str());
     }
 };
 
@@ -425,12 +485,12 @@ private:
 
 public:
 
-    tablica_gracza() {
+    void init() {
         w = 0;
-        h = 55;
-        font_size = 14;
+        h = na_moim_kompie(55);
+        font_size = na_moim_kompie(14);
         pomiedzy_napisami = (h - font_size * 2) / 3.5;
-        pomiedzy_kartami = 14;
+        pomiedzy_kartami = na_moim_kompie(14);
         kolor_czcionki = white;
         start_odlicznia = -1;
         tryb_siadania = false;
@@ -492,10 +552,10 @@ public:
 
         if (gracz[numer_gracza].status > -2) {
             wolne_miejsce = false;
-            w = 130;
+            w = na_moim_kompie(130);
         } else {
             wolne_miejsce = true;
-            w = 92;
+            w = na_moim_kompie(92);
         }
 
         ustaw_x_i_y (numer_siedzenia);
@@ -504,15 +564,15 @@ public:
 
         if (tryb_siadania) {
             al_draw_filled_rectangle (cx-w/2,cy-h/2,cx+w/2,cy+h/2,white);
-            al_draw_text (font[font_size], black, cx, cy - pomiedzy_napisami/5 -font_size, ALLEGRO_ALIGN_CENTRE, string("Kliknij").c_str());
-            al_draw_text(font[font_size], black, cx, cy + pomiedzy_napisami/5, ALLEGRO_ALIGN_CENTRE, string("by usiąść").c_str());
+            al_draw_text (font(font_size), black, cx, cy - pomiedzy_napisami/5 -font_size, ALLEGRO_ALIGN_CENTRE, string("Kliknij").c_str());
+            al_draw_text(font(font_size), black, cx, cy + pomiedzy_napisami/5, ALLEGRO_ALIGN_CENTRE, string("by usiąść").c_str());
         } else {
             int a;
             if (wolne_miejsce) a = 200;
             else a = 235;
             rysuj_prostokat(cx,cy,w,h,60,60,60,0,0,0,a);
-            al_draw_text (font[font_size], kolor_czcionki, cx, cy - pomiedzy_napisami/2 -font_size, ALLEGRO_ALIGN_CENTRE, napis().c_str());
-            al_draw_text(font[font_size], white, cx, cy + pomiedzy_napisami/2, ALLEGRO_ALIGN_CENTRE, kasa().c_str());
+            al_draw_text (font(font_size), kolor_czcionki, cx, cy - pomiedzy_napisami/2 -font_size, ALLEGRO_ALIGN_CENTRE, napis().c_str());
+            al_draw_text(font(font_size), white, cx, cy + pomiedzy_napisami/2, ALLEGRO_ALIGN_CENTRE, kasa().c_str());
         }
 
         if (wolne_miejsce) obramowka(35,35,35,10);
@@ -584,10 +644,10 @@ public:
 
     void init(int i) {
         n = i;
-        w = 100, h = 55;
-        cx = 20 + w/2;
-        cy = screen_h - 20 - h/2 - 3*(h+5) + n*(h+5);
-        font_size = 14;
+        w = na_moim_kompie(100), h = na_moim_kompie(55);
+        cx = na_moim_kompie(20) + w/2;
+        cy = screen_h - na_moim_kompie(20) - h/2 - 3*(h+5) + n*(h+5);
+        font_size = na_moim_kompie(14);
     }
 
     void klik() {
@@ -612,7 +672,7 @@ public:
         else if (m.najechane) rysuj_prostokat (cx, cy, w, h, 255-k, 20, 20, 90-k, 20, 20);
         else rysuj_prostokat (cx, cy, w, h, 255, 30, 30, 90, 30, 30);
 
-        al_draw_text(font[font_size], white, cx, cy - font_size/2 - font_size/6, ALLEGRO_ALIGN_CENTRE, napis().c_str());
+        al_draw_text(font(font_size), white, cx, cy - font_size/2 - font_size/6, ALLEGRO_ALIGN_CENTRE, napis().c_str());
     }
 };
 
@@ -645,7 +705,7 @@ class opcje_zagran {
             bok = i1;
             x = i2;
             y = i3;
-            font_size = 15;
+            font_size = na_moim_kompie(15);
         }
 
         void aktualizuj() {
@@ -667,7 +727,7 @@ class opcje_zagran {
 
         void rysuj() {
             al_draw_rectangle (x, y, x+bok, y+bok, black, 2);
-            al_draw_text (font[font_size], black, x+bok*1.5, y+bok/2-font_size/2, ALLEGRO_ALIGN_LEFT, txt.c_str());
+            al_draw_text (font(font_size), black, x+bok*1.5, y+bok/2-font_size/2, ALLEGRO_ALIGN_LEFT, txt.c_str());
             if (przyszle_zagranie == z) al_draw_bitmap (good.wsk, x - abs(bok-good.w)/2, y - abs(bok-good.h)/2, 0);
         }
     };
@@ -680,8 +740,8 @@ public:
 
         cy = a;
         x = b;
-        bok = 24; x+=bok/2;
-        pomiedzy = 15;
+        bok = na_moim_kompie(24); x+=bok/2;
+        pomiedzy = na_moim_kompie(15);
 
         o[0].init(0,"Pasuję",bok,x,cy-1.5*bok-pomiedzy);
         o[1].init(0.5,"Czekam/Pasuję",bok,x,cy-bok/2);
@@ -733,10 +793,10 @@ class suwak_przebijania {
     system_klikania minus;
 
     void rysuj_stan () {
-        int font_size = 15;
+        int font_size = na_moim_kompie(15);
         al_draw_filled_rectangle (x[0], cy-miara/2, x[1], cy+miara/2, white);
         al_draw_rectangle (x[0], cy-miara/2, x[1], cy+miara/2, black, 1);
-        al_draw_text(font[font_size], black, x[0]+(x[1]-x[0])/2, cy - font_size/2, ALLEGRO_ALIGN_CENTRE, intostring(stan).c_str());
+        al_draw_text(font(font_size), black, x[0]+(x[1]-x[0])/2, cy - font_size/2, ALLEGRO_ALIGN_CENTRE, intostring(stan).c_str());
     }
 
     void rysuj_minus () {
@@ -779,8 +839,8 @@ public:
     int stan;
 
     void init() {
-        miara = 32;
-        w = 220;
+        miara = na_moim_kompie(32);
+        w = na_moim_kompie(220);
         cy = przycisk3.cy;
         stan = 0;
         //x: 0   1  2  3     4  5
@@ -836,16 +896,24 @@ suwak_przebijania suwak;
 
 class okno_czatu { // klasa do dopracowania
 
-    string txt;
+    vector <string> komunikaty;
+    int ile_komunikatow;
 
 public:
 
-    void odbierz(string t) {
-        txt = wycinek(t, string(nazwa_stolika+" CZAT Stolik ").size(), t.size());
+    void init() {
+        ile_komunikatow = 20;
+    }
+
+    void odbierz(string txt) {
+        txt = wycinek(txt, string(nazwa_stolika + " CZAT Stolik ").size(), txt.size());
+        komunikaty.push_back(txt);
+        //if (komunikaty.size() == komunikaty[0] = txt;
+        //else komunikaty.push_back(txt);
     }
 
     void rysuj() {
-        al_draw_text(font[14], white, screen_w-20, screen_h-20, ALLEGRO_ALIGN_RIGHT, txt.c_str());
+        al_draw_text(font(14), white, screen_w-20, screen_h-20, ALLEGRO_ALIGN_RIGHT, komunikaty.back().c_str());
     }
 };
 
@@ -984,24 +1052,6 @@ int bitmap_init() {
     return 0;
 }
 
-int font_init() {
-
-    al_init_font_addon();
-    al_init_ttf_addon();
-
-    for (int i = 0; i < sizeof(font)/sizeof(int); i++) {
-        font[i] = al_load_ttf_font("bitmapy/FreeMono.ttf",i,0);
-        if (!font[i]) {
-            cerr << "Nie mogę załadować czcionki FreeMono.ttf" << endl;
-            al_destroy_display(display);
-            al_destroy_timer(timer);
-            return -1;
-        }
-    }
-
-    return 0;
-}
-
 int color_init() {
 
     white = al_map_rgb(255,255,255);
@@ -1105,14 +1155,14 @@ void rysuj_pule() {
 
     if (pula[0] < 1) return;
 
-    int x = 50, y = 60, w = 90, h = 25, font_size = 16;
+    int x = 50, y = 60, w = 90, h = 25, font_size = na_moim_kompie(16);
     for (int i = 0; i < w/2; i++) {
         int a = (float)255*((float)1-(float)i/(float)((float)w/2));
         al_draw_line(x+w/2+i, y, x+w/2+i, y+h, al_map_rgba(0,0,0,a), 1);
         al_draw_line(x+w/2-i, y, x+w/2-i, y+h, al_map_rgba(0,0,0,a), 1);
     }
 
-    al_draw_text(font[font_size], white, x+w/2, y+h/2-font_size/2, ALLEGRO_ALIGN_CENTRE, string("PULA").c_str());
+    al_draw_text(font(font_size), white, x+w/2, y+h/2-font_size/2, ALLEGRO_ALIGN_CENTRE, string("PULA").c_str());
 
     for (int i = 0; i < liczba_miejsc; i++) {
         if (pula[i] < 1) break;
@@ -1189,7 +1239,7 @@ int stoliki() {
 
                     } else if (paczka == "PRZELUDNIENIE") {
 
-                        cout << "Niestety przy stoliku " << nazwa_stolika << "' nie ma wolnego miejsca.\n" << endl;
+                        cout << "Niestety przy stoliku " << nazwa_stolika << " nie ma wolnego miejsca.\n" << endl;
                         return -1;
                     }
                 }
@@ -1239,6 +1289,12 @@ int init() {
     screen_h = disp_data.height; //- 54;
     centrum_y = screen_h/2 - 20;
 
+al_set_new_display_flags(ALLEGRO_WINDOWED);
+cout << "w: ";
+cin >> screen_w;
+cout << "h: ";
+cin >> screen_h;
+
     display = al_create_display(screen_w, screen_h);
     if(!display) {
         cerr << "Błąd podczas inicjalizacji ekranu." << endl;
@@ -1254,17 +1310,17 @@ int init() {
         return -1;
     }
 
-    if (font_init() != 0) return -1;
+    if (font.init() != 0) return -1;
     if (bitmap_init() != 0) return -1;
     if (color_init() != 0) return -1;
-
+    stolik.init();
+    for (int i = 0; i < liczba_miejsc; i++) tablica[i].init();
     przycisk1.init(1);
     przycisk2.init(2);
     przycisk3.init(3);
-
     opcje.init(przycisk2.cy, przycisk2.cx-przycisk2.w/2);
-
     suwak.init();
+    czat.init();
 
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
@@ -1407,6 +1463,7 @@ int main() {
             przerysuj = true;
 
             zawsze();
+
 
         } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
             key[ev.keyboard.keycode] = true;

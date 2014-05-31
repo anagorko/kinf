@@ -156,7 +156,7 @@ string zmiana_nicku(string t) {
     return t;
 }
 
-const short czas_na_zagranie = 8;
+const short czas_na_zagranie = 10;
 
 /********************************
  Funkcje
