@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+
 #include <time.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -17,6 +18,12 @@ string wycinek (string t1, int from, int to) {
         t2 += t1[i];
     }
     return t2;
+}
+string z_ (string txt) {
+    for (int i = 0; i < txt.length(); i++) {
+        if (txt[i] == ' ') txt[i] = '_';
+    }
+    return txt;
 }
 
 enum RELACJE {mniejsze, rowne, wieksze};
@@ -34,6 +41,8 @@ struct karta {
     static bool wg_liczba (karta a, karta b) {return a.liczba > b.liczba;}
     static bool wg_kolor (karta a, karta b) {return a.kolor > b.kolor;}
 };
+
+short faza = -1;
 
 struct miejsce {
     short status;
@@ -57,8 +66,6 @@ int wysokoscMC = 5;
 int wysokoscDC = 10;
 
 string komunikat = "X";
-
-short faza = -1;
 
 vector < miejsce > gracz;
 
@@ -157,6 +164,7 @@ string zmiana_nicku(string t) {
 }
 
 const short czas_na_zagranie = 10;
+const short poczatkowy_czas_dodatkowy = 25;
 
 /********************************
  Funkcje
@@ -188,7 +196,7 @@ bool WBIJAM(string nick_nowego) {
         gracz[miejsce_nowego].zagranie = "X";
         gracz[miejsce_nowego].kasa = 1000;
         gracz[miejsce_nowego].zaklad = 0;
-        gracz[miejsce_nowego].dod_czas = 25;
+        gracz[miejsce_nowego].dod_czas = poczatkowy_czas_dodatkowy;
 
         ss.str(""); ss.clear();
         ss << nazwa_stolika << " " << gracz[miejsce_nowego].nick << " ZAPRASZAM " << liczba_miejsc << " " << miejsce_nowego;
@@ -426,6 +434,8 @@ bool paczki() {
 
 void zbierz_zaklady() { // funkcja do dopracowania
 
+    rozeslij_dane();
+
     while (1) {
         int min;
         short numer;
@@ -450,7 +460,7 @@ void zbierz_zaklady() { // funkcja do dopracowania
                 gracz[i].pule = aktualna_pula;
             }
         }
-        // poniższa linijka była pisana na szybko, może zawierać błąd ;)
+        // poniższa linijka była pisana na szybko, może zawierać błąd logiczny;)
         if (gracz[numer].status == 0) aktualna_pula++;
     }
 }
@@ -546,10 +556,12 @@ int ustawienia() {
 
     cout << endl << "Serwer: ";
     string serwer;
-    cin >> serwer;
+    getline(cin,serwer);
+    serwer = z_(serwer);
 
     cout << "Nazwa: ";
-    cin >> nazwa_stolika;
+    getline(cin,nazwa_stolika);
+    nazwa_stolika = z_(nazwa_stolika);
 
     while (nazwa_stolika.length() > 50) {
         cout << "Nazwa stolika musi się mieścić w 50 znakach: ";
@@ -588,7 +600,7 @@ int ustawienia() {
 void pre_flop() {
 
     faza = 0;
-
+    rozeslij_dane();
     komunikat = "X";
 
     for (int i = 0; i < liczba_miejsc; i++) {
@@ -647,6 +659,7 @@ void pre_flop() {
 
 void flop() {
     faza = 1;
+    rozeslij_dane();
     wyloz_karte(0);
     wyloz_karte(1);
     wyloz_karte(2);
@@ -655,12 +668,14 @@ void flop() {
 
 void turn() {
     faza = 2;
+    rozeslij_dane();
     wyloz_karte(3);
     if (ile_statusow(1) > 1) licytacja();
 }
 
 void the_river() {
     faza = 3;
+    rozeslij_dane();
     wyloz_karte(4);
     if (ile_statusow(1) > 1) licytacja();
 }
@@ -789,6 +804,7 @@ RELACJE relacja (vector<short>a,vector<short>b) {
 void wykrycie_kart() {
 
     faza = 4;
+    rozeslij_dane();
 
     for (int i = 0; i < liczba_miejsc; i++) gracz[i].wykryj_uklad();
 
@@ -853,7 +869,9 @@ int main() {
             paczki();
             if (liczba_graczy() < 2) {
                 while (1) {
+                    usleep(1000000);
                     paczki();
+                    rozeslij_dane();
                     if (liczba_graczy() > 2) {
                         time_t czas = time(NULL);
                         for (int i = 0; i < 10;) {
