@@ -893,7 +893,7 @@ public:
             else a = 235;
             rysuj_prostokat(cx,cy,w,h,60,60,60,0,0,0,a);
             if (wolne_miejsce) al_draw_text (font(font_size), white, cx, cy - pomiedzy_napisami/2 -font_size, ALLEGRO_ALIGN_CENTRE, string("Wolne").c_str());
-            else al_draw_text (font(font_size), white, cx, cy - pomiedzy_napisami/2 -font_size, ALLEGRO_ALIGN_CENTRE, gracz[numer_gracza].nick.c_str());
+            else al_draw_text (font(font_size), white, cx, cy - pomiedzy_napisami/2 -font_size, ALLEGRO_ALIGN_CENTRE, bez_(gracz[numer_gracza].nick).c_str());
             al_draw_text(font(font_size), white, cx, cy + pomiedzy_napisami/2, ALLEGRO_ALIGN_CENTRE, kasa().c_str());
         }
 
