@@ -371,7 +371,7 @@ public:
 
 class KUPKA_KASY
 {
-    const float speed = na_moim_kompie(5.0);
+    float speed;
     struct LATACZ
     {
         int ile_dolecialo;
@@ -399,6 +399,7 @@ public:
     KUPKA_KASY(KUPKA_KASY * arg)
     {
         cel = arg;
+	  speed = na_moim_kompie(5.0);
     }
     ~KUPKA_KASY()
     {
@@ -475,7 +476,7 @@ class eliptyczny_stol {
     class STOLIKOWA_KARTA
     {
         float cel_x, cel_y;
-        float speed = na_moim_kompie(5.0);
+        float speed;
         float droga;
         float x;
         short lp;
@@ -483,6 +484,7 @@ class eliptyczny_stol {
         bool pokazuj;
         STOLIKOWA_KARTA(short i, float a1, float a2)
         {
+            speed = na_moim_kompie(5.0);
             lp = i;
             cel_x = a1;
             cel_y = a2;
