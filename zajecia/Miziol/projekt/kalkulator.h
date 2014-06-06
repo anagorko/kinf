@@ -5,7 +5,7 @@ using namespace std;
 void kalkulator()
 {
 
-cout<<"Witaj w kalkulatorze klasycznym.\nPodaj swoje działanie\n";
+powitanie();
 //zmienne
 float a=0,b=0,w=0,l,r=0;
 string s,r2;
