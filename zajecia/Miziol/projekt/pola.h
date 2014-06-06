@@ -3,30 +3,36 @@ using namespace std;
 void pola()
 {
 int n;
-cout<<"Witaj w liczeniu pól figur\nWybierz pole które chcesz policzyć\n";
-float w;
-cout<<"1. Pole kwadratu\n2. Pole koła\n3. Pole trapez\n4. Pole prostokąta\n5. Pole rombu\n6. Pole równoległoboku\n7. Pole trókata\n";
+const float PI=3.14;
+float a,b,h,r,w;
+powitanie();
 cin>>n;
 cout<<"\n";
 if (n==1)
 	{
-	float a;
 	cout<<"Podaj a ";
 	cin>>a;
 	w=a*a;
-	cout<<"Pole jest równe "<<w<<" centymetrów kwadratowych\n";
+	cout<<"Pole kwadratu o boku "<<a<<" jest równe "<<w<<" centymetrów kwadratowych\n"<<a<<"*"<<a<<"="<<w<<"\n";
 	}
 if (n==2)
 	{
-	float a;
-	cout<<"Podaj r ";
+	cout<<"Podaj a\n";
 	cin>>a;
-	w=3.14*(a*a);
-	cout<<"Pole jest równe "<<w<<" centymetrów kwadratowych\n";
+	cout<<"Podaj b\n";
+	cin>>b;
+	cout<<"Pole prostokąta o bokach a="<<a<<"; b="<<b<<" jest równe "<<w<<" centymetrów kwadratowych\n"<<a<<"*"<<b<<"="<<w<<"\n";
 	}
 if (n==3)
 	{
-	float a,b,h;
+	cout<<"Podaj a\n";
+	cin>>a;
+	cout<<"Podaj h\n";
+	cin>>h;
+	cout<<"Pole trójkąta o podstawie a="<<a<<" i wysokości h="<<h<<" jest równe "<<w<<" centymetrów kwadratowych\n"<<"("<<a<<"*"<<h<<")/2="<<w<<"\n";
+	}
+if (n==4)
+	{
 	cout<<"Podaj a ";
 	cin>>a;
 	cout<<"\nPodaj b ";
@@ -34,44 +40,22 @@ if (n==3)
 	cout<<"\nPodaj h ";
 	cin>>h;
 	w=((a+b)*h)/2.0;
-	cout<<"Pole jest równe "<<w<<" centymetrów kwadratowych\n";
-	}
-if (n==4)
-	{
-	float a,b;
-	cout<<"Podaj a\n";
-	cin>>a;
-	cout<<"Podaj b\n";
-	cin>>b;
-	cout<<"Pole jest równe "<<a*b<<" centymetrów kwadratowych\n";
+	cout<<"Pole trapezu o podstawach a="<<a<<"; b="<<b<<" i wysokości h="<<h<<" jest równe "<<w<<" centymetrów kwadratowych\n"<<"(("<<a<<"+"<<b<<")*"<<h<<"/2="<<w<<"\n";
 	}
 if (n==5)
 	{
-	float a,h;
 	cout<<"Podaj a\n";
 	cin>>a;
 	cout<<"Podaj h\n";
 	cin>>h;
-	cout<<"Pole jest równe "<<a*h<<" centymetrów kwadratowych\n";
+	cout<<"Pole równoległoboku o podstawie a="<<a<<" i wysokości h="<<h<<" jest równe "<<w<<" centymetrów kwadratowych\n"<<a<<"*"<<h<<"="<<w<<"\n";
 	}
 if (n==6)
 	{
-	float a,h;
-	cout<<"Podaj a\n";
+	cout<<"Podaj r ";
 	cin>>a;
-	cout<<"Podaj h\n";
-	cin>>h;
-	w=a*h;
-	cout<<"Pole równe jest "<<w<<" centymetrów kwadratowych\n";
-	}
-if (n==7)
-	{
-	float a,h;
-	cout<<"Podaj a\n";
-	cin>>a;
-	cout<<"Podaj h\n";
-	cin>>h;
-	cout<<"Pole jest równe "<<(a*h)/2<<" centymetrów kwadratowych\n";
+	w=PI*(a*a);
+	cout<<"Pole koła o promieniu "<<a<<" jest równe "<<w<<" centymetrów kwadratowych\n"<<"("<<r<<"*"<<r<<")*PI="<<w<<"\n";
 	}
 return;
 }
