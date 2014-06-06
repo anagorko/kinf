@@ -204,7 +204,7 @@ for(int i=0;i<s.size();i++)
 		st.remove();
 		b=st.top();
 		st.remove();
-		st.insert(a/b);
+		st.insert(b/a);
 		r=0;
 		z=true;
 		}

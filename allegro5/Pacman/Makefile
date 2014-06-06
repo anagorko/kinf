@@ -1,4 +1,4 @@
-all: pacmallegro5
+all: pacman
 	# Done
-pacmallegro5: pacmallegro5.cpp
-	g++ pacmallegro5.cpp -o szablon -I/opt/local/include/ -L/opt/local/lib -lallegro -lallegro_main -lallegro_primitives
+pacman: pacman.cpp
+	g++ pacman.cpp -o pacman -I/opt/local/include/ -L/opt/local/lib -lallegro -lallegro_main -lallegro_primitives -lallegro_image -lallegro_font -lallegro_ttf
