@@ -519,6 +519,30 @@ class eliptyczny_stol {
     bool wyslane;
     short poprzednia_faza;
 
+    ALLEGRO_BITMAP * bmp;
+
+    void utworz_bmp()
+    {
+        bmp = al_create_bitmap(screen_w,screen_h);
+        al_clear_to_color(al_map_rgba(0,0,0,0));
+        al_set_target_bitmap(bmp);
+
+        int g1 = 255, g2 = 70;
+        float szer = float(w/2+1) / (g1-g2);
+        float wys = float(h/2+1) / (g1-g2);
+        for (int i = 0; i < float(w/2+1)/szer; i++) {
+            al_draw_ellipse(cx, cy, szer*i, wys*i, al_map_rgb(0,255-(float(szer*i)/float(w/2+1))*(g1-g2),0), szer+0.5);
+        }
+        for (float i = 1; i < 5; i+=0.1) {
+            al_draw_ellipse(cx, cy, w/2 + i, h/2 + i, al_map_rgb(40+i*25,40+i*25,40+i*25), 1);
+        }
+        for (float i = 0; i < 3; i+=0.1) {
+            al_draw_ellipse(cx, cy, w/2 + i+5, h/2 + i+5, al_map_rgb(165-i*25,165-i*25,165-i*25), 1);
+        }
+
+        al_set_target_bitmap(bmp);
+    }
+
 public:
 
     int w, h;
@@ -577,6 +601,7 @@ public:
             stolikowa_karta[i] = new STOLIKOWA_KARTA(i,x,y);
         }
         poprzednia_faza = -1;
+        utworz_bmp();
     }
 
     void aktualizuj()
@@ -629,18 +654,7 @@ public:
 
     void rysuj() {
 
-        int g1 = 255, g2 = 70;
-        float szer = float(w/2+1) / (g1-g2);
-        float wys = float(h/2+1) / (g1-g2);
-        for (int i = 0; i < float(w/2+1)/szer; i++) {
-            al_draw_ellipse(cx, cy, szer*i, wys*i, al_map_rgb(0,255-(float(szer*i)/float(w/2+1))*(g1-g2),0), szer+0.5);
-        }
-        for (float i = 1; i < 5; i+=0.1) {
-            al_draw_ellipse(cx, cy, w/2 + i, h/2 + i, al_map_rgb(40+i*25,40+i*25,40+i*25), 1);
-        }
-        for (float i = 0; i < 3; i+=0.1) {
-            al_draw_ellipse(cx, cy, w/2 + i+5, h/2 + i+5, al_map_rgb(165-i*25,165-i*25,165-i*25), 1);
-        }
+        al_draw_bitmap(bmp,0,0,0);
 
         if (komunikat == "X") {
             for (int i = 0; i < 5; i++) {
@@ -1554,48 +1568,74 @@ bool zagraj() {
 
 // ../rysowanie
 
-void rysuj_tlo() {
+class TLO
+{
+    ALLEGRO_BITMAP * bmp;
+public:
+    TLO()
+    {
+        bmp = al_create_bitmap(screen_w,screen_h);
+        al_set_target_bitmap(bmp);
+        al_clear_to_color(al_map_rgba(0,0,0,0));
 
-    float przekatna = sqrt(pow(screen_h-centrum_y,2)+pow(screen_w/2,2));
-    float szary = 255;
-    float grubosc = (przekatna-stolik.h/2) / szary;
+        float przekatna = sqrt(pow(screen_h-centrum_y,2)+pow(screen_w/2,2));
+        float szary = 255;
+        float grubosc = (przekatna-stolik.h/2) / szary;
 
-    float r = stolik.h/2;
-    for (int i = szary; r < przekatna; i--) {
-        al_draw_circle(screen_w/2,centrum_y,r,al_map_rgb(i,i,i),grubosc+1);
-        r += grubosc;
+        float r = stolik.h/2;
+        for (int i = szary; r < przekatna; i--) {
+            al_draw_circle(screen_w/2,centrum_y,r,al_map_rgb(i,i,i),grubosc+1);
+            r += grubosc;
+        }
+
+        al_set_target_bitmap(al_get_backbuffer(display));
     }
-}
+    void rysuj()
+    {
+        al_draw_bitmap(bmp,0,0,0);
+    }
+};
+
+TLO * tlo = NULL;
 
 /********************************
  Funkcje 1
 *********************************/
 
-int stoliki() {
+int stoliki(int argc, char** argv) {
 
     cout << endl;
+    string serwer, nick;
 
-    stringstream ss;
+    if (argc == 4) {
 
-    cout << "Serwer: ";
-    string serwer;
-    getline(cin,serwer);
-    serwer = z_(serwer);
+        serwer = z_(string(argv[1]));
+        nazwa_stolika = z_(string(argv[2]));
+        nick = z_(string(argv[3]));
 
-    cout << "Stolik: ";
-    getline(cin,nazwa_stolika);
-    nazwa_stolika = z_(nazwa_stolika);
+    } else {
 
-    cout << "Nick: ";
-    string nick;
-    getline(cin,nick);
-    nick = z_(nick);
+        cout << "Serwer: ";
+        getline(cin,serwer);
+        serwer = z_(serwer);
 
-    cout << endl;
+        cout << "Stolik: ";
+        getline(cin,nazwa_stolika);
+        nazwa_stolika = z_(nazwa_stolika);
+
+        cout << "Nick: ";
+        getline(cin,nick);
+        nick = z_(nick);
+
+        cout << endl;
+    }
+
     if (!connect_to_server(serwer)) {
         cout << endl << "Połączenie nie powiodło się." << endl << endl; return -1;
     }
     cout << endl;
+
+    stringstream ss;
 
     send_packet("spam");
     usleep(10);
@@ -1725,6 +1765,7 @@ int init() {
     opcje.init(przycisk2.cy, przycisk2.cx-przycisk2.w/2-przycisk_zagrania::pasek_czasu_w()/2);
     suwak.init();
     czat.init();
+    tlo = new TLO;
 
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
@@ -1808,7 +1849,7 @@ void rysowanie() {
     nazwa_okna << "PokerOnline - " << bez_(nazwa_stolika) << " - " << bez_(gracz[moje_miejsce].nick) << " - " << gracz[moje_miejsce].kasa;
     al_set_window_title(display, nazwa_okna.str().c_str());
 
-    rysuj_tlo();
+    tlo->rysuj();
 
     stolik.rysuj();
 
@@ -1844,9 +1885,9 @@ void sprzatanie() {
  int main()
 *********************************/
 
-int main() {
+int main(int argc, char** argv) {
 
-    if (stoliki() != 0) {
+    if (stoliki(argc, argv) != 0) {
         return -1;
     }
 
