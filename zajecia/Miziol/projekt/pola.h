@@ -54,9 +54,9 @@ if (n==5)
 if (n==6)
 	{
 	cout<<"Podaj r ";
-	cin>>a;
-	w=PI*(a*a);
-	cout<<"Pole koła o promieniu "<<a<<" jest równe "<<w<<" centymetrów kwadratowych\n"<<"("<<r<<"*"<<r<<")*PI="<<w<<"\n";
+	cin>>r;
+	w=PI*(r*r);
+	cout<<"Pole koła o promieniu "<<r<<" jest równe "<<w<<" centymetrów kwadratowych\n"<<"("<<r<<"*"<<r<<")*PI="<<w<<"\n";
 	}
 return;
 }

@@ -70,7 +70,7 @@ return;
 
 void wynik(string s,float w)
 {
-cout<<"Wynikiem działania "<<s<<" jest "<<w<<"\n"<<s<<"="<<w<<"\n";
+cout<<"Wynikiem działania "<<s<<" jest "<<w<<"\n"<<s<<" = "<<w<<"\n";
 
 return;
 }
