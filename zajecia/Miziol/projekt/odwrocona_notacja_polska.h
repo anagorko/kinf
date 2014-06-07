@@ -213,7 +213,7 @@ for(int i=0;i<s.size();i++)
 	}
 //wczytywanie i liczenie
 
-cout<<"Wynik to "<<st.top()<<"\n";
+wynik(s,st.top());
 
 return;
 }

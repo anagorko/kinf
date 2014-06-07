@@ -6,6 +6,7 @@ int n;
 const float PI=3.14;
 float a,b,h,r,w;
 powitanie();
+ktora();
 cin>>n;
 cout<<"\n";
 if (n==1)

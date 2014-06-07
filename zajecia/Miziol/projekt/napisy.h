@@ -1,6 +1,13 @@
 #include"iostream"
 using namespace std;
 
+void jakie()
+{
+cout<<"\nPodaj swoje działanie\n";
+
+return;
+}
+
 void powitanie()
 {
 if(kalpo==0)
@@ -26,16 +33,9 @@ else
 		}
 	if(kalpo==4)
 		{
-		cout<<"Witaj w programie liczącym pola figur.\n1. Pole kwadratu\n2. Pole prostokąta\n3. Pole trókata\n4. Pole trapez\n5. Pole równoległoboku\n6. Pole koła\nJakie pole chcesz policzyć?\n";
+		cout<<"Witaj w programie liczącym pola figur.\n1. Pole kwadratu\n2. Pole prostokąta\n3. Pole trókata\n4. Pole trapez\n5. Pole równoległoboku\n6. Pole koła\n";
 		}
 	}
-
-return;
-}
-
-void jakie()
-{
-cout<<"\nPodaj swoje działanie\n";
 
 return;
 }
@@ -67,3 +67,11 @@ if(korzystanie==true)
 
 return;
 }
+
+void wynik(string s,float w)
+{
+cout<<"Wynikiem działania "<<s<<" jest "<<w<<"\n"<<s<<"="<<w<<"\n";
+
+return;
+}
+

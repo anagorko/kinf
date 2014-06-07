@@ -202,8 +202,7 @@ if(z=='!'&&a>=1)
 	}
 
 //wypisywanie wyniku
-cout<<"Wynikiem działania "<<a<<z<<b<<" jest "<<w<<"\n";
-cout<<a<<z<<b<<"="<<w<<"\n";
+wynik(s,w);
 
 return;
 }
