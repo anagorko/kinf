@@ -4,7 +4,7 @@
 using namespace std;
 
 //zmienne globalne
-int kalpo=0;
+char kalpo='0';
 bool korzystanie=false;
 //zmienne globalne
 
@@ -23,31 +23,31 @@ ktora();
 while(1)
 	{
 	cin>>kalpo;
-	if(kalpo==1)
+	if(kalpo=='1')
 		{
 		korzystanie=true;
 		kalkulator();
 		}
-	if(kalpo==2)
+	if(kalpo=='2')
 		{
 		korzystanie=true;
 		odwrotna_notacja_polska();
 		}
-	if(kalpo==3)
+	if(kalpo=='3')
 		{
 		korzystanie=true;
 		ulamki();
 		}
-	if(kalpo==4)
+	if(kalpo=='4')
 		{
 		korzystanie=true;
 		pola();
 		}
-	if(kalpo==5)
+	if(kalpo=='5')
 		{
 		mozliwosci();
 		}
-	if(kalpo==6)
+	if(kalpo=='6')
 		{
 		koniec();
 		break;

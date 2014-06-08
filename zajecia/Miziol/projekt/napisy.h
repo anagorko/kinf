@@ -10,28 +10,28 @@ return;
 
 void powitanie()
 {
-if(kalpo==0)
+if(kalpo=='0')
 	{
 	cout<<"Witaj w programie SUPER KALKULATOR. Program ten dysponuje kilkoma możliwościami obliczeń.";
 	}
 else
 	{
-	if(kalpo==1)
+	if(kalpo=='1')
 		{
 		cout<<"Witaj w kalkulatorze klasycznym.";
 		jakie();
 		}
-	if(kalpo==2)
+	if(kalpo=='2')
 		{
 		cout<<"Witaj w kalkulatorze liczącym w odwrotnej notacji polskiej.";
 		jakie();
 		}
-	if(kalpo==3)
+	if(kalpo=='3')
 		{
 		cout<<"Witaj w kalkulatorze operującym na ułamkach zwykłych.";
 		jakie();
 		}
-	if(kalpo==4)
+	if(kalpo=='4')
 		{
 		cout<<"Witaj w programie liczącym pola figur.\n1. Pole kwadratu\n2. Pole prostokąta\n3. Pole trókata\n4. Pole trapez\n5. Pole równoległoboku\n6. Pole koła\n";
 		}
