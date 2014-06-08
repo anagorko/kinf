@@ -526,8 +526,9 @@ class eliptyczny_stol {
     void utworz_bmp()
     {
         bmp = al_create_bitmap(screen_w,screen_h);
+        al_clear_to_color(al_map_rgb(255,0,255));
         al_clear_to_color(al_map_rgba(0,0,0,0));
-        al_set_target_bitmap(bmp);
+        al_convert_mask_to_alpha(bmp,al_map_rgb(255,0,255));
 
         int g1 = 255, g2 = 70;
         float szer = float(w/2+1) / (g1-g2);
@@ -656,7 +657,20 @@ public:
 
     void rysuj() {
 
-        al_draw_bitmap(bmp,0,0,0);
+        //al_draw_bitmap(bmp,0,0,0);
+
+        int g1 = 255, g2 = 70;
+        float szer = float(w/2+1) / (g1-g2);
+        float wys = float(h/2+1) / (g1-g2);
+        for (int i = 0; i < float(w/2+1)/szer; i++) {
+            al_draw_ellipse(cx, cy, szer*i, wys*i, al_map_rgb(0,255-(float(szer*i)/float(w/2+1))*(g1-g2),0), szer+0.5);
+        }
+        for (float i = 1; i < 5; i+=0.1) {
+            al_draw_ellipse(cx, cy, w/2 + i, h/2 + i, al_map_rgb(40+i*25,40+i*25,40+i*25), 1);
+        }
+        for (float i = 0; i < 3; i+=0.1) {
+            al_draw_ellipse(cx, cy, w/2 + i+5, h/2 + i+5, al_map_rgb(165-i*25,165-i*25,165-i*25), 1);
+        }
 
         if (komunikat == "X") {
             for (int i = 0; i < 5; i++) {
@@ -1574,6 +1588,7 @@ class TLO
 {
     ALLEGRO_BITMAP * bmp;
 public:
+
     TLO()
     {
         bmp = al_create_bitmap(screen_w,screen_h);
@@ -1592,6 +1607,7 @@ public:
 
         al_set_target_bitmap(al_get_backbuffer(display));
     }
+
     void rysuj()
     {
         al_clear_to_color(al_map_rgb(0,0,0));
