@@ -1578,7 +1578,7 @@ public:
     {
         bmp = al_create_bitmap(screen_w,screen_h);
         al_set_target_bitmap(bmp);
-        al_clear_to_color(al_map_rgba(0,0,0,0));
+        al_clear_to_color(al_map_rgb(0,0,0));
 
         float przekatna = sqrt(pow(screen_h-centrum_y,2)+pow(screen_w/2,2));
         float szary = 255;
@@ -1594,6 +1594,7 @@ public:
     }
     void rysuj()
     {
+        al_clear_to_color(al_map_rgb(0,0,0));
         al_draw_bitmap(bmp,0,0,0);
     }
 };
