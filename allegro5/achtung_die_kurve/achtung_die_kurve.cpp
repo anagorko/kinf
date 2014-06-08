@@ -66,6 +66,7 @@ ALLEGRO_FONT * font = NULL;
 ALLEGRO_FONT * font1 = NULL;
 ALLEGRO_FONT * font2 = NULL;
 ALLEGRO_FONT * font3 = NULL;
+ALLEGRO_DISPLAY_MODE disp_data;
 
 int init()
 {
@@ -94,6 +95,10 @@ int init()
         cerr << "Błąd podczas inicjalizacji zegara." << endl;
         return -1;
     }
+
+    
+    //al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
+
     display = al_create_display(screen_w, screen_h);
     if(!display) {
         cerr << "Błąd podczas inicjalizacji ekranu." << endl;
@@ -284,9 +289,6 @@ void konczenie_tury(){
 }
 
 void podsumowanie_wynikow(){
-
-	bool przerysuj=false;
-
 	
 	stringstream ss;
 	
@@ -322,6 +324,8 @@ void podsumowanie_wynikow(){
 
 	al_draw_bitmap(podsumowanie_wynikow_bitmap, 0, 0, 0);
 
+	al_flip_display();
+
 	while(!wyjdz)
    	{
    		ALLEGRO_EVENT ev;
@@ -331,7 +335,6 @@ void podsumowanie_wynikow(){
 	   	   //
       	   // minęła 1/60 (1/FPS) część sekundy
        	   //
-       	   przerysuj = true;
 
        	   if(cursor_pressed){
        	   	cursor_pressed=false;
@@ -358,12 +361,7 @@ void podsumowanie_wynikow(){
             cursor_pressed = false;
         } else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
             cursor_pressed = true;
-        } 
-
-       	if(przerysuj && al_is_event_queue_empty(event_queue)) {
-       	    przerysuj = false;
-           	al_flip_display();
-       	}
+        }
 	}
 }
 void clean0(){
@@ -397,6 +395,7 @@ void clean2(){
 		}
 	}
 	przesuniecie_czasu=clock()-10000;
+	czasomierz=0;
 }
 void rysowanie_kolorow(){
 	al_set_target_bitmap(gameroom_player_bitmap);
@@ -429,9 +428,11 @@ void rysowanie_kolorow(){
 						colors[i].wykozystany=true;
 					}
 					klik_down=false;
-					al_draw_filled_rectangle(px-5, py-5, px+bok+5, py+bok+5,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));	
-					tekst="wykorzystany kolor";
-					al_draw_text(font2, al_map_rgb(255,255,255),px+15,py+bok/2-15, 0, tekst.c_str());
+					if(colors[i].wykozystany){
+						al_draw_filled_rectangle(px-5, py-5, px+bok+5, py+bok+5,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));	
+						tekst="wykorzystany kolor";
+						al_draw_text(font2, al_map_rgb(255,255,255),px+15,py+bok/2-15, 0, tekst.c_str());
+					}
 				}else{
 					al_draw_filled_rectangle(px-5, py-5, px+bok+5, py+bok+5,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
 				}
@@ -458,7 +459,7 @@ void rysowanie_kolorow(){
 		}else{
 			al_draw_filled_rectangle(px, py, px+bok, py+bok,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
 			if(colors[i].wykozystany){
-				tekst="Wykorzystany kolor";
+				tekst="wykorzystany kolor";
 				al_draw_text(font2, al_map_rgb(255,255,255),px+15,py+bok/2-15, 0, tekst.c_str());
 			}
 		}
@@ -477,14 +478,13 @@ void menu_quit()
 	ALLEGRO_EVENT ev;
 	al_stop_timer(timer);
 	al_draw_bitmap(zaciemnienie_bitmap, 0, 0, 0);
-	int px=400;
-	int py=100;
-	int bokx=300;
-	int boky=50;
+	int px=480;
+	int py=300;
 	al_set_target_bitmap(pause_menu);
-	string tekst="kontynuj";
-	al_draw_filled_rectangle(px, py, px+bokx, py+boky,al_map_rgb(126 , 126, 126));
-	al_draw_text(font1, al_map_rgb(255,100,255), 400, 100, 0, tekst.c_str());
+	string tekst="Achtung die kurve";
+	al_draw_text(font3, al_map_rgb(255,22,22), 250, 100, 0, tekst.c_str());
+	tekst="STOP";
+	al_draw_text(font3, al_map_rgb(255,100,255), px, py, 0, tekst.c_str());
 	al_set_target_backbuffer(display);
 
 	al_draw_bitmap(pause_menu, 0, 0, 0);
@@ -501,11 +501,12 @@ void menu_quit()
         } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
             key[ev.keyboard.keycode] = false ;
 
-            if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
+            if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE || ev.keyboard.keycode == ALLEGRO_KEY_SPACE) {
                 break;
             }
             if (ev.keyboard.keycode == ALLEGRO_KEY_Q) {
                 wyjdz = true;
+                koncz_gre = true;
                 break;
             }
         } else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {
@@ -563,8 +564,14 @@ void clean1()
 	al_set_target_backbuffer(display);
 	al_set_target_bitmap(gameroom_bitmap);
 	al_clear_to_color(al_map_rgb(0, 0, 0));
-	tekst="Wybierz swój kolor";
-	al_draw_text(font1, al_map_rgb(255,255,255), 500, 100,0, tekst.c_str());
+	tekst="Wybierz kolory graczy";
+	al_draw_text(font1, al_map_rgb(255,255,255), 480, 120,0, tekst.c_str());
+	tekst="ABY ZACZĄĆ, NACIŚNIJ S";
+	al_draw_text(font2, al_map_rgb(255,255,255), 20, 20,0, tekst.c_str());
+	tekst="ABY ZAKOŃCZYĆ, NACIŚNIJ Q";
+	al_draw_text(font2, al_map_rgb(255,255,255), 1050, 20,0, tekst.c_str());
+	tekst="Achtung die kurve";
+	al_draw_text(font3, al_map_rgb(255,22,22), 350, 10, 0, tekst.c_str());
 	al_set_target_backbuffer(display);
 	al_set_target_bitmap(gameroom_player_bitmap);
 	al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -673,8 +680,36 @@ void rysuj_plansze()
 	al_draw_text(font1, al_map_rgb(255,255,255), 1180, 70,0, tekst.c_str());
 	ss_time.str("");
 //	###################
+	
+	tekst="sterowanie:";
+	int py=200;
+	al_draw_text(font2, al_map_rgb(255,255,255), 1170, py,0, tekst.c_str());
+	
+	py+=50;
+	al_draw_filled_rectangle(1200, py, 1200+70, py+70,al_map_rgb(colors[player[0].color]._r , colors[player[0].color]._g, colors[player[0].color]._b));
+	py+=70;
+	tekst="strzałka w prawo";
+	al_draw_text(font2, al_map_rgb(255,255,255), 1135, py,0, tekst.c_str());
+	py+=20;
+	tekst="strzałka w lewo";
+	al_draw_text(font2, al_map_rgb(255,255,255), 1135, py,0, tekst.c_str());
+
+	py+=50;
+	al_draw_filled_rectangle(1200, py, 1200+70, py+70,al_map_rgb(colors[player[1].color]._r , colors[player[1].color]._g, colors[player[1].color]._b));
+	py+=70;
+	tekst="X";
+	al_draw_text(font2, al_map_rgb(255,255,255), 1225, py,0, tekst.c_str());
+	py+=20;
+	tekst="Z";
+	al_draw_text(font2, al_map_rgb(255,255,255), 1225, py,0, tekst.c_str());
+
+	tekst="Aby zakończyć gre,";
+	al_draw_text(font2, al_map_rgb(255,255,255), 1125, 600,0, tekst.c_str());
+	tekst="naciśnij Q";
+	al_draw_text(font2, al_map_rgb(255,255,255), 1170, 620,0, tekst.c_str());
 
 }
+
 
 //
 // Mechanika gry
@@ -822,9 +857,9 @@ int main(int argc, char ** argv)
         	    key[ev.keyboard.keycode] = false ;
 
        	    	if (ev.keyboard.keycode == ALLEGRO_KEY_Q) {
-      	    	    wyjdz = true;
+      	    	   break;
        	    	}
-       	    	if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE){
+       	    	if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE || ev.keyboard.keycode == ALLEGRO_KEY_SPACE){
        	    		menu_quit();
        	    	}
    			} else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES || ev.type == ALLEGRO_EVENT_MOUSE_ENTER_DISPLAY) {

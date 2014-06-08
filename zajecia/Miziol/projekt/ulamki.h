@@ -3,7 +3,7 @@ using namespace std;
 
 void ulamki()
 {
-cout<<"Witaj w kalkulatorze który operuje na ułamkach zwykłych.\nPodaj swoje działanie\n";
+powitanie();
 //zmienne
 int a[2],b[2],w[2];
 int wa[2],wb[2];

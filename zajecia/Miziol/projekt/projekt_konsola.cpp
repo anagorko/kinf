@@ -1,16 +1,25 @@
 #include<iostream>
 #include<math.h>
 #include<string.h>
-#include"kalkulator.h"
-#include"pola.h"
-#include"ulamki.h"
 using namespace std;
-int main()
-{
-cout<<"Witaj w programie kalkulator. Program ten dysponuje dwoma możliwościami obliczeń.\n1. Klasyczny kalkulator\n2. Obliczanie pól\n3. Kalkulator działający na ułamkach zwykłych\n4. Przypomnij możliwości\n5. Zakończ\n";
+
+//zmienne globalne
 int kalpo=0;
 bool korzystanie=false;
-cout<<"Którą opcję wybierasz?\n";
+//zmienne globalne
+
+#include"napisy.h"
+#include"kalkulator.h"
+#include"odwrocona_notacja_polska.h"
+#include"ulamki.h"
+#include"pola.h"
+
+int main()
+{
+powitanie();
+mozliwosci();
+ktora();
+
 while(1)
 	{
 	cin>>kalpo;
@@ -22,7 +31,7 @@ while(1)
 	if(kalpo==2)
 		{
 		korzystanie=true;
-		pola();
+		odwrotna_notacja_polska();
 		}
 	if(kalpo==3)
 		{
@@ -31,21 +40,20 @@ while(1)
 		}
 	if(kalpo==4)
 		{
-		cout<<"Witaj w programie kalkulator. Program tan dysponuje dwoma możliwościami obliczeń.\n1. Klasyczny kalkulator\n2. Obliczanie pól\n3. Kalkulator działający na ułamkach zwykłych\n4. Przypomnij możliwości\n5. Zakończ\n";
+		korzystanie=true;
+		pola();
 		}
 	if(kalpo==5)
 		{
-		if(korzystanie==false)
-			{
-			cout<<"Dziękuję za uruchomienie mojego programu. Do zobaczenia.\n";
-			}
-		if(korzystanie==true)
-			{
-			cout<<"Dziękuję za skorzystanie z mojego programu. Do zobaczenia. ;)\n";
-			}
+		mozliwosci();
+		}
+	if(kalpo==6)
+		{
+		koniec();
 		break;
 		}
-	cout<<"4.Przypomnij możliwości\nKtórą opcję wybierasz?";
+	cout<<"5.Przypomnij możliwości\n";
+	ktora();
 	}
 
 return 0;
