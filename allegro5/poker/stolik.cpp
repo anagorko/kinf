@@ -552,16 +552,26 @@ void licytacja() {
  Funkcje 1
 *********************************/
 
-int ustawienia() {
+int ustawienia(int argc, char** argv) {
 
-    cout << endl << "Serwer: ";
+    cout << endl;
     string serwer;
-    getline(cin,serwer);
-    serwer = z_(serwer);
 
-    cout << "Nazwa: ";
-    getline(cin,nazwa_stolika);
-    nazwa_stolika = z_(nazwa_stolika);
+    if (argc == 3) {
+
+        serwer = z_(string(argv[1]));
+        nazwa_stolika = z_(string(argv[2]));
+
+    } else {
+
+        cout << "Serwer: ";
+        getline(cin,serwer);
+        serwer = z_(serwer);
+
+        cout << "Nazwa: ";
+        getline(cin,nazwa_stolika);
+        nazwa_stolika = z_(nazwa_stolika);
+    }
 
     while (nazwa_stolika.length() > 50) {
         cout << "Nazwa stolika musi się mieścić w 50 znakach: ";
@@ -853,11 +863,11 @@ void wykrycie_kart() {
     rozeslij_dane();
 }
 
-int main() {
+int main(int argc, char** argv) {
 
     srandom(time(NULL)+getpid());
 
-    if (ustawienia() != 0) return -1;
+    if (ustawienia(argc, argv) != 0) return -1;
 
     while (1) {
 
