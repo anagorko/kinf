@@ -59,7 +59,6 @@ ALLEGRO_BITMAP * snakes = NULL;
 ALLEGRO_BITMAP * pause_menu = NULL;
 ALLEGRO_BITMAP * menu0_bitmap = NULL;
 ALLEGRO_BITMAP * gameroom_bitmap = NULL;
-ALLEGRO_BITMAP * gameroom_player_bitmap = NULL;
 ALLEGRO_BITMAP * podsumowanie_wynikow_bitmap = NULL;
 ALLEGRO_BITMAP * zaciemnienie_bitmap = NULL;
 ALLEGRO_FONT * font = NULL;
@@ -97,7 +96,8 @@ int init()
     }
 
     
-    //al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
+    
+    al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
 
     display = al_create_display(screen_w, screen_h);
     if(!display) {
@@ -160,6 +160,30 @@ int init()
 	int przesuniecie_czasu=0;
 	int czasomierz=0;
 	int licznik_fps;
+
+//
+// Zmienne
+//
+	int przegranych=0;
+    bool wyjdz = false;
+    int cursor_x;
+    int cursor_y;
+    bool cursor_pressed=false;
+
+    int wybrane_kolory=0;
+    bool klik_down=false;
+    bool koncz_gre=false;
+    bool zacznij_gre;
+
+
+    int pocz_zakresu_x_0 = 200;
+	int kon_zakresu_x_0 = 600;
+	int pocz_zakresu_x_1 = 700;
+	int kon_zakresu_x_1 = 1100;
+	int pocz_zakresu_y = 200;
+	int kon_zakresu_y = 700;
+
+
 //
 // Struktury danych
 //
@@ -181,44 +205,123 @@ int init()
 		int przerwa_time;//czas kiedy ma byc wykonywana przerwa
 	};
 	type_of_player player[max_number_of_player];
+	
 	struct type{
 		int nrplayer;
 		int time;
 	};
 	type board[xpl][ypl];//+2
 
-	 struct type_color{
+	class type_color{
+	public:
 	 	int _r;
 	 	int _g;
 	 	int _b;
+	 	int x;
+	 	int y;
+	 	int bok;
+	 	int animation;
+	 	int size_animation;
 	 	bool wykozystany;
+	 	bool touch;
+	 	void draw(){
+	 		al_set_target_bitmap(gameroom_bitmap);
+	 		al_draw_filled_rectangle(x-animation, y-animation, x+bok+animation, y+bok+animation,al_map_rgb(_r , _g, _b));
+	 		if(wykozystany){
+	 			string tekst="wykorzystany kolor";
+				al_draw_text(font2, al_map_rgb(255,255,255),x+15,y+bok/2-15, 0, tekst.c_str());
+			}
+	 		al_set_target_backbuffer(display);
+	 	}
+	 	void calculate(int i){
+	 		if(cursor_x>x && cursor_x<x+bok && cursor_y>y && cursor_y<y+bok){
+	 			touch=true;
+	 			if(klik_down && !cursor_pressed){
+	 				if(!wykozystany){
+	 					if(player[0].color==-1){
+							wybrane_kolory++;	
+							player[0].color=i;	
+							cout<<"player[0].color="<<player[0].color<<endl;
+							wykozystany=true;
+						}else if(player[1].color==-1){
+							wybrane_kolory++;	
+							player[1].color=i;
+							cout<<"player[1].color="<<player[1].color<<endl;
+							wykozystany=true;
+						}
+					}else{
+	 					if(player[0].color==i){
+							wybrane_kolory--;	
+							player[0].color=-1;
+							wykozystany=false;	
+						}else if(player[1].color==i){
+							wybrane_kolory--;	
+							player[1].color=-1;
+							wykozystany=false;
+						}
+	 				}
+	 				klik_down=false;
+	 			}
+	 		}else{
+	 			touch=false;
+	 		}
+	 		if(animation<size_animation && touch){animation++;}
+			if(animation>0 && !touch){animation--;}
+
+
+	 		
+
+	 	}
 	};
 	type_color colors[10];
-//
-// Zmienne
-//
-	int przegranych=0;
-    bool wyjdz = false;
-    int cursor_x;
-    int cursor_y;
-    bool cursor_pressed=false;
 
-    int wybrane_kolory=0;
-    bool klik_down=false;
-    bool koncz_gre=false;
+	class button{
+	public:
+		int px;
+		int py;
+		int kx;
+		int ky;
+		int r;
+		int g;
+		int b;
+		bool touch;
+		int animation;
+		int size_animation;
+		string tekst;
+		void init(){
 
-
-    int pocz_zakresu_x_0 = 200;
-	int kon_zakresu_x_0 = 600;
-	int pocz_zakresu_x_1 = 700;
-	int kon_zakresu_x_1 = 1100;
-	int pocz_zakresu_y = 200;
-	int kon_zakresu_y = 700;
-
+		}
+		void calculate(){
+			if(cursor_x>px && cursor_x<kx && cursor_y>py && cursor_y<ky){
+		if(animation<size_animation && touch){animation++;}
+			if(animation>0 && !touch){animation--;}		touch=true;
+				if(klik_down && !cursor_pressed){
+					if(wybrane_kolory==2){
+						zacznij_gre=true;
+					}
+					klik_down=false;
+				}
+			}else{
+				touch=false;
+			}
+			if(animation<size_animation && touch){animation++;}
+			if(animation>0 && !touch){animation--;}
+		}
+		void draw(){
+			al_set_target_bitmap(gameroom_bitmap);
+			al_draw_filled_rounded_rectangle(px-animation, py-animation, kx+animation, ky+animation, 5, 20, al_map_rgb(r,g,b));
+			if(tekst=="START"){
+				al_draw_text(font1, al_map_rgb(255,255,255), px+5, py,0, tekst.c_str());
+			}
+			al_set_target_backbuffer(display);
+		}
+	};
+	button start;
     
 //
 //Czyszczenie
 //
+
 void rysowanie_kolorow();
 void gameroom()
 {
@@ -226,8 +329,10 @@ void gameroom()
 	cout<<"GAMEROOM\n";
     	
 	bool przerysuj = true;
+	zacznij_gre=false;
+	int klikanie=0;
 
-	 while(true)
+	 while(!zacznij_gre)
 	 {
 	    ALLEGRO_EVENT ev;
    	    al_wait_for_event(event_queue, &ev);
@@ -236,10 +341,23 @@ void gameroom()
             //
             // minęła 1/60 (1/FPS) część sekundy
             //
-            przerysuj = true;
-           rysowanie_kolorow();
+           
+           przerysuj = true;
+          
+           start.calculate();
+           start.draw();
+           for(int i=0;i<10;i++){
+           	colors[i].calculate(i);
+           	colors[i].draw();
+           }
+
+           if(klik_down){
+           	klikanie++;
+           }else{
+           	klikanie=0;
+           }
+           if(klikanie==10){klik_down=false;}
            	
-        
         } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
         	key[ev.keyboard.keycode] = true;
         } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
@@ -271,9 +389,21 @@ void gameroom()
       	if(przerysuj && al_is_event_queue_empty(event_queue)) {
        	    przerysuj = false;
 
+			
+		
+
        	    al_draw_bitmap(gameroom_bitmap, 0, 0, 0);
-       	    al_draw_bitmap(gameroom_player_bitmap, 28, 200, 0);//234
-           	al_flip_display();
+       	   	al_flip_display();
+
+           	al_set_target_bitmap(gameroom_bitmap);
+			al_clear_to_color(al_map_rgb(0, 0, 0));
+			string tekst="Wybierz kolory graczy";
+			al_draw_text(font1, al_map_rgb(255,255,255), 480, 120,0, tekst.c_str());
+			tekst="ABY ZAKOŃCZYĆ, NACIŚNIJ Q";
+			al_draw_text(font2, al_map_rgb(255,255,255), 1050, 20,0, tekst.c_str());
+			tekst="Achtung die kurve";
+			al_draw_text(font3, al_map_rgb(255,22,22), 350, 10, 0, tekst.c_str());
+			al_set_target_backbuffer(display);
     	}
 	}
 }
@@ -369,9 +499,21 @@ void clean0(){
 	pause_menu = al_create_bitmap(screen_w,screen_h);
 	menu0_bitmap = al_create_bitmap(screen_w,screen_h);
 	gameroom_bitmap = al_create_bitmap(screen_w,screen_h);
-	gameroom_player_bitmap = al_create_bitmap(1310, 524);
 	podsumowanie_wynikow_bitmap = al_create_bitmap(1366, 768);
 	zaciemnienie_bitmap = al_create_bitmap(1366, 768);
+
+	//czyszczenie class start
+		start.px=1150;
+		start.py=100;
+		start.kx=1250;
+		start.ky=150;
+		start.r=15;
+		start.g=15;
+		start.b=15;
+		start.touch=false;
+		start.animation=0;
+		start.size_animation=10;
+		start.tekst="START";
 	
 }
 void clean2(){
@@ -397,79 +539,6 @@ void clean2(){
 	przesuniecie_czasu=clock()-10000;
 	czasomierz=0;
 }
-void rysowanie_kolorow(){
-	al_set_target_bitmap(gameroom_player_bitmap);
-	int a,b,c;
-	al_clear_to_color(al_map_rgba( 0, 0, 0, 0));
-	int px=5;
-	int py=5;
-	int bok=252;
-	int przesunieciex=28;
-	int przesunieciey=195;
-	string tekst;
-	for(int i=0;i<10;i++){
-		if(i==5){
-			px=5;
-			py=bok+15;
-		}
-		if(cursor_x>px+przesunieciex && cursor_x<px+bok+przesunieciex && cursor_y>py+przesunieciey && cursor_y<py+bok+przesunieciey){
-			if(!colors[i].wykozystany){
-				al_draw_filled_rectangle(px-5, py-5, px+bok+5, py+bok+5,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
-				if(klik_down && !cursor_pressed){
-					if(player[0].color==-1){
-						wybrane_kolory++;	
-						player[0].color=i;	
-						cout<<"player[0].color="<<player[0].color<<endl;
-						colors[i].wykozystany=true;
-					}else if(player[1].color==-1){
-						wybrane_kolory++;	
-						player[1].color=i;
-						cout<<"player[1].color="<<player[1].color<<endl;
-						colors[i].wykozystany=true;
-					}
-					klik_down=false;
-					if(colors[i].wykozystany){
-						al_draw_filled_rectangle(px-5, py-5, px+bok+5, py+bok+5,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));	
-						tekst="wykorzystany kolor";
-						al_draw_text(font2, al_map_rgb(255,255,255),px+15,py+bok/2-15, 0, tekst.c_str());
-					}
-				}else{
-					al_draw_filled_rectangle(px-5, py-5, px+bok+5, py+bok+5,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
-				}
-								
-			}else{
-				if(klik_down && !cursor_pressed){
-					if(player[0].color==i){
-						wybrane_kolory--;	
-						player[0].color=-1;
-						colors[i].wykozystany=false;	
-					}else if(player[1].color==i){
-						wybrane_kolory--;	
-						player[1].color=-1;
-						colors[i].wykozystany=false;
-					}
-					klik_down=false;
-					al_draw_filled_rectangle(px-5, py-5, px+bok+5, py+bok+5,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
-				}else{
-					al_draw_filled_rectangle(px-5, py-5, px+bok+5, py+bok+5,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
-					tekst="wykorzystany kolor";
-					al_draw_text(font2, al_map_rgb(255,255,255),px+15,py+bok/2-15, 0, tekst.c_str());
-				}
-			}
-		}else{
-			al_draw_filled_rectangle(px, py, px+bok, py+bok,al_map_rgb(colors[i]._r , colors[i]._g, colors[i]._b));
-			if(colors[i].wykozystany){
-				tekst="wykorzystany kolor";
-				al_draw_text(font2, al_map_rgb(255,255,255),px+15,py+bok/2-15, 0, tekst.c_str());
-			}
-		}
-		px=px+bok+10;
-	}
-	al_set_target_backbuffer(display);
-	
-
-}
-
 
 
 void menu_quit()
@@ -566,15 +635,11 @@ void clean1()
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	tekst="Wybierz kolory graczy";
 	al_draw_text(font1, al_map_rgb(255,255,255), 480, 120,0, tekst.c_str());
-	tekst="ABY ZACZĄĆ, NACIŚNIJ S";
-	al_draw_text(font2, al_map_rgb(255,255,255), 20, 20,0, tekst.c_str());
 	tekst="ABY ZAKOŃCZYĆ, NACIŚNIJ Q";
 	al_draw_text(font2, al_map_rgb(255,255,255), 1050, 20,0, tekst.c_str());
 	tekst="Achtung die kurve";
 	al_draw_text(font3, al_map_rgb(255,22,22), 350, 10, 0, tekst.c_str());
 	al_set_target_backbuffer(display);
-	al_set_target_bitmap(gameroom_player_bitmap);
-	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_set_target_backbuffer(display);
 	al_set_target_bitmap(zaciemnienie_bitmap);
 	al_clear_to_color(al_map_rgba(0, 0, 0, 200));
@@ -588,6 +653,9 @@ void clean1()
 
 	przegranych=0;
 	wybrane_kolory=0;
+	int zmiennax=33;
+	int zmiennay=221;
+	int bok=252;
 
 	for(int i=0;i<10;i++){
 		player[i].color=-1;
@@ -645,6 +713,17 @@ void clean1()
 				colors[i]._b = 240;
 			}
 			colors[i].wykozystany=false;
+			colors[i].animation=0;
+			colors[i].size_animation=5;
+			colors[i].bok=252;
+			colors[i].touch=false;
+			if(i==5){
+				zmiennax=33;
+				zmiennay=221+bok+10;
+			}
+			colors[i].x=zmiennax;
+			colors[i].y=zmiennay;
+			zmiennax=zmiennax+bok+10;
 	}
 }
 
