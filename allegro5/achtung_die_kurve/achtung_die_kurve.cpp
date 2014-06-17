@@ -223,10 +223,12 @@ int init()
 	 	int animation;
 	 	int size_animation;
 	 	bool wykozystany;
+	 	bool poczatkowa_animacja;
 	 	bool touch;
 	 	void draw(){
 	 		al_set_target_bitmap(gameroom_bitmap);
-	 		al_draw_filled_rectangle(x-animation, y-animation, x+bok+animation, y+bok+animation,al_map_rgb(_r , _g, _b));
+	 		//al_draw_filled_rectangle(x-animation, y-animation, x+bok+animation, y+bok+animation,al_map_rgb(_r , _g, _b));
+	 		al_draw_filled_rounded_rectangle(x-animation, y-animation, x+bok+animation, y+bok+animation, 10, 10, al_map_rgb(_r,_g,_b));
 	 		if(wykozystany){
 	 			string tekst="wykorzystany kolor";
 				al_draw_text(font2, al_map_rgb(255,255,255),x+15,y+bok/2-15, 0, tekst.c_str());
@@ -265,8 +267,18 @@ int init()
 	 		}else{
 	 			touch=false;
 	 		}
-	 		if(animation<size_animation && touch){animation++;}
-			if(animation>0 && !touch){animation--;}
+	 		if(animation<size_animation && (touch || poczatkowa_animacja)){
+	 			animation++;
+	 			if(poczatkowa_animacja){
+	 				animation+=2;
+	 				if(poczatkowa_animacja && animation>=size_animation){
+	 					poczatkowa_animacja=false;
+	 				}
+	 			}else if(touch){
+	 				animation++;
+	 			}
+	 		}
+			if(animation>0 && !touch && !poczatkowa_animacja){animation--;}
 
 
 	 		
@@ -549,7 +561,9 @@ void menu_quit()
 	al_draw_bitmap(zaciemnienie_bitmap, 0, 0, 0);
 	int px=480;
 	int py=300;
+
 	al_set_target_bitmap(pause_menu);
+	al_clear_to_color(al_map_rgba(0, 0, 0, 0));
 	string tekst="Achtung die kurve";
 	al_draw_text(font3, al_map_rgb(255,22,22), 250, 100, 0, tekst.c_str());
 	tekst="STOP";
@@ -588,8 +602,8 @@ void menu_quit()
         } 
 
        	if(licznik_czasu==0 && al_is_event_queue_empty(event_queue)) {
- 			al_draw_bitmap(pause_menu, 0, 0, 0);
-           	al_flip_display();
+ 			//al_draw_bitmap(pause_menu, 0, 0, 0);
+           	//al_flip_display();
        	}
        	licznik_czasu=(licznik_czasu+1)%20;
 	}
@@ -713,8 +727,9 @@ void clean1()
 				colors[i]._b = 240;
 			}
 			colors[i].wykozystany=false;
-			colors[i].animation=0;
+			colors[i].animation=-100;
 			colors[i].size_animation=5;
+			colors[i].poczatkowa_animacja=true;
 			colors[i].bok=252;
 			colors[i].touch=false;
 			if(i==5){
