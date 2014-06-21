@@ -41,51 +41,43 @@ bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 class DUSZEK
 {
 	public:
-		int x = 0,y;
-		ALLEGRO_BITMAP *obraz;
-	void rysuj (x,y,obraz,obraz1)
-	{
-		al_draw_bitmap(x,y, obraz);
-
-	}
-	private:
-	
-	void idzdo (int x, y;)
-	{
+	DUSZEK () {
+	int x;
+	int y;
+	unsigned char time;
+	bool zmiana;
+	public:
+	void poruszanie(){
 		x++;
-		y =100;
-	
+		cout << x<< endl;
 	}
-	
-	
-	DUSZEK duszek1;
-	
-	x.duszek1 = 100;
-	y.duszek1 = 100;
-	obraz.duszek1 = al_load_bitmap("duszek.png");
-
-	if (obraz.duszek1 == NULL) {
-		cout << "Nie udalo sie zaladowac pliku." << endl;
-		exit(1);	
+	void czas(){
+		time++;
+		if (time == 10){
+			zmiana = true;
+			time = 0;
+		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	};	
 
 };
+DUSZEK duszek1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 
 //
 // Rysowanie planszy
@@ -93,7 +85,7 @@ class DUSZEK
 
 void rysuj_plansze()
 {
-   duszek1.ryszuj();
+  
 }
 
 //
@@ -102,7 +94,7 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
-	
+poruszanie();	
 }
 
 //
@@ -231,6 +223,10 @@ int main(int argc, char ** argv)
             przerysuj = false;
 
             rysuj_plansze();
+		
+		
+
+
 
             al_flip_display();
          }    
