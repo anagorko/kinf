@@ -29,7 +29,7 @@ const int screen_h = 562;   // wysokość ekranu (screen height)
 /****************************************
  * Tu rozpoczyna się istotna część kodu *
  ****************************************/
- 
+
 //
 // Struktury danych
 //
@@ -37,16 +37,15 @@ bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 //
 // Zmienne
 //
-	
+
 class DUSZEK
 {
-	public:
-	DUSZEK () {
+public:
+
 	int x;
 	int y;
 	unsigned char time;
 	bool zmiana;
-	public:
 	void poruszanie(){
 		x++;
 		cout << x<< endl;
@@ -58,7 +57,7 @@ class DUSZEK
 			time = 0;
 		}
 	}
-	};	
+
 
 };
 DUSZEK duszek1;
@@ -77,7 +76,7 @@ DUSZEK duszek1;
 
 
 
-	
+
 
 //
 // Rysowanie planszy
@@ -85,7 +84,7 @@ DUSZEK duszek1;
 
 void rysuj_plansze()
 {
-  
+
 }
 
 //
@@ -94,7 +93,7 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
-poruszanie();	
+    duszek1.poruszanie();
 }
 
 //
@@ -117,7 +116,7 @@ void menu() {
 /****************************************
  * Kod poniżej jest w miarę generyczny  *
  ****************************************/
- 
+
 const float FPS = 60;       // Frames Per Second
 
 
@@ -131,12 +130,12 @@ int init()
         cerr << "Błąd podczas inicjalizacji allegro." << endl;
         return -1;
     }
-  
+
     if (!al_init_primitives_addon()) {
         cerr << "Błąd podczas inicjalizacji dodatku 'primitives'." << endl;
         return -1;
     }
-    
+
     if (!al_install_keyboard()) {
         cerr << "Błąd podczas inicjalizacji klawiatury." << endl;
         return -1;
@@ -146,13 +145,13 @@ int init()
         cerr << "Błąd podczas inicjalizacji myszy." << endl;
         return -1;
     }
-  
+
     timer = al_create_timer(1.0 / FPS);
     if(!timer) {
         cerr << "Błąd podczas inicjalizacji zegara." << endl;
         return -1;
     }
- 
+
     display = al_create_display(screen_w, screen_h);
     if(!display) {
         cerr << "Błąd podczas inicjalizacji ekranu." << endl;
@@ -167,13 +166,13 @@ int init()
         al_destroy_timer(timer);
         return -1;
     }
-   
-    al_register_event_source(event_queue, al_get_display_event_source(display));  
-    al_register_event_source(event_queue, al_get_timer_event_source(timer));  
+
+    al_register_event_source(event_queue, al_get_display_event_source(display));
+    al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
     al_clear_to_color(al_map_rgb(0,0,0));
-  
-    al_flip_display();  
+
+    al_flip_display();
     al_start_timer(timer);
 
     return 0;
@@ -185,15 +184,15 @@ int main(int argc, char ** argv)
         cerr << "Inicjalizacja nie powiodła się." << endl;
         return -1;
     }
- 
+
 
     bool przerysuj = true;
-    bool wyjdz = false;  
+    bool wyjdz = false;
 
     //
     // Event loop - główna pętla programu
     //
-        
+
     while(!wyjdz)
     {
         ALLEGRO_EVENT ev;
@@ -213,7 +212,7 @@ int main(int argc, char ** argv)
             key[ev.keyboard.keycode] = true;
         } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
             key[ev.keyboard.keycode] = false;
-            
+
             if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
                 wyjdz = true;
             }
@@ -223,13 +222,13 @@ int main(int argc, char ** argv)
             przerysuj = false;
 
             rysuj_plansze();
-		
-		
+
+
 
 
 
             al_flip_display();
-         }    
+         }
     }
 
     return 0;
