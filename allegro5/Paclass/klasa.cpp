@@ -44,17 +44,26 @@ public:
 
 	int x;
 	int y;
-	unsigned char time;
-	bool zmiana;
+	
 	void poruszanie(){
 		x++;
 		cout << x<< endl;
 	}
-	void czas(){
-		time++;
-		if (time == 10){
-			zmiana = true;
-			time = 0;
+	private: 
+	bool zmiana1, zmina2;
+	int czas;
+	public:
+	void kostium(){
+		czas++;
+		if (czas == 10 || zmina1 == true){
+			zmiana1 = false;
+			zmiana2 = true;
+			czas = 0;
+		}
+		if (czas == 10 || zmina1 == false){
+			zmiana1 = true;
+			zmiana2 = false;
+			czas = 0;
 		}
 	}
 
@@ -94,6 +103,7 @@ void rysuj_plansze()
 void aktualizuj_plansze()
 {
     duszek1.poruszanie();
+	duszek1.kostium();
 }
 
 //
