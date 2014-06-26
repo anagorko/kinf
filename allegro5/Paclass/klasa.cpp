@@ -44,34 +44,102 @@ public:
 
 	int x;
 	int y;
-	
-	void poruszanie(){
-		x++;
-		cout << x<< endl;
-	}
-	private: 
-	bool zmiana1, zmina2;
+	bool zmiana1;
+	bool zmiana2;
 	int czas;
-	public:
-	void kostium(){
-		czas++;
-		if (czas == 10 || zmina1 == true){
-			zmiana1 = false;
-			zmiana2 = true;
-			czas = 0;
-		}
-		if (czas == 10 || zmina1 == false){
-			zmiana1 = true;
-			zmiana2 = false;
-			czas = 0;
-		}
+	ALLEGRO_BITMAP* rys1;
+	ALLEGRO_BITMAP* rys2;
+
+
+
+	DUSZEK (){
+		x = 100;
+		y = 100;
+		zmiana1 = true;
+		zmiana2 = false;
+		czas = 0;
+		rys1 = NULL;
+		rys2 = NULL;
+        draw = true;
 	}
 
+	void poruszanie(){
+		x++;
+	}
+
+
+
+	void rysuj() {
+
+			al_draw_bitmap(rys1,x,y,0);
+	}
 
 };
 DUSZEK duszek1;
 
+class PACMAN
+{
+private:
 
+    int angle;
+
+public:
+    ALLEGRO_BITMAP *pacman;
+    int x,y;
+    PACMAN (){
+        x = screen_w/2;
+        y = screen_h/2;
+        angle = 0;
+        xcel -= duszek1.x;
+        ycel -= duszek1.y;
+    }
+
+    void ruch()
+    {
+        if(key[ALLEGRO_KEY_UP]){
+            y -= 2;
+            angle = 270;
+
+        }
+        if(key[ALLEGRO_KEY_DOWN]){
+            y += 2;
+            angle = 90;
+
+        }
+        if(key[ALLEGRO_KEY_RIGHT]){
+            x += 2;
+            angle = 0;
+
+        }
+        if(key[ALLEGRO_KEY_LEFT]){
+            x -= 2;
+            angle = 180;
+
+        }
+    }
+
+    void rysuj()
+    {
+    al_draw_rotated_bitmap(pacman, al_get_bitmap_width(pacman)/2, al_get_bitmap_height(pacman)/2, x, y, angle / 360.0 * 2 * 3.14159, 0);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+};
+
+PACMAN pacman1;
 
 
 
@@ -93,7 +161,9 @@ DUSZEK duszek1;
 
 void rysuj_plansze()
 {
-
+    al_clear_to_color(al_map_rgb(0,0,0));
+    duszek1.rysuj();
+    pacman1.rysuj();
 }
 
 //
@@ -103,7 +173,7 @@ void rysuj_plansze()
 void aktualizuj_plansze()
 {
     duszek1.poruszanie();
-	duszek1.kostium();
+    pacman1.ruch();
 }
 
 //
@@ -176,6 +246,24 @@ int init()
         al_destroy_timer(timer);
         return -1;
     }
+
+    al_init_image_addon();
+
+	duszek1.rys1 = al_load_bitmap("duszek1.png");
+    pacman1.pacman = al_load_bitmap("pacman.png");
+	duszek1.rys2 = al_load_bitmap("duszek2.png");
+	if (duszek1.rys1 == NULL){
+		cout << "nie ubało się załadować rys1."<<endl;
+		exit(1);
+	}
+	if (duszek1.rys2 == NULL){
+		cout << "nie ubało się załadować rys2."<<endl;
+		exit(1);
+	}
+    if (pacman1.pacman == NULL){
+		cout << "nie ubało się załadować rys3."<<endl;
+		exit(1);
+	}
 
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
