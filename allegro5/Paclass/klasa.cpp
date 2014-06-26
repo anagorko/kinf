@@ -38,44 +38,6 @@ bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 // Zmienne
 //
 
-class DUSZEK
-{
-public:
-
-	int x;
-	int y;
-	bool zmiana1;
-	bool zmiana2;
-	int czas;
-	ALLEGRO_BITMAP* rys1;
-	ALLEGRO_BITMAP* rys2;
-
-
-
-	DUSZEK (){
-		x = 100;
-		y = 100;
-		zmiana1 = true;
-		zmiana2 = false;
-		czas = 0;
-		rys1 = NULL;
-		rys2 = NULL;
-        draw = true;
-	}
-
-	void poruszanie(){
-		x++;
-	}
-
-
-
-	void rysuj() {
-
-			al_draw_bitmap(rys1,x,y,0);
-	}
-
-};
-DUSZEK duszek1;
 
 class PACMAN
 {
@@ -90,8 +52,7 @@ public:
         x = screen_w/2;
         y = screen_h/2;
         angle = 0;
-        xcel -= duszek1.x;
-        ycel -= duszek1.y;
+
     }
 
     void ruch()
@@ -100,22 +61,23 @@ public:
             y -= 2;
             angle = 270;
 
-        }
-        if(key[ALLEGRO_KEY_DOWN]){
+        } else if(key[ALLEGRO_KEY_DOWN]){
             y += 2;
             angle = 90;
 
-        }
-        if(key[ALLEGRO_KEY_RIGHT]){
+        } else if(key[ALLEGRO_KEY_RIGHT]){
             x += 2;
             angle = 0;
 
-        }
-        if(key[ALLEGRO_KEY_LEFT]){
+        } else if(key[ALLEGRO_KEY_LEFT]){
             x -= 2;
             angle = 180;
 
         }
+        if (y < 0) { y = screen_h - 1; }
+        if (y > screen_h) { y = 0; }
+        if (x < 0) { x = screen_w - 1; }
+        if (x >= screen_w) { x = 0; }
     }
 
     void rysuj()
@@ -141,6 +103,79 @@ public:
 
 PACMAN pacman1;
 
+class DUSZEK
+{
+public:
+
+	int x;
+	int y;
+	int xcel, ycel;
+	bool zmiana1;
+	bool zmiana2;
+	int czas;
+	ALLEGRO_BITMAP* rys1;
+	ALLEGRO_BITMAP* rys2;
+
+
+
+	DUSZEK (){
+		x = 100;
+		y = 100;
+		zmiana1 = true;
+		zmiana2 = false;
+		czas = 0;
+		rys1 = NULL;
+		rys2 = NULL;
+
+	}
+
+
+
+
+
+
+
+	void rysuj() {
+
+			al_draw_bitmap(rys1,x,y,0);
+	}
+
+    void ruch (){
+        xcel = x - pacman1.x;
+        ycel = y - pacman1.y;
+
+        if (xcel < 0){
+            x++;
+        } else if (xcel > 0){
+            x--;
+        } else if (y < 0){
+            y--;
+        } else if (y > 0) {
+            y++;
+        }
+        if (y < 0) { y = screen_h - 1; }
+        if (y > screen_h) { y = 0; }
+        if (x < 0) { x = screen_w - 1; }
+        if (x >= screen_w) { x = 0; }
+
+
+
+
+
+
+    }
+
+    void kolizja (){
+    if(x>(pacman1.x -30) && x<(pacman1.x +30) && y>(pacman1.y -30) && y<(pacman1.y +30)){
+		exit(1);
+	}
+
+
+
+    }
+
+};
+DUSZEK duszek1;
 
 
 
@@ -172,8 +207,9 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
-    duszek1.poruszanie();
+    duszek1.ruch();
     pacman1.ruch();
+    duszek1.kolizja();
 }
 
 //
