@@ -139,11 +139,11 @@ public:
 
 	void rysuj() {
         czas++;
-        if (czas < 30){
-			al_draw_bitmap(rys1,x,y,0);
+        if (czas < 10){
+			al_draw_rotated_bitmap(rys1, al_get_bitmap_width(rys1)/2,al_get_bitmap_height(rys1)/2,x,y,0,0);
         } else {
-            al_draw_bitmap(rys2,x,y,0);
-        } if (czas == 61){
+            al_draw_rotated_bitmap(rys2,al_get_bitmap_width(rys2)/2,al_get_bitmap_height(rys2)/2,x,y,0,0);
+        } if (czas == 21){
             czas = 0;
         }
 
@@ -152,21 +152,23 @@ public:
     void ruch (){
         xcel = x - pacman1.x;
         ycel = y - pacman1.y;
+cout << "&" << y  << " " << pacman1.y << "&";
 
         if (xcel < 0){
             x++;
-            x++;
         } else if (xcel > 0){
             x--;
-        } else if (y < 0){
-            y--;
-        } else if (y > 0) {
-            y++;
         }
+else if (ycel < 0){
+            y++;
+        } else if (ycel > 0) {
+            y--;
+        }
+
         if (y < 0) { y = screen_h - 1; }
         if (y > screen_h) { y = 0; }
         if (x < 0) { x = screen_w - 1; }
-        if (x >= screen_w) { x = 0; }
+        if (x > screen_w) { x = 0; }
 
 
 
@@ -176,8 +178,8 @@ public:
     }
 
     void kolizja (){
-        if(x>(pacman1.x -33) && x<(pacman1.x +33) && y>(pacman1.y -33) && y<(pacman1.y +33)){
-            cout << "Przegrałeś rzycie"<<endl;
+        if(x>(pacman1.x -30) && x<(pacman1.x +30) && y>(pacman1.y -30) && y<(pacman1.y +30)){
+            cout << "Przegrałeś zycie"<<endl;
             exit(1);
         }
 
