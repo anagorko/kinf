@@ -47,7 +47,9 @@ private:
 
 public:
     ALLEGRO_BITMAP *pacman;
+
     int x,y;
+
     PACMAN (){
         x = screen_w/2;
         y = screen_h/2;
@@ -123,7 +125,7 @@ public:
 		y = 100;
 		zmiana1 = true;
 		zmiana2 = false;
-		czas = 0;
+		czas = 1;
 		rys1 = NULL;
 		rys2 = NULL;
 
@@ -136,8 +138,15 @@ public:
 
 
 	void rysuj() {
-
+        czas++;
+        if (czas < 30){
 			al_draw_bitmap(rys1,x,y,0);
+        } else {
+            al_draw_bitmap(rys2,x,y,0);
+        } if (czas == 61){
+            czas = 0;
+        }
+
 	}
 
     void ruch (){
@@ -145,6 +154,7 @@ public:
         ycel = y - pacman1.y;
 
         if (xcel < 0){
+            x++;
             x++;
         } else if (xcel > 0){
             x--;
@@ -166,9 +176,10 @@ public:
     }
 
     void kolizja (){
-    if(x>(pacman1.x -30) && x<(pacman1.x +30) && y>(pacman1.y -30) && y<(pacman1.y +30)){
-		exit(1);
-	}
+        if(x>(pacman1.x -33) && x<(pacman1.x +33) && y>(pacman1.y -33) && y<(pacman1.y +33)){
+            cout << "Przegrałeś rzycie"<<endl;
+            exit(1);
+        }
 
 
 
@@ -179,8 +190,97 @@ DUSZEK duszek1;
 
 
 
+class  MENU
+{
+
+public:
+    ALLEGRO_FONT* font;
+    bool start;
+    bool exit;
+    bool about;
+    int kolejka;
+    MENU (){
+        font = NULL;
+        start = false;
+        exit = false;
+        about = false;
+        kolejka = 0;
+
+    }
+
+    void napisy()
+    {
+
+    if (kolejka == 0){
+            al_draw_text(font, al_map_rgb(255,0,0), screen_w/2, screen_h/2-20, ALLEGRO_ALIGN_CENTER,"start");
+
+    } else {
+            al_draw_text(font, al_map_rgb(255,255,255), screen_w/2, screen_h/2-20, ALLEGRO_ALIGN_CENTER,"start");
+
+    } if (kolejka == 1){
+            al_draw_text(font, al_map_rgb(255,0,0), screen_w/2, screen_h/2, ALLEGRO_ALIGN_CENTER,"about");
+
+    } else {
+            al_draw_text(font, al_map_rgb(255,255,255), screen_w/2, screen_h/2, ALLEGRO_ALIGN_CENTER,"about");
+
+    } if (kolejka == 2){
+            al_draw_text(font, al_map_rgb(255,0,0), screen_w/2, screen_h/2+20, ALLEGRO_ALIGN_CENTER, "exit");
+
+    } else {
+            al_draw_text(font, al_map_rgb(255,255,255), screen_w/2, screen_h/2+20, ALLEGRO_ALIGN_CENTER, "exit");
+
+    }
+
+        cout << kolejka<<endl;
 
 
+    }
+    void sterowanie() {
+        if (key[ALLEGRO_KEY_DOWN]){
+            kolejka += 1;
+            usleep(100000);
+        } else if (key[ALLEGRO_KEY_UP]){
+            kolejka -= 1;
+            usleep(100000);
+        }
+        if (kolejka == -1){
+            kolejka = 2;
+            usleep(100000);
+        }
+        if (kolejka == 3){
+            kolejka = 0;
+            usleep(100000);
+        }
+
+
+
+    }
+    void przyciski(){
+        if (kolejka == 0 && key[ALLEGRO_KEY_ENTER]){
+            start = true;
+        }
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+};
+MENU menu1;
 
 
 
@@ -196,9 +296,15 @@ DUSZEK duszek1;
 
 void rysuj_plansze()
 {
+   /* if (!menu1.start) {
+        menu1.napisy();
+        return;
+    }*/
+
     al_clear_to_color(al_map_rgb(0,0,0));
     duszek1.rysuj();
     pacman1.rysuj();
+
 }
 
 //
@@ -207,9 +313,16 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
+    /*if (!menu1.start) {
+        menu1.sterowanie();
+        return;
+    }*/
+
     duszek1.ruch();
     pacman1.ruch();
     duszek1.kolizja();
+
+
 }
 
 //
@@ -221,12 +334,7 @@ void co_robia_gracze()
 }
 
 
-void menu() {
 
-
-
-
-}
 
 
 /****************************************
@@ -284,10 +392,14 @@ int init()
     }
 
     al_init_image_addon();
+    al_init_font_addon();
+    al_init_ttf_addon();
+
 
 	duszek1.rys1 = al_load_bitmap("duszek1.png");
     pacman1.pacman = al_load_bitmap("pacman.png");
 	duszek1.rys2 = al_load_bitmap("duszek2.png");
+//	menu1.font = al_load_ttf_font("AdvoCut.ttf",16,0);
 	if (duszek1.rys1 == NULL){
 		cout << "nie ubało się załadować rys1."<<endl;
 		exit(1);
@@ -297,9 +409,13 @@ int init()
 		exit(1);
 	}
     if (pacman1.pacman == NULL){
-		cout << "nie ubało się załadować rys3."<<endl;
+		cout << "nie ubało się załadować pacmana."<<endl;
 		exit(1);
 	}
+//	if (menu1.font == NULL) {
+  //      cout << "nie udało się załadować fontów."<< endl;
+    //    exit(1);
+	//}
 
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
@@ -327,7 +443,7 @@ int main(int argc, char ** argv)
     // Event loop - główna pętla programu
     //
 
-    while(!wyjdz)
+    while(!wyjdz /*|| menu1.start == true*/)
     {
         ALLEGRO_EVENT ev;
         al_wait_for_event(event_queue, &ev);
