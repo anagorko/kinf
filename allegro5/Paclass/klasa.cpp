@@ -38,37 +38,251 @@ bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 // Zmienne
 //
 
+
+class PACMAN
+{
+private:
+
+    int angle;
+
+public:
+    ALLEGRO_BITMAP *pacman;
+
+    int x,y;
+
+    PACMAN (){
+        x = screen_w/2;
+        y = screen_h/2;
+        angle = 0;
+
+    }
+
+    void ruch()
+    {
+        if(key[ALLEGRO_KEY_UP]){
+            y -= 2;
+            angle = 270;
+
+        } else if(key[ALLEGRO_KEY_DOWN]){
+            y += 2;
+            angle = 90;
+
+        } else if(key[ALLEGRO_KEY_RIGHT]){
+            x += 2;
+            angle = 0;
+
+        } else if(key[ALLEGRO_KEY_LEFT]){
+            x -= 2;
+            angle = 180;
+
+        }
+        if (y < 0) { y = screen_h - 1; }
+        if (y > screen_h) { y = 0; }
+        if (x < 0) { x = screen_w - 1; }
+        if (x >= screen_w) { x = 0; }
+    }
+
+    void rysuj()
+    {
+    al_draw_rotated_bitmap(pacman, al_get_bitmap_width(pacman)/2, al_get_bitmap_height(pacman)/2, x, y, angle / 360.0 * 2 * 3.14159, 0);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+};
+
+PACMAN pacman1;
+
 class DUSZEK
 {
 public:
 
 	int x;
 	int y;
-	unsigned char time;
-	bool zmiana;
-	void poruszanie(){
-		x++;
-		cout << x<< endl;
-	}
-	void czas(){
-		time++;
-		if (time == 10){
-			zmiana = true;
-			time = 0;
-		}
+	int xcel, ycel;
+	bool zmiana1;
+	bool zmiana2;
+	int czas;
+	ALLEGRO_BITMAP* rys1;
+	ALLEGRO_BITMAP* rys2;
+
+
+
+	DUSZEK (){
+		x = 100;
+		y = 100;
+		zmiana1 = true;
+		zmiana2 = false;
+		czas = 1;
+		rys1 = NULL;
+		rys2 = NULL;
+
 	}
 
+
+
+
+
+
+
+	void rysuj() {
+        czas++;
+        if (czas < 10){
+			al_draw_rotated_bitmap(rys1, al_get_bitmap_width(rys1)/2,al_get_bitmap_height(rys1)/2,x,y,0,0);
+        } else {
+            al_draw_rotated_bitmap(rys2,al_get_bitmap_width(rys2)/2,al_get_bitmap_height(rys2)/2,x,y,0,0);
+        } if (czas == 21){
+            czas = 0;
+        }
+
+	}
+
+    void ruch (){
+        xcel = x - pacman1.x;
+        ycel = y - pacman1.y;
+cout << "&" << y  << " " << pacman1.y << "&";
+
+        if (xcel < 0){
+            x++;
+        } else if (xcel > 0){
+            x--;
+        }
+else if (ycel < 0){
+            y++;
+        } else if (ycel > 0) {
+            y--;
+        }
+
+        if (y < 0) { y = screen_h - 1; }
+        if (y > screen_h) { y = 0; }
+        if (x < 0) { x = screen_w - 1; }
+        if (x > screen_w) { x = 0; }
+
+
+
+
+
+
+    }
+
+    void kolizja (){
+        if(x>(pacman1.x -30) && x<(pacman1.x +30) && y>(pacman1.y -30) && y<(pacman1.y +30)){
+            cout << "Przegrałeś zycie"<<endl;
+            exit(1);
+        }
+
+
+
+    }
 
 };
 DUSZEK duszek1;
 
 
 
+class  MENU
+{
+
+public:
+    ALLEGRO_FONT* font;
+    bool start;
+    bool exit;
+    bool about;
+    int kolejka;
+    MENU (){
+        font = NULL;
+        start = false;
+        exit = false;
+        about = false;
+        kolejka = 0;
+
+    }
+
+    void napisy()
+    {
+
+    if (kolejka == 0){
+            al_draw_text(font, al_map_rgb(255,0,0), screen_w/2, screen_h/2-20, ALLEGRO_ALIGN_CENTER,"start");
+
+    } else {
+            al_draw_text(font, al_map_rgb(255,255,255), screen_w/2, screen_h/2-20, ALLEGRO_ALIGN_CENTER,"start");
+
+    } if (kolejka == 1){
+            al_draw_text(font, al_map_rgb(255,0,0), screen_w/2, screen_h/2, ALLEGRO_ALIGN_CENTER,"about");
+
+    } else {
+            al_draw_text(font, al_map_rgb(255,255,255), screen_w/2, screen_h/2, ALLEGRO_ALIGN_CENTER,"about");
+
+    } if (kolejka == 2){
+            al_draw_text(font, al_map_rgb(255,0,0), screen_w/2, screen_h/2+20, ALLEGRO_ALIGN_CENTER, "exit");
+
+    } else {
+            al_draw_text(font, al_map_rgb(255,255,255), screen_w/2, screen_h/2+20, ALLEGRO_ALIGN_CENTER, "exit");
+
+    }
+
+        cout << kolejka<<endl;
+
+
+    }
+    void sterowanie() {
+        if (key[ALLEGRO_KEY_DOWN]){
+            kolejka += 1;
+            usleep(100000);
+        } else if (key[ALLEGRO_KEY_UP]){
+            kolejka -= 1;
+            usleep(100000);
+        }
+        if (kolejka == -1){
+            kolejka = 2;
+            usleep(100000);
+        }
+        if (kolejka == 3){
+            kolejka = 0;
+            usleep(100000);
+        }
+
+
+
+    }
+    void przyciski(){
+        if (kolejka == 0 && key[ALLEGRO_KEY_ENTER]){
+            start = true;
+        }
+
+
+
+    }
 
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+};
+MENU menu1;
 
 
 
@@ -84,6 +298,14 @@ DUSZEK duszek1;
 
 void rysuj_plansze()
 {
+   /* if (!menu1.start) {
+        menu1.napisy();
+        return;
+    }*/
+
+    al_clear_to_color(al_map_rgb(0,0,0));
+    duszek1.rysuj();
+    pacman1.rysuj();
 
 }
 
@@ -93,7 +315,16 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
-    duszek1.poruszanie();
+    /*if (!menu1.start) {
+        menu1.sterowanie();
+        return;
+    }*/
+
+    duszek1.ruch();
+    pacman1.ruch();
+    duszek1.kolizja();
+
+
 }
 
 //
@@ -105,12 +336,7 @@ void co_robia_gracze()
 }
 
 
-void menu() {
 
-
-
-
-}
 
 
 /****************************************
@@ -167,6 +393,32 @@ int init()
         return -1;
     }
 
+    al_init_image_addon();
+    al_init_font_addon();
+    al_init_ttf_addon();
+
+
+	duszek1.rys1 = al_load_bitmap("duszek1.png");
+    pacman1.pacman = al_load_bitmap("pacman.png");
+	duszek1.rys2 = al_load_bitmap("duszek2.png");
+//	menu1.font = al_load_ttf_font("AdvoCut.ttf",16,0);
+	if (duszek1.rys1 == NULL){
+		cout << "nie ubało się załadować rys1."<<endl;
+		exit(1);
+	}
+	if (duszek1.rys2 == NULL){
+		cout << "nie ubało się załadować rys2."<<endl;
+		exit(1);
+	}
+    if (pacman1.pacman == NULL){
+		cout << "nie ubało się załadować pacmana."<<endl;
+		exit(1);
+	}
+//	if (menu1.font == NULL) {
+  //      cout << "nie udało się załadować fontów."<< endl;
+    //    exit(1);
+	//}
+
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -193,7 +445,7 @@ int main(int argc, char ** argv)
     // Event loop - główna pętla programu
     //
 
-    while(!wyjdz)
+    while(!wyjdz /*|| menu1.start == true*/)
     {
         ALLEGRO_EVENT ev;
         al_wait_for_event(event_queue, &ev);

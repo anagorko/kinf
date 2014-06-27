@@ -120,7 +120,7 @@ int init()
 	font=al_load_ttf_font("FreeMono.ttf", 60, 12);
 	font1=al_load_ttf_font("FreeMono.ttf", 30, 12);
 	font2=al_load_ttf_font("FreeMono.ttf", 20, 12);
-	font3=al_load_ttf_font("FreeMono.ttf", 60, 12);
+	font3=al_load_ttf_font("FreeMono.ttf", 62, 12);
 
    if (!font) {
        cerr << "Nie mogę załadować czcionki FreeMono.ttf" << endl;
@@ -228,9 +228,15 @@ int init()
 	 	void draw(){
 	 		al_set_target_bitmap(gameroom_bitmap);
 	 		//al_draw_filled_rectangle(x-animation, y-animation, x+bok+animation, y+bok+animation,al_map_rgb(_r , _g, _b));
-	 		al_draw_filled_rounded_rectangle(x-animation, y-animation, x+bok+animation, y+bok+animation, 10, 10, al_map_rgb(_r,_g,_b));
+	 		al_draw_filled_rounded_rectangle(x-animation, y-animation, x+bok+animation, y+bok+animation, 10, 5, al_map_rgb(_r,_g,_b));
 	 		if(wykozystany){
 	 			string tekst="wykorzystany kolor";
+	 			int px=x;
+	 			int py=y;
+	 			int kx=x+bok;
+	 			int ky=y+bok;
+	 			float tx=px+((kx-px)/2)-(al_get_text_width(font1,tekst.c_str())/2);
+				float ty=py+((ky-py)/2)-(al_get_font_line_height(font1)/2);
 				al_draw_text(font2, al_map_rgb(255,255,255),x+15,y+bok/2-15, 0, tekst.c_str());
 			}
 	 		al_set_target_backbuffer(display);
@@ -323,7 +329,9 @@ int init()
 			al_set_target_bitmap(gameroom_bitmap);
 			al_draw_filled_rounded_rectangle(px-animation, py-animation, kx+animation, ky+animation, 5, 20, al_map_rgb(r,g,b));
 			if(tekst=="START"){
-				al_draw_text(font1, al_map_rgb(255,255,255), px+5, py,0, tekst.c_str());
+				float tx=px+((kx-px)/2)-(al_get_text_width(font1,tekst.c_str())/2);
+				float ty=py+((ky-py)/2)-(al_get_font_line_height(font1)/2);
+				al_draw_text(font1, al_map_rgb(255,255,255), tx, ty,0, tekst.c_str());
 			}
 			al_set_target_backbuffer(display);
 		}
