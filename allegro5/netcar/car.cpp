@@ -1,5 +1,5 @@
 //
-// Car (C) Marcin Szcząchor
+// NetCar (C) Marcin Szcząchor
 //
 
 #include <allegro5/allegro.h>
@@ -14,20 +14,26 @@
 #include <math.h>
 #include "client.h"
 #include <vector>
+#include <future>
+#include <thread>
 using namespace std;
 
 //
 // Konfiguracja gry
 //
 
-int screen_w;   // szerokość ekranu (screen width)
-int screen_h;   // wysokość ekranu (screen height)
+int screen_w = 1366;   // szerokość ekranu (screen width)
+int screen_h = 768;   // wysokość ekranu (screen height)
+const int tiles_w = 20;
+const int tiles_h = 20;
+const int size = 100;
+const int map_w = tiles_w * size;
+const int map_h = tiles_h * size;
 bool key[ALLEGRO_KEY_MAX];  // wciśnięte klawisze
 const float FPS = 60;       // Frames Per Second
 int mouse_x;
 int mouse_y;
 bool mouse_pressed = false;
-
 
 /****************************************
  * Tu rozpoczyna się istotna część kodu *
@@ -37,11 +43,68 @@ bool mouse_pressed = false;
 // Struktury danych
 //
 
-class car
+class object
 {
 	public:
-	string id;
+	float x;
+	float y;	
+};
+class map
+{
+	public:
+		float height;
+		float width;
+};
+class camera
+{
+	public:
+	float x;
+	float y;
+	camera(float new_x, float new_y){
+		x = new_x;
+		y = new_y;
+	}
+	void follow(object a){
+		x = a.x;
+		y = a.y;
+	}
+	void follow_in_borders(object a){
+		
+		if((a.x > screen_w/2) && (a.x < (map_w - screen_w/2)) && (a.y > screen_h/2) && (a.y < (map_h - screen_h/2))){
+			x = a.x;
+			y = a.y;			
+		}else{
+			x = a.x;
+			y = a.y;
+			if(a.x < screen_w/2){
+				x = screen_w/2;
+			}
+			if(a.x > (map_w - screen_w/2)){
+				x = map_w - screen_w/2;
+			}
+			if(a.y < screen_h/2){
+				y = screen_h/2;
+			}
+			if(a.y > (map_h - screen_h/2)){
+				y = map_h - screen_h/2;
+			}
+		}
+	}
+};
+class car: public object
+{
+	public:
 	ALLEGRO_BITMAP * image = NULL;
+	string id;
+	float angle;
+	void draw(camera cam)
+	{
+		if(image == NULL)return;
+		if((x > (cam.x - screen_w)) && (x < (cam.x + screen_w)) && (y > (cam.y - screen_h)) && (y < (cam.y + screen_h))){
+			al_draw_rotated_bitmap (image, al_get_bitmap_width(image)/2, al_get_bitmap_height(image)/2, x - cam.x + screen_w/2, y - cam.y + screen_h/2, angle / 360.0 * 2 * 3.14159, 0);
+		}	
+		
+	}
 	car(float new_x, float new_y) {
 		x = new_x;
 		y = new_y;
@@ -60,7 +123,7 @@ class car
 		max_reverse_speed = 3;
 		max_speed = 10;
 		acceleration = 0.4;
-		image = al_load_bitmap("car.png");
+		image = al_load_bitmap("yellow_car.png");
 	}
 	void accelerate(){
 		if (speed + acceleration <= max_speed) {
@@ -105,19 +168,29 @@ class car
 			}
 		}
 	}
-	void draw()
-	{
-		if(image == NULL)return;
-		al_draw_rotated_bitmap (image, al_get_bitmap_width(image)/2, al_get_bitmap_height(image)/2, x, y, angle / 360.0 * 2 * 3.14159, 0);
-	}
-	float angle;
+	private:
 	float speed;
-	float x;
-	float y;
 	float max_speed;
 	float max_reverse_speed;
-	float weight;
 	float acceleration;
+};
+class tile : public object
+{
+	public:
+	tile(float new_x, float new_y, float new_size){
+		x = new_x;
+		y = new_y;
+		size = new_size;
+	}
+	tile(){}
+	float size;
+	void draw(camera cam)
+	{
+		if((x > (cam.x - screen_w/2 - size)) && (x < (cam.x + screen_w/2 + size)) && (y > (cam.y - screen_h/2 - size)) && (y < (cam.y + screen_h/2 + size))){
+			al_draw_filled_rectangle (x - cam.x + screen_w/2, y - cam.y + screen_h/2, x - cam.x + screen_w/2 + size - 1, y - cam.y + screen_h/2 + size - 1, al_map_rgb(128,128,255));
+		}	
+		
+	}
 };
 
 //
@@ -129,8 +202,11 @@ class car
 	float angle = 0;
 	float speed = 0;
 	car autko(100, 100, 0);
+	int grid [20][20];
 	stringstream ss;
 	vector <car> positions;
+	camera kamera(screen_w/2, screen_h/2);
+	tile kafelki[tiles_w][tiles_h];
 	//car autko2(200, 200);
 	
 //
@@ -140,11 +216,20 @@ class car
 void rysuj_plansze()
 {
     al_clear_to_color(al_map_rgb(0,0,0));
-	for(int i = 0; i < positions.size(); i++){
-		positions[i].draw(); cout << "#" << positions.size();
+	
+	for(int tx = 0; tx < tiles_w; tx++){
+		for(int ty = 0; ty < tiles_h; ty++){
+			kafelki[tx][ty].draw(kamera);
+		}
 	}
-	//autko.draw();
-	//autko2.draw();
+	for(int i = 0; i < positions.size(); i++){
+		if(positions[i].id != autko.id){
+			positions[i].draw(kamera);
+		}
+	}
+	autko.draw(kamera);
+	//autko2.draw(kamera);
+	kamera.follow_in_borders(autko);
 }
 
 //
@@ -158,28 +243,27 @@ void aktualizuj_plansze()
 	ss << autko.generate_packet();
 	send_packet(ss.str());
 	service_websockets(); // git push & pull
-	string received_packets;cout<<1;
+	string received_packets;
 	while (receive_packet(received_packets))
-	{	cout<<2;
+	{
 		string nick;
 		ss.clear(); ss.str("");
 		ss << received_packets;
 		ss >> nick;
-		int player_number = -1;cout<<3;
+		int player_number = -1;
 		for(int i = 0; i < positions.size(); i++){
 			if(nick == positions[i].id){
 				player_number = i;
 			}
-		}cout<<4;
+		}
 		if(player_number == -1){
 			player_number = positions.size();
 			positions.push_back(car (100, 100, 0));
 			positions.back().id = nick;		
-		}cout<<5;
+		}
 		ss >> positions[player_number].x;
 		ss >> positions[player_number].y;
 		ss >> positions[player_number].angle;
-cout<<6;
 		
 	} 
 	//autko2.calculate();
@@ -228,11 +312,13 @@ ALLEGRO_TIMER *timer = NULL;
 
 int init()
 {
+	char **xxx;
 	string server_adress;
 	cout << "Podaj adres serwera: ";
 	cin >> server_adress;
 	cout << "Podaj nick: ";
-	cin >> autko.id;	
+	cin >> autko.id;
+	if(server_adress == "local")server_adress = "127.0.0.1";	
 	if(!connect_to_server(server_adress)) {
         	cerr << "Serwer nie odpowiada" << endl;
         	return -1;
@@ -304,8 +390,15 @@ int init()
 	car_image = al_load_bitmap("car.png");
 	x = screen_w/2;
 	y = screen_h/2;
-	autko.image = al_load_bitmap("car.png");
-	//autko2.image = al_load_bitmap("car.png");
+	autko.image = al_load_bitmap("yellow_car.png");
+	//autko2.image = al_load_bitmap("red_car.png");
+	for(int tx = 0; tx < tiles_w; tx++){
+		for(int ty = 0; ty < tiles_h; ty++){
+			kafelki[tx][ty].size = size;
+			kafelki[tx][ty].x = tx * kafelki[tx][ty].size;
+			kafelki[tx][ty].y = ty * kafelki[tx][ty].size;
+		}
+	}
 	
   
     al_flip_display();  
