@@ -38,7 +38,7 @@ bool mouse_pressed = false;
 /****************************************
  * Tu rozpoczyna się istotna część kodu *
  ****************************************/
- 
+
 //
 // Struktury danych
 //
@@ -47,7 +47,7 @@ class object
 {
 	public:
 	float x;
-	float y;	
+	float y;
 };
 class map
 {
@@ -69,10 +69,10 @@ class camera
 		y = a.y;
 	}
 	void follow_in_borders(object a){
-		
+
 		if((a.x > screen_w/2) && (a.x < (map_w - screen_w/2)) && (a.y > screen_h/2) && (a.y < (map_h - screen_h/2))){
 			x = a.x;
-			y = a.y;			
+			y = a.y;
 		}else{
 			x = a.x;
 			y = a.y;
@@ -102,8 +102,8 @@ class car: public object
 		if(image == NULL)return;
 		if((x > (cam.x - screen_w)) && (x < (cam.x + screen_w)) && (y > (cam.y - screen_h)) && (y < (cam.y + screen_h))){
 			al_draw_rotated_bitmap (image, al_get_bitmap_width(image)/2, al_get_bitmap_height(image)/2, x - cam.x + screen_w/2, y - cam.y + screen_h/2, angle / 360.0 * 2 * 3.14159, 0);
-		}	
-		
+		}
+
 	}
 	car(float new_x, float new_y) {
 		x = new_x;
@@ -113,7 +113,7 @@ class car: public object
 		max_reverse_speed = 3;
 		max_speed = 10;
 		acceleration = 0.4;
-		
+
 	}
 	car(float new_x, float new_y, float angle) {
 		x = new_x;
@@ -147,7 +147,7 @@ class car: public object
 	}
 	string generate_packet(){
 		stringstream ss2;
-		ss2.clear(); 
+		ss2.clear();
 		ss2 << id << " " << x << " " << y << " " << angle;
 		return ss2.str();
 	}
@@ -188,8 +188,8 @@ class tile : public object
 	{
 		if((x > (cam.x - screen_w/2 - size)) && (x < (cam.x + screen_w/2 + size)) && (y > (cam.y - screen_h/2 - size)) && (y < (cam.y + screen_h/2 + size))){
 			al_draw_filled_rectangle (x - cam.x + screen_w/2, y - cam.y + screen_h/2, x - cam.x + screen_w/2 + size - 1, y - cam.y + screen_h/2 + size - 1, al_map_rgb(128,128,255));
-		}	
-		
+		}
+
 	}
 };
 
@@ -208,7 +208,7 @@ class tile : public object
 	camera kamera(screen_w/2, screen_h/2);
 	tile kafelki[tiles_w][tiles_h];
 	//car autko2(200, 200);
-	
+
 //
 // Rysowanie planszy
 //
@@ -216,7 +216,7 @@ class tile : public object
 void rysuj_plansze()
 {
     al_clear_to_color(al_map_rgb(0,0,0));
-	
+
 	for(int tx = 0; tx < tiles_w; tx++){
 		for(int ty = 0; ty < tiles_h; ty++){
 			kafelki[tx][ty].draw(kamera);
@@ -259,13 +259,13 @@ void aktualizuj_plansze()
 		if(player_number == -1){
 			player_number = positions.size();
 			positions.push_back(car (100, 100, 0));
-			positions.back().id = nick;		
+			positions.back().id = nick;
 		}
 		ss >> positions[player_number].x;
 		ss >> positions[player_number].y;
 		ss >> positions[player_number].angle;
-		
-	} 
+
+	}
 	//autko2.calculate();
 }
 
@@ -318,22 +318,22 @@ int init()
 	cin >> server_adress;
 	cout << "Podaj nick: ";
 	cin >> autko.id;
-	if(server_adress == "local")server_adress = "127.0.0.1";	
+	if(server_adress == "local")server_adress = "127.0.0.1";
 	if(!connect_to_server(server_adress)) {
         	cerr << "Serwer nie odpowiada" << endl;
         	return -1;
     	}
-	
+
     if(!al_init()) {
         cerr << "Błąd podczas inicjalizacji allegro." << endl;
         return -1;
     }
-  
+
     if (!al_init_primitives_addon()) {
         cerr << "Błąd podczas inicjalizacji dodatku 'primitives'." << endl;
         return -1;
     }
-    
+
     if (!al_install_keyboard()) {
         cerr << "Błąd podczas inicjalizacji klawiatury." << endl;
         return -1;
@@ -348,14 +348,14 @@ int init()
         cerr << "Błąd podczas inicjalizacji dodatku image." << endl;
         return -1;
     }
-	
+
 	al_init_font_addon();
 
 	 if (!al_init_ttf_addon()) {
         cerr << "Błąd podczas inicjalizacji dodatku ttf." << endl;
         return -1;
     }
-  
+
     timer = al_create_timer(1.0 / FPS);
     if(!timer) {
         cerr << "Błąd podczas inicjalizacji zegara." << endl;
@@ -366,7 +366,7 @@ int init()
     al_get_display_mode(0, &disp_data);
     screen_w = disp_data.width;
     screen_h = disp_data.height;
- 
+
     display = al_create_display(screen_w, screen_h);
     if(!display) {
         cerr << "Błąd podczas inicjalizacji ekranu." << endl;
@@ -381,16 +381,16 @@ int init()
         al_destroy_timer(timer);
         return -1;
     }
-  
-    al_register_event_source(event_queue, al_get_display_event_source(display));  
-    al_register_event_source(event_queue, al_get_timer_event_source(timer));  
+
+    al_register_event_source(event_queue, al_get_display_event_source(display));
+    al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
 	al_register_event_source(event_queue, al_get_mouse_event_source());
     al_clear_to_color(al_map_rgb(0,0,0));
 	car_image = al_load_bitmap("car.png");
 	x = screen_w/2;
 	y = screen_h/2;
-	autko.image = al_load_bitmap("yellow_car.png");
+	autko.image = al_load_bitmap("car.png");
 	//autko2.image = al_load_bitmap("red_car.png");
 	for(int tx = 0; tx < tiles_w; tx++){
 		for(int ty = 0; ty < tiles_h; ty++){
@@ -399,9 +399,9 @@ int init()
 			kafelki[tx][ty].y = ty * kafelki[tx][ty].size;
 		}
 	}
-	
-  
-    al_flip_display();  
+
+
+    al_flip_display();
     al_start_timer(timer);
 
     return 0;
@@ -413,14 +413,14 @@ int main(int argc, char ** argv)
         cerr << "Inicjalizacja nie powiodła się." << endl;
         return -1;
     }
- 
+
     bool przerysuj = true;
-    bool wyjdz = false; 
+    bool wyjdz = false;
 
     //
     // Event loop - główna pętla programu
     //
-        
+
     while(!wyjdz)
     {
         ALLEGRO_EVENT ev;
@@ -440,7 +440,7 @@ int main(int argc, char ** argv)
             key[ev.keyboard.keycode] = true;
         } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
             key[ev.keyboard.keycode] = false;
-            
+
             if (ev.keyboard.keycode == ALLEGRO_KEY_ESCAPE) {
                 wyjdz = true;
             }
@@ -461,7 +461,7 @@ int main(int argc, char ** argv)
             rysuj_plansze();
 
             al_flip_display();
-         }    
+         }
     }
 
     return 0;
