@@ -1,7 +1,7 @@
 #ifndef __TEXTBOX_H__
 #define __TEXTBOX_H__
 
-#include "global.h"
+#include "globalMain.h"
 #include "Position.h"
 
 // klasa narzędziowa

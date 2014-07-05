@@ -9,7 +9,7 @@
 using namespace std;
 
 #include "../../Error.h"
-#include "global.h"
+#include "globalMain.h"
 
 // Narzędziowy singleton do pobierania wkaźników na czcionki
 

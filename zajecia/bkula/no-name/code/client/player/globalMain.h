@@ -13,10 +13,12 @@
 
 /// Zbiór funkcji globalnych TYLKO dla wątku player
 
-/// UWAGA! nagłówek global.h należy inkludować tylko do plików code/client/player/*.cpp
-/// ma to na celu uniknięcie upublicznienia poniższych funkcji dla całego programu
+// UWAGA! nagłówek global.h należy inkludować tylko do plików code/client/player/*.cpp
+// ma to na celu uniknięcie upublicznienia poniższych funkcji dla całego projektu
 
-/// Przyjaźń z Display
+/****************************
+    Przyjaźń z Display
+****************************/
 
 // zwarca szerokość ekranu
 int screen_w();
@@ -28,30 +30,23 @@ bool key(int n) throw(Error);
 int mouse_x();
 // zwraca y myszy
 int mouse_y();
-// zwraca true jeśli LPM jest wciśnięty
+// zwraca true jeśli mysz jest wciśnięta
 bool mouse_pressed();
 // wywołuje al_set_target_bitmap(display)
 void backToDisplay();
 
-/// Przyjaźń z Player
+/****************************
+    Przyjaźń z Player
+****************************/
 
 void setGameColor(const Color& color);
 Color getGameColor();
 
-/// Przyjaźń z Font
+/****************************
+    Przyjaźń z Font
+****************************/
 
 ALLEGRO_FONT* font(int n);
 
-/// Pomocne funkcje
-
-template<typename T> T difference(T a, T b)
-{
-    return a > b ? a-b : b-a;
-}
-
-template<typename T> T max3(T a, T b, T c)
-{
-    return max(max(a,b),c);
-}
-
 #endif // __GLOBAL_H__
+

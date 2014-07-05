@@ -3,8 +3,11 @@
 
 #include "../Client.h"
 #include "../../host/Host.h"
+#include "waiting_room/WaitingRoom.h"
+#include "game_room/GameRoom.h"
+
 #include "Display.h"
-#include "global.h"
+#include "globalMain.h"
 #include "GroupOfButtons.h"
 
 /// najważniejszy singleton w programie
@@ -55,8 +58,22 @@ private:
     enum GameStatus {WAITING, RUNNING, PAUZE};
     GameStatus status;
 
+    // sceny
+    WaitingRoom waiting_room;
+    GameRoom game_room;
+
     // menu
     GroupOfButtons* menu;
+
+    // zamykanie gry
+    GroupOfButtons* closing_window;
+    bool closing;
+
+    class Menu
+    {
+        void update();
+        void draw();
+    };
 };
 
 #endif // Player_H

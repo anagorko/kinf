@@ -17,13 +17,13 @@ class Client
 {
 public:
 
-    Client() : client(NULL) {}
+    Client() : web_client(NULL) {}
     virtual ~Client() {}
     virtual void mainLoop() = 0;
 
 protected:
 
-    WebsocketsClient* client;
+    WebsocketsClient* web_client;
 
     string nick;
     ALLEGRO_COLOR flag_color;

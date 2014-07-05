@@ -238,7 +238,7 @@ WebsocketsClient::WebsocketsClient(string _server) throw(Error) : server(_server
 
 WebsocketsClient::~WebsocketsClient()
 {
-    libwebsocket_context_destroy(KinfClient::context);
+    //libwebsocket_context_destroy(KinfClient::context);
 }
 
 void WebsocketsClient::sendPacket(string payload) throw(Error)

@@ -1,9 +1,12 @@
 #include "Color.h"
+#include "globalMath.h"
 
+Color Color::null() { return Color(0,0,0,0); }
 Color Color::black() { return Color(0,0,0); }
 Color Color::white() { return Color(255,255,255); }
 
-Color::Color(int _r, int _g, int _b, int _a) : r(_r), g(_g), b(_b), a(_a)
+Color::Color(int _r, int _g, int _b, int _a)
+    : r(range(_r, 0, 255)), g(range(_g, 0, 255)), b(range(_b, 0, 255)), a(range(_a, 0, 255))
 {
     //
 }
@@ -80,16 +83,6 @@ Color Color::operator--(int)
     return result;
 }
 
-bool Color::operator==(const Color& other)
-{
-    return (r == other.r) && (g == other.g) && (b = other.b) && (a == other.a) ? true : false;
-}
-
-bool Color::operator!=(const Color& other)
-{
-    return (r == other.r) && (g == other.g) && (b = other.b) && (a == other.a) ? false : true;
-}
-
 Color Color::operator+=(const int& n)
 {
     for (int i = 0; i < n; ++i) ++(*this);
@@ -100,4 +93,40 @@ Color Color::operator-=(const int& n)
 {
     for (int i = 0; i < n; ++i) --(*this);
     return *this;
+}
+
+bool operator==(const Color& a, const Color& b)
+{
+    return (a.r == b.r) && (a.g == b.g) && (a.b == b.b) && (a.a == b.a) ? true : false;
+}
+
+bool operator!=(const Color& a, const Color& b)
+{
+    return (a.r == b.r) && (a.g == b.g) && (a.b == b.b) && (a.a == b.a) ? false : true;
+}
+
+Color operator+(const Color& a, const Color& b)
+{
+    return Color(a.r + b.r, a.g + b.g, a.b + b.b, a.a + b.a);
+}
+
+Color operator-(const Color& a, const Color& b)
+{
+    return Color(a.r - b.r, a.g - b.g, a.b - b.b);
+}
+
+Color operator*(const Color& c, float n)
+{
+    return Color(c.r * n, c.g * n, c.b * n, c.a * n);
+}
+
+Color operator/(const Color& c, float n)
+{
+    return Color(c.r / n, c.g / n, c.b / n, c.a / n);
+}
+
+Color::Color(int rgba)
+    : r(range(rgba, 0, 255)), g(range(rgba, 0, 255)), b(range(rgba, 0, 255)), a(range(rgba, 0, 255))
+{
+    //
 }

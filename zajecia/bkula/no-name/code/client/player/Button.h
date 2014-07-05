@@ -29,8 +29,6 @@ private:
     Color color;
 
     ClickSystem cs;
-
-    void drawRectangle(int cx, int cy, int w, int h, const Color& a, const Color& b);
 };
 
 #endif // Button_H

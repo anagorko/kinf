@@ -2,7 +2,8 @@
 #define __POSITION_H__
 
 #include "../../Error.h"
-#include "global.h"
+#include "globalMain.h"
+#include "globalMath.h"
 
 /// Klasa narzędziowa służąca do określania pozycji (współrzędnych) na planszy
 /// dla prostokątnego obiektu (np. bitmapy).
@@ -98,7 +99,7 @@ public:
         // wypełnienie naszej pozycji kolorem czarnym z użyciem makra
         al_draw_filled_rectangle(POS(my_position), al_map_rgb(0,0,0));
     */
-    #define POS(p) p.x1(), p.y1(), p.x2(), py2()
+    #define POS(p) p.x1(), p.y1(), p.x2(), p.y2()
 
 private:
 

@@ -3,9 +3,6 @@
 
 #include "Error.h"
 
-// tymczasowy include:
-#include "client/player/global.h"
-
 class WebsocketsClient
 {
 public:

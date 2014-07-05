@@ -1,5 +1,5 @@
 #include "ClickSystem.h"
-#include "global.h"
+#include "globalMain.h"
 
 void ClickSystem::update(const Position& _pos) throw(Error)
 {
