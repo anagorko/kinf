@@ -3,14 +3,14 @@
 
 GroupOfButtons::GroupOfButtons(int _cx, int _cy, string _title, int _font_size, Color _default_button_color)
     : cx(_cx), cy(_cy), title(_title), font_size(_font_size), default_button_color(_default_button_color),
-     button_h(font_size*3), button_w(al_get_text_width(font(font_size), title.c_str()) + space()*8)
+     button_h(font_size*3), button_w(al_get_text_width(font(font_size), title.c_str()) + space())
 {
     //
 }
 
 void GroupOfButtons::addButton(string _text, void(*_fn)(), Color _color)
 {
-    button_w = max(button_w, al_get_text_width(font(font_size), _text.c_str()) + space()*3);
+    button_w = max(button_w, al_get_text_width(font(font_size), _text.c_str()) + space()*5);
 
     objectsSequence.push_back(1);
     buttons.push_back(Button(_text, _fn, [=]()->Color{return _color == Color::null() ? default_button_color : _color;}(), Position()));

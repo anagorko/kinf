@@ -23,8 +23,8 @@ void Button::update()
 void Button::draw()
 {
     Color c = color;
-    if (cs.getInvaded()) c += 65;
-    else if (cs.getIsPressed()) c -= 65;
+    if (cs.getInvaded()) c += 75;
+    else if (cs.getIsPressed()) c -= 75;
 
     drawGradient(pos, c + 50, c - 50);
 
