@@ -8,18 +8,21 @@ class Button
 {
 public:
 
-    Button(int _x, int _y, int _w, int _h, string _text, Color _color, void(*_fn)());
+    // Kostruktor inicjalizujący
+    Button(string _text, void(*_fn)(), Color _color, Position _pos);
+
+    // Kostrkutor NIE inicjalizujący
+    Button(string _text, void(*_fn)(), Color _color);
 
     void update();
     void draw();
 
+    Position pos;
+
 private:
 
-    // wskaźnik na funkcję wywoływaną w momencie wciśnięcia przycisku
+    // wskaźnik na funkcję wywoływaną w momencie kliknięcia przycisku
     void(*fn)();
-
-    int x, y;
-    int w, h;
 
     string text;
 

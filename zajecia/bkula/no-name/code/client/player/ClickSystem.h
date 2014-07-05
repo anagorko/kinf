@@ -1,33 +1,28 @@
 #ifndef ClickSystem_H
 #define ClickSystem_H
 
+#include "Position.h"
+
 class ClickSystem {
 public:
 
-    ClickSystem ()
-    : invaded(0), is_pressed(0), pressed(0)
+    ClickSystem (const Position& _pos = Position())
+        : invaded(0), is_pressed(0), pressed(0), pos(_pos)
     {
         //
     }
 
-    ClickSystem (int _x1, int _y1, int _x2, int _y2)
-    : invaded(0), is_pressed(0), pressed(0), x1(_x1), y1(_y1), x2(_x2), y2(_y2)
-    {
-        //
-    }
-
-    void update();
-
-    void changeArea(int _x1, int _y1, int _x2, int _y2);
+    void update(const Position& _pos) throw(Error);
+    void update() throw(Error);
 
     bool click();
 
     bool getInvaded() const { return invaded; }
     bool getIsPressed() const { return is_pressed; }
 
-private:
+    Position pos;
 
-    int x1, y1, x2, y2;
+private:
 
     bool pressed;
     bool invaded;

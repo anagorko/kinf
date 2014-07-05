@@ -22,7 +22,7 @@ Player::Player() : gameColor(0,127,0), status(WAITING)
         throw Error(__FILE__, __LINE__, ss.str());
     }
 
-    menu = new GroupOfButtons(screen_w()/2, screen_h()/2, "Menu");
+    menu = new GroupOfButtons(screen_w()/2, screen_h()/2, "Menu", 40);
     menu->addButton("Utwórz grę", []{ this_copy->host.start(); this_copy->client = new WebsocketsClient("127.0.0.1"); });
     menu->addButton("Dołącz do gry", []{ this_copy->client = new WebsocketsClient("69.69.69.69"); });
     menu->addButton("Wyjdź", []{ closeGame(); });
@@ -52,7 +52,7 @@ void Player::update()
     } else if (this_copy->status == WAITING) {
         //waiting_room.update();
     } else {
-        //
+        //game_room.update();
     }
 }
 
@@ -65,7 +65,7 @@ void Player::draw()
     } else if (this_copy->status == WAITING) {
         //waiting_room.draw();
     } else {
-        //
+        //game_room.draw();
     }
 }
 

@@ -9,7 +9,7 @@ class GroupOfButtons
 {
 public:
 
-    GroupOfButtons(int _cx, int _cy, string _title, Color _color = getGameColor(), int _font_size = 14);
+    GroupOfButtons(int _cx, int _cy, string _title, int _font_size = 32, Color _color = getGameColor());
 
     void addButton(string _text, void(*_fn)());
     void addTextbox(/**/);
@@ -18,6 +18,8 @@ public:
     void draw();
 
 private:
+
+    static const int space = 15;
 
     string title;
 
@@ -29,14 +31,16 @@ private:
 
     int cx, cy;
 
+    int getW();
+    int getH();
+
     int font_size;
 
     // wyliczane na podstawie font_size
-    int button_w, button_h;
+    int button_w;
+    const int button_h;
 
     bool centred_x, centred_y;
-
-    static const int space = 15;
 
     Color color;
 };

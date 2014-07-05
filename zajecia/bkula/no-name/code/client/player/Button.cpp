@@ -1,25 +1,31 @@
 #include "Button.h"
 #include "global.h"
 
-Button::Button(int _x, int _y, int _w, int _h, string _text, Color _color, void(*_fn)())
-: x(_x), y(_y), w(_w), h(_h), text(_text), color(_color), cs(x, y, x+w, y+h), fn(_fn)
+Button::Button(string _text, void(*_fn)(), Color _color, Position _pos)
+    : text(_text), color(_color), fn(_fn), pos(_pos), cs(_pos)
+{
+    //
+}
+
+Button::Button(string _text, void(*_fn)(), Color _color)
+    : text(_text), color(_color), fn(_fn)
 {
     //
 }
 
 void Button::update()
 {
-    cs.update();
+    cs.update(pos);
     if (cs.click()) fn();
 }
 
 void Button::draw()
 {
-    int x;
     Color c1 = color;
     Color c2 = color;
-    drawRectangle(x+w/2, y+h/2, w, h, c1+=50, c2+=50);
-    al_draw_text(font((3/5)*float(h)), [](bool b)->Color{return b ? Color::white() : Color::black();}(color.ifDark()), x, y - (1/6)*float(h), ALLEGRO_ALIGN_CENTER, text.c_str());
+    drawRectangle(pos.x()+pos.w()/2, pos.y()+pos.h()/2, pos.w(), pos.h(), c1-=50, c2+=50);
+    al_draw_filled_rectangle(pos.x(), pos.y(), pos.x()+pos.w(), pos.y()+pos.h(), color);
+    al_draw_text(font((3.0/5.0)*float(pos.h())), [](bool b)->Color{return b ? Color::white() : Color::black();}(color.ifDark()), pos.cx(), pos.y() + (1.0/6.0)*float(pos.h()), ALLEGRO_ALIGN_CENTER, text.c_str());
 }
 
 void Button::drawRectangle (int cx, int cy, int w, int h, const Color& c1, const Color& c2)

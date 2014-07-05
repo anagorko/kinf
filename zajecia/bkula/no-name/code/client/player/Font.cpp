@@ -2,32 +2,35 @@
 
 using namespace std;
 
-Font::Font() : path("arial.ttf"), minimal(8), maximal(128)
+Font::Font() : font_name("arial.ttf")
 {
     //
 }
 
 ALLEGRO_FONT* Font::operator()(int n) throw(Error)
 {
-    if (n < minimal || n > maximal) {
+    if (n < MINIMAL || n > MAXIMAL) {
         stringstream ss;
         ss << "Próba załadowania czcionki o rozmiarze " << n;
         throw Error(__FILE__, __LINE__, ss.str());
     }
 
-    if (n >= v.size() + minimal) {
-        for (int i = v.size() - n - minimal; i >= 0; --i) {
+    if (n >= v.size() + MINIMAL || v[n-MINIMAL] == NULL) {
+        for (int i = n - MINIMAL - v.size(); i >= 0; --i) {
             v.push_back(NULL);
+        }
+
+        /** rozwiązanie chwilowe: */ v[n-MINIMAL] = al_load_ttf_font("/home/bkula/kinf/zajecia/bkula/no-name/load/arial.ttf", n, 0);
+
+        //v[n-MINIMAL] = al_load_ttf_font([=]{return "../../../load/" + font_name;}().c_str(), n, 0);
+        if (!v[n-MINIMAL]) {
+            stringstream ss;
+            ss << "Nie mogę załadować czcionki " << font_name;
+            throw Error(__FILE__, __LINE__, ss.str());
         }
     }
 
-    v[n-minimal] = al_load_ttf_font(path.c_str(), n+minimal, 0);
-
-    stringstream ss;
-    ss << "Nie magę załadować czcionki " << path;
-    if (!v[n-minimal]) throw Error(__FILE__, __LINE__, ss.str());
-
-    return v[n-minimal];
+    return v[n-MINIMAL];
 }
 
 Font f;

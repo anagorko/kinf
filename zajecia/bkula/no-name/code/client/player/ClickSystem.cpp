@@ -1,25 +1,25 @@
 #include "ClickSystem.h"
 #include "global.h"
 
-void ClickSystem::update()
+void ClickSystem::update(const Position& _pos) throw(Error)
 {
+    pos = _pos;
+    update();
+}
+
+void ClickSystem::update() throw(Error)
+{
+    if (!pos.ifInitialized()) throw Error(__FILE__, __LINE__, "Update niezainicjalizowango clicksystemu");
+
     if (mouse_pressed() && invaded) is_pressed = true;
 
-    if ((!mouse_pressed()) && mouse_x() >= x1 && mouse_x() <= x2 && mouse_y() >= y1 && mouse_y() <= y2) invaded = true;
+    if ((!mouse_pressed()) && mouse_x() >= pos.x1() && mouse_x() <= pos.x2() && mouse_y() >= pos.y1() && mouse_y() <= pos.y2()) invaded = true;
     else invaded = false;
 
     if (!mouse_pressed()) {
         if (is_pressed && invaded) pressed = true;
         is_pressed = false;
     }
-}
-
-void ClickSystem::changeArea(int _x1, int _y1, int _x2, int _y2)
-{
-    x1 = _x1;
-    y1 = _y1;
-    x2 = _x2;
-    y2 = _y2;
 }
 
 bool ClickSystem::click()

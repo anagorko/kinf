@@ -21,9 +21,9 @@ public:
 
     Font();
     ALLEGRO_FONT* operator()(int n) throw(Error);
-    const int minimal;
-    const int maximal;
-    const string path;
+    static const int MINIMAL = 8;
+    static const int MAXIMAL = 128;
+    const string font_name;
 
 private:
 
