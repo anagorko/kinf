@@ -15,7 +15,7 @@ public:
     Error(string _file, int _line, string _statement = "lack")
     : file(_file), line(_line), statement(_statement)
     {
-        cout << "ERROR: " << file << ":" << line << " " << statement << endl;
+        cerr << "ERROR: " << file << ":" << line << " " << statement << endl;
     }
 
     const string file;

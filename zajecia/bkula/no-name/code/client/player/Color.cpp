@@ -1,9 +1,14 @@
 #include "Color.h"
-#include "globalMath.h"
+#include "global_math.h"
 
 Color Color::null() { return Color(0,0,0,0); }
 Color Color::black() { return Color(0,0,0); }
 Color Color::white() { return Color(255,255,255); }
+Color Color::grey() { return Color(127,127,127); }
+Color Color::yellow() { return Color(255,255,0); }
+Color Color::purple() { return Color(127,0,127); }
+Color Color::pink() { return Color(255,0,255); }
+Color Color::orange() { return Color(255,127,0); }
 
 Color::Color(int _r, int _g, int _b, int _a)
     : r(range(_r, 0, 255)), g(range(_g, 0, 255)), b(range(_b, 0, 255)), a(range(_a, 0, 255))

@@ -1,7 +1,7 @@
 #ifndef Display_H
 #define Display_H
 
-#include "globalMain.h"
+#include "global_main.h"
 
 class Display
 {
@@ -17,8 +17,7 @@ public:
     void finish() { closed = true; }
 
     // zaprzyjaźnine funkcje globalne
-    friend int screen_w();
-    friend int screen_h();
+    friend Area screen();
     friend bool key(int n) throw(Error);
     friend int mouse_x();
     friend int mouse_y();
@@ -41,7 +40,7 @@ private:
     ALLEGRO_EVENT_QUEUE * event_queue;
     ALLEGRO_TIMER* timer;
 
-    int SCREEN_W, SCREEN_H;
+    const Area* area;
 
     bool closed;
 };

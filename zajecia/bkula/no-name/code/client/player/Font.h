@@ -1,5 +1,5 @@
-#ifndef Font_H
-#define Font_H
+#ifndef __Font_H__
+#define __Font_H__
 
 #include <allegro_font.h>
 #include <allegro_ttf.h>
@@ -9,7 +9,7 @@
 using namespace std;
 
 #include "../../Error.h"
-#include "globalMain.h"
+#include "global_main.h"
 
 // Narzędziowy singleton do pobierania wkaźników na czcionki
 
@@ -30,4 +30,4 @@ private:
     vector<ALLEGRO_FONT*> v;
 };
 
-#endif // Font_H
+#endif // __Font_H__

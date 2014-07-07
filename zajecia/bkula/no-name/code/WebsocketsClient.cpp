@@ -231,14 +231,16 @@ namespace KinfClient
 WebsocketsClient::WebsocketsClient(string _server) throw(Error) : server(_server)
 {
     if (!KinfClient::connect_to_server(server)) {
-        string statement = "Nie udało się połączyć z serverem " + _server;
-        throw Error(__FILE__, __LINE__, statement);
+        stringstream ss;
+        ss << "Nie udało się połączyć z serverem " << _server;
+        throw Error(__FILE__, __LINE__, ss.str());
     }
 }
 
 WebsocketsClient::~WebsocketsClient()
 {
-    //libwebsocket_context_destroy(KinfClient::context);
+    // Poniższa linijka została wykomentowana ponieważ powoduje segmentation fault
+    // libwebsocket_context_destroy(KinfClient::context);
 }
 
 void WebsocketsClient::sendPacket(string payload) throw(Error)

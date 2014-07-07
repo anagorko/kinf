@@ -9,10 +9,10 @@ class GroupOfButtons
 {
 public:
 
-    GroupOfButtons(int _cx, int _cy, string _title, int _font_size = 32, Color _default_button_color = getGameColor());
+    GroupOfButtons(int _cx, int _cy, string _title = "", int _font_size = 32, Color _default_color = getGameColor());
 
     void addButton(string _text, void(*_fn)(), Color _color = Color::null());
-    void addTextbox(/**/);
+    void addTextbox(string* pText, string _default_text = "");
 
     void update();
     void draw();
@@ -21,11 +21,18 @@ private:
 
     string title;
 
+    struct MyTextbox
+    {
+        MyTextbox(Textbox _box, string* _pText) : box(_box), pText(_pText) {}
+        string* pText;
+        Textbox box;
+    };
+
     // true = button, false = textbox
     vector<bool> objectsSequence;
 
     vector<Button> buttons;
-    vector<Textbox> textboxes;
+    vector<MyTextbox> textboxes;
 
     int cx, cy;
 
@@ -41,7 +48,7 @@ private:
 
     bool centred_x, centred_y;
 
-    Color default_button_color;
+    Color default_color;
 };
 
 #endif // GroupOfButtons_H

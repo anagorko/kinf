@@ -5,6 +5,7 @@
 
 #include "Color.h"
 #include "Font.h"
+#include "Area.h"
 #include "../../Error.h"
 
 #include <allegro5.h>
@@ -20,10 +21,8 @@
     Przyjaźń z Display
 ****************************/
 
-// zwarca szerokość ekranu
-int screen_w();
-// zwraca wysokość ekrau
-int screen_h();
+// Obszar ekranu
+Area screen();
 // zwraca true jeśli klawisz n jest wciśnięty
 bool key(int n) throw(Error);
 // zwraca x myszy
@@ -39,8 +38,9 @@ void backToDisplay();
     Przyjaźń z Player
 ****************************/
 
-void setGameColor(const Color& color);
 Color getGameColor();
+void setGameColor(const Color& color);
+string getServer();
 
 /****************************
     Przyjaźń z Font

@@ -1,6 +1,7 @@
 #ifndef __GAMEROOM_H__
 #define __GAMEROOM_H__
 
+#include "../global_main.h"
 
 class GameRoom
 {

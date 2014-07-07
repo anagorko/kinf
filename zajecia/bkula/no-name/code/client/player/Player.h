@@ -1,5 +1,5 @@
-#ifndef Player_H
-#define Player_H
+#ifndef __Player_H__
+#define __Player_H__
 
 #include "../Client.h"
 #include "../../host/Host.h"
@@ -7,7 +7,8 @@
 #include "game_room/GameRoom.h"
 
 #include "Display.h"
-#include "globalMain.h"
+#include "global_main.h"
+#include "global_graphic.h"
 #include "GroupOfButtons.h"
 
 /// najważniejszy singleton w programie
@@ -58,22 +59,26 @@ private:
     enum GameStatus {WAITING, RUNNING, PAUZE};
     GameStatus status;
 
-    // sceny
-    WaitingRoom waiting_room;
+    // pokoje
+    WaitingRoom* waiting_room;
     GameRoom game_room;
 
-    // menu
-    GroupOfButtons* menu;
+    // sceny
+    enum Scene { MAIN_MENU, CREATING_THE_GAME, ATTACHING_TO_GAME, CONNECTION_FAILED, LEAVING_THE_GAME };
+    Scene scene;
+    GroupOfButtons* main_menu;
+    GroupOfButtons* attaching_to_game;
+    GroupOfButtons* creating_the_game;
+    GroupOfButtons* connection_failed;
+    GroupOfButtons* leaving_the_game;
+    bool escWasPressed;
 
-    // zamykanie gry
-    GroupOfButtons* closing_window;
-    bool closing;
+    // metoda łącząca z dadnym serverem i wyświetlająca okno w przypadku niepowodzenia
+    string server_adress, my_nick;
+    void tryConnectToServer(bool server_is_mine = false);
 
-    class Menu
-    {
-        void update();
-        void draw();
-    };
+    // zwraca web_client->server
+    friend string getServer();
 };
 
-#endif // Player_H
+#endif // __Player_H__

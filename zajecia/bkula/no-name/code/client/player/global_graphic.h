@@ -5,8 +5,9 @@
  Pomocne funkcje graficzne
 ******************************/
 
-#include "Position.h"
+#include "Area.h"
+#include "Color.h"
 
-void drawGradient(Position pos, const Color& from, const Color& to, bool withFrame = true);
+void drawGradient(Area area, const Color& from, const Color& to, bool withFrame = true);
 
 #endif // __GLOBALGRAPHIC_H__

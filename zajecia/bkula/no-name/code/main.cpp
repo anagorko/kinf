@@ -8,7 +8,7 @@ int main(int argc, char** argv)
         Player player;
         player.mainLoop();
     } catch (...) {
-        throw Error(__FILE__, __LINE__, "Niezłapany wyjątek");
+        Error e(__FILE__, __LINE__, "Niezłapany wyjątek");
     }
 
     return 0;

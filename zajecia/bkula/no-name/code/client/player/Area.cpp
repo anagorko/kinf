@@ -1,15 +1,16 @@
-#include "Position.h"
-Position::Position() : initialized(false)
+#include "Area.h"
+
+Area::Area() : initialized(false)
 {
     //
 }
 
-Position::Position(Style s, float a1, float a2, float a3, float a4) throw(Error)
+Area::Area(Style s, float a1, float a2, float a3, float a4) throw(Error)
 {
     reInit(s, a1, a2, a3, a4);
 }
 
-void Position::reInit(Style s, float a1, float a2, float a3, float a4) throw(Error)
+void Area::reInit(Style s, float a1, float a2, float a3, float a4) throw(Error)
 {
     switch(s) {
 
@@ -41,7 +42,7 @@ void Position::reInit(Style s, float a1, float a2, float a3, float a4) throw(Err
     initialized = true;
 }
 
-void Position::reInit(const Position& other)
+void Area::reInit(const Area& other)
 {
     _x1 = other._x1;
     _y1 = other._y1;

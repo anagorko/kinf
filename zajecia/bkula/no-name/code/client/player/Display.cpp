@@ -1,15 +1,14 @@
-#include <string>
-
 #include "Display.h"
 
-int screen_w() { return Display::this_copy->SCREEN_W; }
-int screen_h() { return Display::this_copy->SCREEN_H; }
+#include <string>
+
+Display* Display::this_copy = NULL;
+
+Area screen() { return *(Display::this_copy->area); }
 int mouse_x() { return Display::this_copy->mouse_x; }
 int mouse_y() { return Display::this_copy->mouse_y; }
 bool mouse_pressed() { return Display::this_copy->mouse_pressed; }
 void backToDisplay() { al_get_display_event_source(Display::this_copy->display); }
-
-Display* Display::this_copy = NULL;
 
 Display::Display() throw(Error) : closed(false), mouse_pressed(false), FPS(30)
 {
@@ -44,10 +43,9 @@ Display::Display() throw(Error) : closed(false), mouse_pressed(false), FPS(30)
     al_set_new_display_flags(ALLEGRO_FULLSCREEN_WINDOW);
     al_get_display_mode(0, &display_mode);
 
-    SCREEN_W = display_mode.width;
-    SCREEN_H = display_mode.height;
+    area = new Area(Area::XYWH, 0, 0, display_mode.width, display_mode.height);
 
-    display = al_create_display(SCREEN_W, SCREEN_H);
+    display = al_create_display(screen().w(), screen().h());
     if(!display) {
         throw Error(__FILE__, __LINE__, "Błąd podczas inicjalizacji ekranu.");
     }
