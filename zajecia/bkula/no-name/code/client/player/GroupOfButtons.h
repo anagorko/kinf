@@ -3,13 +3,14 @@
 
 #include "Button.h"
 #include "Textbox.h"
+#include "global_graphic.h"
 #include <vector>
 
 class GroupOfButtons
 {
 public:
 
-    GroupOfButtons(int _cx, int _cy, string _title = "", int _font_size = 32, Color _default_color = getGameColor());
+    GroupOfButtons(int _cx, int _cy, string _title = "", int _font_size = Scale::bk(32), Color _default_color = getGameColor());
 
     void addButton(string _text, void(*_fn)(), Color _color = Color::null());
     void addTextbox(string* pText, string _default_text = "");

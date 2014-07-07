@@ -2,6 +2,8 @@
 
 #include "allegro_primitives.h"
 
+Scale Scale::bk = Scale(1024, 600);
+
 void drawGradient(Area area, const Color& from, const Color& to, bool withFrame)
 {
     for (float i = area.y1(); i < area.y2(); ++i) {

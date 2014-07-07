@@ -2,7 +2,7 @@
 #include "global_main.h"
 #include "global_graphic.h"
 
-Button::Button(string _text, void(*_fn)(), Color _color, Area _area)
+Button::Button(string _text, void(*_fn)(), Area _area, Color _color)
     : text(_text), color(_color), fn(_fn), area(_area), cs(_area)
 {
     //
@@ -26,7 +26,7 @@ void Button::draw()
     if (cs.getInvaded()) c += 75;
     else if (cs.getIsPressed()) c -= 75;
 
-    drawGradient(area, c + 60, c - 60);
+    drawGradient(area, c + Color(c.getR()/2, c.getG()/2, c.getB()/2), c - Color(c.getR()/2, c.getG()/2, c.getB()/2));
 
     al_draw_text(font(area.h()/3), [](bool b)->Color{return b ? Color::white() : Color::black();}(color.ifDark()),
                  area.cx(), area.cy() - area.h()/6, ALLEGRO_ALIGN_CENTER, text.c_str());

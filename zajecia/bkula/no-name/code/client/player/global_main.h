@@ -11,6 +11,7 @@
 #include <allegro5.h>
 #include <allegro_image.h>
 #include <allegro_primitives.h>
+#include <allegro_font.h>
 
 /// Zbiór funkcji globalnych TYLKO dla wątku player
 

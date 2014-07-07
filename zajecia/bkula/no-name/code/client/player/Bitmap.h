@@ -1,5 +1,5 @@
-#ifndef BITMAP_H
-#define BITMAP_H
+#ifndef __BITMAP_H__
+#define __BITMAP_H__
 
 #include "../../Error.h"
 
@@ -35,4 +35,4 @@ private:
     int w, h;
 };
 
-#endif // BITMAP_H
+#endif // __BITMAP_H__

@@ -13,7 +13,7 @@ void GroupOfButtons::addButton(string _text, void(*_fn)(), Color _color)
     button_w = max(button_w, al_get_text_width(font(font_size), _text.c_str()) + space()*5);
 
     objectsSequence.push_back(1);
-    buttons.push_back(Button(_text, _fn, [=]()->Color{return _color == Color::null() ? default_color : _color;}(), Area()));
+    buttons.push_back(Button(_text, _fn, Area(), [=]()->Color{return _color == Color::null() ? default_color : _color;}()));
 
     for (int i = 0, b = buttons.size(), t = textboxes.size(); i < objectsSequence.size(); ++i) {
         if (objectsSequence[objectsSequence.size()-i-1]) {

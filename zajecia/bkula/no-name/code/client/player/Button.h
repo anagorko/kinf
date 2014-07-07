@@ -3,16 +3,17 @@
 
 #include "ClickSystem.h"
 #include "Color.h"
+#include "global_main.h"
 
 class Button
 {
 public:
 
     // Kostruktor inicjalizujący
-    Button(string _text, void(*_fn)(), Color _color, Area _area);
+    Button(string _text, void(*_fn)(), Area _area, Color _color = getGameColor());
 
     // Kostrkutor NIE inicjalizujący
-    Button(string _text, void(*_fn)(), Color _color);
+    Button(string _text, void(*_fn)(), Color _color = getGameColor());
 
     void update();
     void draw();

@@ -24,22 +24,22 @@ Player::Player() : gameColor(0, 0, 127), status(WAITING), scene(MAIN_MENU), escW
 
     waiting_room = new WaitingRoom([]{ this_copy->host.stop(); delete this_copy->web_client; this_copy->web_client = NULL; });
 
-    leaving_the_game = new GroupOfButtons(screen().cx(), screen().cy(), "Jesteś pewien, że chcesz perwać grę?", 24);
+    leaving_the_game = new GroupOfButtons(screen().cx(), screen().cy(), "Jesteś pewien, że chcesz perwać grę?", Scale::bk(24));
     leaving_the_game->addButton("Opuść grę", []{ closeGame(); }, Color(200, 0, 0));
     leaving_the_game->addButton("Anuluj", []{ this_copy->scene = MAIN_MENU; }, Color(0, 200, 0));
 
-    main_menu = new GroupOfButtons(screen().cx(), screen().cy(), "Menu", 32, Color(0, 127, 0));
+    main_menu = new GroupOfButtons(screen().cx(), screen().cy(), "Menu", Scale::bk(32), Color(0, 127, 0));
     main_menu->addButton("Utwórz grę", []{ this_copy->scene = CREATING_THE_GAME; });
     main_menu->addButton("Dołącz do gry", []{ this_copy->scene = ATTACHING_TO_GAME; });
     main_menu->addButton("Wyjdź", []{ closeGame(); });
 
-    attaching_to_game = new GroupOfButtons(screen().cx(), screen().cy(), "", 30, Color::purple());
+    attaching_to_game = new GroupOfButtons(screen().cx(), screen().cy(), "", Scale::bk(30), Color::purple());
     attaching_to_game->addTextbox(&server_adress, "Adres servera");
     attaching_to_game->addTextbox(&my_nick, "Twój nick");
     attaching_to_game->addButton("Dołącz do gry", []{ this_copy->tryConnectToServer(); });
     attaching_to_game->addButton("Anuluj", []{ this_copy->scene = MAIN_MENU; });
 
-    creating_the_game = new GroupOfButtons(screen().cx(), screen().cy(), "Podaj swój nick", 30, Color::purple());
+    creating_the_game = new GroupOfButtons(screen().cx(), screen().cy(), "Podaj swój nick", Scale::bk(30), Color::purple());
     creating_the_game->addTextbox(&my_nick);
     creating_the_game->addButton("Utwórz grę", []{ this_copy->tryConnectToServer(true); });
     creating_the_game->addButton("Anuluj", []{ this_copy->scene = MAIN_MENU; });
@@ -112,9 +112,7 @@ void Player::draw()
 {
     if (this_copy->web_client == NULL) {
 
-        al_clear_to_color(Color(150,150,255));
         drawGradient(screen(), Color::white(), Color::yellow(), false);
-        //al_clear_to_color(Color::white());
 
         switch (this_copy->scene) {
         case MAIN_MENU:
@@ -169,9 +167,10 @@ void Player::tryConnectToServer(bool server_is_mine)
     {
         host.stop();
         delete web_client;
+        web_client = NULL;
         scene = CONNECTION_FAILED;
         delete connection_failed;
-        connection_failed = new GroupOfButtons(screen().cx(), screen().cy(), e.statement, 28, Color::orange());
+        connection_failed = new GroupOfButtons(screen().cx(), screen().cy(), e.statement, Scale::bk(28), Color::yellow()-60);
         if (server_is_mine) connection_failed->addButton("OK", []{ this_copy->scene = CREATING_THE_GAME; });
         else connection_failed->addButton("OK", []{ this_copy->scene = ATTACHING_TO_GAME; });
 

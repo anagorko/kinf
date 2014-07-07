@@ -2,7 +2,6 @@
 
 Bitmap::Bitmap(string path) throw(Error)
 {
-
     ptr = al_load_bitmap(path.c_str());
     if (!ptr) {
         throw Error(__FILE__, __LINE__, "Nie udało się załadować bitmapy " + path);

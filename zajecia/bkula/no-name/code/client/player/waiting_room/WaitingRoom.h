@@ -2,6 +2,8 @@
 #define __WAITINGROOM_H__
 
 #include "../GroupOfButtons.h"
+#include "../global_main.h"
+#include "../global_graphic.h"
 
 class WaitingRoom
 {
@@ -17,8 +19,12 @@ public:
 
 private:
 
-    GroupOfButtons* host_menu;
-    GroupOfButtons* client_menu;
+    Button* buttonClose;
+    Button* buttonStart;
+    Button* buttonAddBot;
+    Button* buttonLeave;
+
+    const int font_size;
 };
 
 #endif // __WAITINGROOM_H__
