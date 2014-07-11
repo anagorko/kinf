@@ -2,11 +2,13 @@
 #define ClickSystem_H
 
 #include "Area.h"
+#include "global_main.h"
+#include "global_graphic.h"
 
 class ClickSystem {
 public:
 
-    ClickSystem (const Area& = Area());
+    ClickSystem (const Area& _area = Area(), ALLEGRO_SYSTEM_MOUSE_CURSOR _cursor = ALLEGRO_SYSTEM_MOUSE_CURSOR_NONE);
 
     void update(const Area& _area) throw(Error);
     void update() throw(Error);
@@ -23,6 +25,8 @@ private:
     bool pressed;
     bool invaded;
     bool is_pressed;
+
+    ALLEGRO_SYSTEM_MOUSE_CURSOR cursor;
 };
 
 #endif // ClickSystem_H

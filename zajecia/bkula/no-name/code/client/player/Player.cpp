@@ -34,7 +34,7 @@ Player::Player() : gameColor(0, 0, 127), status(WAITING), scene(MAIN_MENU), escW
     main_menu->addButton("Wyjdź", []{ closeGame(); });
 
     attaching_to_game = new GroupOfButtons(screen().cx(), screen().cy(), "", Scale::bk(30), Color::purple());
-    attaching_to_game->addTextbox(&server_adress, "Adres servera");
+    attaching_to_game->addTextbox(&server_adress, "Adres IP servera");
     attaching_to_game->addTextbox(&my_nick, "Twój nick");
     attaching_to_game->addButton("Dołącz do gry", []{ this_copy->tryConnectToServer(); });
     attaching_to_game->addButton("Anuluj", []{ this_copy->scene = MAIN_MENU; });
@@ -68,6 +68,8 @@ void Player::mainLoop()
 
 void Player::update()
 {
+    setMouseCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
+
     if (key(ALLEGRO_KEY_ESCAPE)) this_copy->escWasPressed = true;
 
     if (this_copy->scene == LEAVING_THE_GAME) {
@@ -170,7 +172,7 @@ void Player::tryConnectToServer(bool server_is_mine)
         web_client = NULL;
         scene = CONNECTION_FAILED;
         delete connection_failed;
-        connection_failed = new GroupOfButtons(screen().cx(), screen().cy(), e.statement, Scale::bk(28), Color::yellow()-60);
+        connection_failed = new GroupOfButtons(screen().cx(), screen().cy(), e.statement, Scale::bk(28), Color::red()-30);
         if (server_is_mine) connection_failed->addButton("OK", []{ this_copy->scene = CREATING_THE_GAME; });
         else connection_failed->addButton("OK", []{ this_copy->scene = ATTACHING_TO_GAME; });
 

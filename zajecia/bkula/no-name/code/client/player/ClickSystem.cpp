@@ -1,8 +1,7 @@
 #include "ClickSystem.h"
-#include "global_main.h"
 
-ClickSystem::ClickSystem (const Area& _area)
-    : invaded(0), is_pressed(0), pressed(0), area(_area)
+ClickSystem::ClickSystem (const Area& _area, ALLEGRO_SYSTEM_MOUSE_CURSOR _cursor)
+    : invaded(0), is_pressed(0), pressed(0), area(_area), cursor(_cursor)
 {
     //
 }
@@ -26,6 +25,8 @@ void ClickSystem::update() throw(Error)
         if (is_pressed && invaded) pressed = true;
         is_pressed = false;
     }
+
+    if (cursor != ALLEGRO_SYSTEM_MOUSE_CURSOR_NONE && (getIsPressed() || getInvaded())) setMouseCursor(cursor);
 }
 
 bool ClickSystem::click()

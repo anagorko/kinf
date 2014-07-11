@@ -34,6 +34,11 @@ int mouse_y();
 bool mouse_pressed();
 // wywołuje al_set_target_bitmap(display)
 void backToDisplay();
+// zmienia kursor myszy na id, powinno być wywoływane tylko w metodach update
+void setMouseCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR id);
+// zwraca true jeśli Caps Lock jest wciśnięty
+bool capsLock();
+
 
 /****************************
     Przyjaźń z Player

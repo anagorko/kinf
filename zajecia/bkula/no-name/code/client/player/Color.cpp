@@ -130,7 +130,7 @@ Color operator*(const Color& c, float n)
 
 Color operator/(const Color& c, float n)
 {
-    return Color(c.r / n, c.g / n, c.b / n, c.a / n);
+    return Color(c.r / n, c.g / n, c.b / n/*, c.a / n*/);
 }
 
 Color::Color(int rgba)

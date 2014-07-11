@@ -23,6 +23,8 @@ public:
     friend int mouse_y();
     friend bool mouse_pressed();
     friend void backToDisplay();
+    friend void setMouseCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR id);
+    friend bool capsLock();
 
 private:
 
@@ -43,6 +45,9 @@ private:
     const Area* area;
 
     bool closed;
+
+    ALLEGRO_SYSTEM_MOUSE_CURSOR mouse_cursor;
+    bool caps_lock_pressed;
 };
 
 #endif // Display_H

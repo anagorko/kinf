@@ -51,9 +51,7 @@ void GroupOfButtons::update()
     }
     for (auto& t: textboxes) {
         t.box.update();
-        string* txt = new string(t.box.getText());
-        t.pText = txt;
-        delete txt;
+        *(t.pText) = t.box.getText();
     }
 }
 

@@ -9,8 +9,10 @@ int mouse_x() { return Display::this_copy->mouse_x; }
 int mouse_y() { return Display::this_copy->mouse_y; }
 bool mouse_pressed() { return Display::this_copy->mouse_pressed; }
 void backToDisplay() { al_get_display_event_source(Display::this_copy->display); }
+void setMouseCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR id) { Display::this_copy->mouse_cursor = id; }
+bool capsLock() { return Display::this_copy->caps_lock_pressed; }
 
-Display::Display() throw(Error) : closed(false), mouse_pressed(false), FPS(30)
+Display::Display() throw(Error) : closed(false), mouse_pressed(false), FPS(30), caps_lock_pressed(false)
 {
     this_copy = this;
 
@@ -117,12 +119,17 @@ void Display::eventLoop(void(*update)(), void(*draw)(), void(*whenWindowClosed)(
 
             redraw = true;
 
+            mouse_cursor = ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT;
             update();
+            if (!al_set_system_mouse_cursor(display, mouse_cursor)) throw Error(__FILE__, __LINE__, "Nie udało się zmienić kursora myszy");
 
         } else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
             key[ev.keyboard.keycode] = true;
         } else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
             key[ev.keyboard.keycode] = false;
+            if (ev.keyboard.keycode == ALLEGRO_KEY_CAPSLOCK) {
+                caps_lock_pressed = caps_lock_pressed ? 0 : 1;
+            }
         } else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             whenWindowClosed();
         } else if (ev.type == ALLEGRO_EVENT_MOUSE_AXES ||
