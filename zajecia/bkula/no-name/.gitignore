@@ -1,0 +1,4 @@
+# ten plik zabezpiecza przed zacommitowaniem plików z katalogów load i codeblocks
+
+load/
+codeblocks/
