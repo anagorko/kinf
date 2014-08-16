@@ -1,5 +1,5 @@
-#ifndef Client_H
-#define Client_H
+#ifndef __CLIENT_H__
+#define __CLIENT_H__
 
 #include <string>
 using namespace std;
@@ -29,4 +29,4 @@ protected:
     ALLEGRO_COLOR flag_color;
 };
 
-#endif // Client_H
+#endif // __CLIENT_H__
