@@ -8,7 +8,7 @@ https://drive.google.com/folderview?id=0B-L-tYmAtZPTS3lfYkRWeHVTb1E&usp=sharing
 
 ...
 
-## Jak uruchomić
+## Jak uruchomić grę
 
 ### Linux ###
 ...
