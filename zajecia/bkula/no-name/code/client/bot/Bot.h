@@ -6,12 +6,12 @@
 class Bot : public Client
 {
     Bot(string _server);
-    ~Bot();
-    void mainLoop();
+    virtual ~Bot() = 0;
+    virtual void mainLoop() = 0;
 
 private:
 
-    string server;
+    const string server;
 };
 
 #endif // __Bot_H__
