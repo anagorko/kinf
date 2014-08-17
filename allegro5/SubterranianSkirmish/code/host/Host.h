@@ -11,6 +11,7 @@ using namespace std;
 
 #include "WebsocketsServer.h"
 #include "../WebsocketsClient.h"
+#include "HostData.h"
 
 class Host
 {
@@ -31,6 +32,8 @@ private:
     WebsocketsClient client;
 
     void mainLoop();
+
+    HostData data;
 };
 
 #endif // Host_H

@@ -12,7 +12,7 @@
 #include<iostream>
 using namespace std;
 
-// namespace KinfClient to skopiowany plik kinf/network/websockets/client.h
+// namespace KinfClient to poprostu skopiowany plik kinf/network/websockets/client.h
 
 namespace KinfClient
 {

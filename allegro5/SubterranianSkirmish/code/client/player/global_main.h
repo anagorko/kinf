@@ -7,6 +7,8 @@
 #include "Font.h"
 #include "Area.h"
 #include "../../Error.h"
+#include "../../Packet.h"
+#include "../ClientData.h"
 
 #include <allegro5.h>
 #include <allegro_image.h>
@@ -39,7 +41,6 @@ void setMouseCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR id);
 // zwraca true jeśli Caps Lock jest wciśnięty
 bool capsLock();
 
-
 /****************************
     Przyjaźń z Player
 ****************************/
@@ -47,6 +48,11 @@ bool capsLock();
 Color getGameColor();
 void setGameColor(const Color& color);
 string getServer();
+
+bool receivePacket(Packet &payload) throw(Error);
+void sendCommand(Data::Commands command, string args = "") throw(Error);
+
+const ClientData& getData() throw(Error);
 
 /****************************
     Przyjaźń z Font

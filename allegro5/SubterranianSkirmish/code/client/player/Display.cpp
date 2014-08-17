@@ -51,12 +51,7 @@ Display::Display() throw(Error) : closed(false), mouse_pressed(false), FPS(30), 
     if(!display) {
         throw Error(__FILE__, __LINE__, "Błąd podczas inicjalizacji ekranu.");
     }
-    al_set_window_title (display,
-    []()->const char* {
-        stringstream ss;
-        ss << "Ustaw nazwę okna (" << __FILE__ << ":" << to_string(__LINE__) << ")";
-        return ss.str().c_str();
-    }() );
+    al_set_window_title (display, "Subterranian Skirmish");
 
     timer = al_create_timer(1.0 / FPS);
     if (!timer) {

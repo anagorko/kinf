@@ -38,12 +38,8 @@ private:
     Host host;
 
     // dwie główne metody wywoływane w pętli nieskończonej:
-
-    // aktalizuje plansze, wysyła i odbiera paczki, reaguje na działanie gracza (mysz, klawisze, itp)
-    static void update();
-
-    // rysuje bierzącą sytuację w oknie
-    static void draw();
+    static void update(); // aktalizuje plansze, wysyła i odbiera paczki, reaguje na działanie gracza (mysz, klawisze, itp)
+    static void draw(); // rysuje bierzącą sytuację w oknie
 
     // funkcja uruchamia się w momencie zamknięcia okna z przyczyn zewnętrznych
     // np. Alt+f4 lub kliknięcie (x) w rogu okna
@@ -79,6 +75,13 @@ private:
 
     // zwraca web_client->server
     friend string getServer();
+
+    // paczki
+    friend bool receivePacket(Packet &payload) throw(Error);
+    friend void sendCommand(Data::Commands command, string args) throw(Error);
+
+    // zwraca const referncje do obiektu *data
+    friend const ClientData& getData() throw(Error);
 };
 
 #endif // __Player_H__

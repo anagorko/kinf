@@ -1,5 +1,5 @@
-#ifndef Error_H
-#define Error_H
+#ifndef __ERROR_H__
+#define __ERROR_H__
 
 #include <string>
 #include <iostream>
@@ -23,4 +23,4 @@ public:
     const string statement;
 };
 
-#endif // Error_H
+#endif // __ERROR_H__

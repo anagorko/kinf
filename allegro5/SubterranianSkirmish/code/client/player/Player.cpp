@@ -5,6 +5,25 @@ Player* Player::this_copy = NULL;
 void setGameColor(const Color& color) { Player::this_copy->gameColor = color; }
 Color getGameColor() { return Player::this_copy->gameColor; }
 
+bool receivePacket(Packet &payload) throw(Error)
+{
+    Packet::receivePacketTemplate(Player::this_copy->web_client, payload);
+}
+
+void sendCommand(Data::Commands command, string args) throw(Error)
+{
+    Packet::sendCommandTemplate(Player::this_copy->web_client, command, args);
+}
+
+const ClientData& getData() throw(Error)
+{
+    if (!Player::this_copy->data) {
+        throw Error(__FILE__, __LINE__, "Próba pobrania nieistniejących danych");
+    }
+
+    return *(Player::this_copy->data);
+}
+
 Player::Player() : gameColor(0, 0, 127), status(WAITING), scene(MAIN_MENU), escWasPressed(false), connection_failed(NULL)
 {
     this_copy = this;
