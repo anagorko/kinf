@@ -270,7 +270,14 @@ bool WebsocketsClient::receivePacket(string &payload)
 void WebsocketsClient::serviceWebsockets() throw(Error)
 {
     int result = KinfClient::service_websockets();
-    stringstream statement;
-    statement << "service_websockets zwróciło " << result;
-    if (result != 0) throw Error(__FILE__, __LINE__, statement.str());
+    if (result != 0) {
+        for (auto start = chrono::system_clock::now(); 1; ) {
+            if (KinfClient::service_websockets() == 0 ||
+                start + chrono::milliseconds(100) < chrono::system_clock::now()
+            ) return;
+        }
+        stringstream statement;
+        statement << "Funkcja service_websockets() zwraca " << result;
+        throw Error(__FILE__, __LINE__, statement.str());
+    }
 }

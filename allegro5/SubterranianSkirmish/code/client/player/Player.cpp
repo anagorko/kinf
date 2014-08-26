@@ -24,7 +24,7 @@ const ClientData& getData() throw(Error)
     return *(Player::this_copy->data);
 }
 
-Player::Player() : gameColor(0, 0, 127), status(WAITING), scene(MAIN_MENU), escWasPressed(false), connection_failed(NULL)
+Player::Player() : gameColor(0, 0, 127), scene(MAIN_MENU), escWasPressed(false), connection_failed(NULL), error_window(NULL)
 {
     this_copy = this;
 
@@ -60,7 +60,7 @@ Player::Player() : gameColor(0, 0, 127), status(WAITING), scene(MAIN_MENU), escW
 
     creating_the_game = new GroupOfButtons(screen().cx(), screen().cy(), "Podaj swój nick", Scale::bk(30), Color::purple());
     creating_the_game->addTextbox(&my_nick);
-    creating_the_game->addButton("Utwórz grę", []{ this_copy->tryConnectToServer(true); });
+    creating_the_game->addButton("Utwórz grę", []{ this_copy->host.start(); this_copy->tryConnectToServer(true); });
     creating_the_game->addButton("Anuluj", []{ this_copy->scene = MAIN_MENU; });
 }
 
@@ -69,15 +69,24 @@ Player::~Player()
     this_copy = NULL;
 
     // usuwanie scen
-    delete waiting_room;
     delete main_menu;
     delete leaving_the_game;
     delete attaching_to_game;
     delete creating_the_game;
+    delete error_window;
+
+    delete waiting_room;
 
     host.stop();
-    delete web_client;
     delete display;
+}
+
+void Player::handleError(const Error& err)
+{
+    delete error_window;
+    error_window = new GroupOfButtons(screen().cx(), screen().cy(), err.statement, Scale::bk(28), Color::red()-30);
+    error_window->addButton("OK", []{ this_copy->scene = MAIN_MENU; delete this_copy->error_window;});
+    scene = ERROR_WINDOW;
 }
 
 void Player::mainLoop()
@@ -85,14 +94,44 @@ void Player::mainLoop()
     display->eventLoop(update, draw, whenWindowClosed);
 }
 
+void Player::handleIncomingPackets()
+{
+    Packet received;
+    while (receivePacket(received)) {
+        switch (received.type) {
+        case Packet::DATA:
+            delete this_copy->data;
+            this_copy->data = new ClientData(this_copy->myID, received.args);
+            break;
+        case Packet::CHAT:
+            // rowiązanie chwilowe:
+            cout << "CHAT: " << received.args << endl;
+            break;
+        case Packet::COMMAND:
+            break;
+        default:
+            try {
+                throw Error(__FILE__, __LINE__, "Nierozpoznany typ paczki");
+            } catch (const Error& err) {
+                break;
+            }
+        }
+    }
+}
+
 void Player::update()
 {
+    this_copy->handleIncomingPackets();
+
     setMouseCursor(ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
 
     if (key(ALLEGRO_KEY_ESCAPE)) this_copy->escWasPressed = true;
 
     if (this_copy->scene == LEAVING_THE_GAME) {
         this_copy->leaving_the_game->update();
+
+    } else if (this_copy->scene == ERROR_WINDOW) {
+        this_copy->error_window->update();
 
     } else if (this_copy->web_client == NULL) {
 
@@ -114,10 +153,10 @@ void Player::update()
             this_copy->connection_failed->update();
             break;
         default:
-            throw Error(__FILE__, __LINE__, "Nierozpoznana scena");
+            throw Error(__FILE__, __LINE__, "Nierozpoznana scena " + to_string(this_copy->scene));
         }
 
-    } else if (this_copy->status == WAITING) {
+    } else if (!this_copy->data || this_copy->data->game_state == Data::WAITING) {
         if (this_copy->escWasPressed && !key(ALLEGRO_KEY_ESCAPE)) WaitingRoom::whenClosed();
         this_copy->waiting_room->update();
 
@@ -148,11 +187,16 @@ void Player::draw()
         case CONNECTION_FAILED:
             this_copy->connection_failed->draw();
             break;
+        case LEAVING_THE_GAME:
+            break;
+        case ERROR_WINDOW:
+            this_copy->error_window->draw();
+            break;
         default:
-            throw Error(__FILE__, __LINE__, "Nierozpoznana scena");
+            throw Error(__FILE__, __LINE__, "Nierozpoznana scena " + to_string(this_copy->scene));
         }
 
-    } else if (this_copy->status == WAITING) {
+    } else if (!this_copy->data || this_copy->data->game_state == Data::WAITING) {
         this_copy->waiting_room->draw();
 
     } else {
@@ -167,8 +211,7 @@ void Player::draw()
 
 void Player::whenWindowClosed()
 {
-    // tymczasowo
-    closeGame();
+    this_copy->scene = LEAVING_THE_GAME;
 }
 
 string getServer()
@@ -176,31 +219,39 @@ string getServer()
     return Player::this_copy->web_client == NULL ? "" : Player::this_copy->web_client->getServer();
 }
 
-void Player::tryConnectToServer(bool server_is_mine)
+void Player::tryConnectToServer(const bool server_is_mine)
 {
-    delete web_client;
+    try {
 
-    try
-    {
-        web_client = new WebsocketsClient([=]{ return server_is_mine ? "127.0.0.1" : server_adress; }());
-    }
-    catch (Error& e)
-    {
+        delete web_client;
+        web_client = new WebsocketsClient(server_is_mine ? "127.0.0.1" : server_adress);
+
+        scene = MAIN_MENU;
+
+        if (server_is_mine) {
+            sendCommand(Data::COM_JOIN_THE_GAME, "0 0 " + my_nick);
+        } else {
+            auto start_waiting = chrono::system_clock::now();
+            while (!data) {
+                handleIncomingPackets();
+                if (start_waiting + chrono::seconds(1) < chrono::system_clock::now()) {
+                    throw Error(__FILE__, __LINE__, "Przekroczono limit czasu oczekiwania na dane");
+                }
+            }
+            sendCommand(Data::COM_JOIN_THE_GAME, to_string(getData().players.back().ID  + 1) + " 0 " + my_nick);
+        }
+
+    } catch (const Error& err) {
+
         host.stop();
         delete web_client;
         web_client = NULL;
         scene = CONNECTION_FAILED;
         delete connection_failed;
-        connection_failed = new GroupOfButtons(screen().cx(), screen().cy(), e.statement, Scale::bk(28), Color::red()-30);
+        connection_failed = new GroupOfButtons(screen().cx(), screen().cy(), err.statement, Scale::bk(28), Color::red()-30);
         if (server_is_mine) connection_failed->addButton("OK", []{ this_copy->scene = CREATING_THE_GAME; });
         else connection_failed->addButton("OK", []{ this_copy->scene = ATTACHING_TO_GAME; });
 
         return;
     }
-
-    scene = MAIN_MENU;
-
-    if (server_is_mine) host.start();
-
-    // Wyślij paczkę o dołączeniu do gry z my_nickiem my_nick
 }

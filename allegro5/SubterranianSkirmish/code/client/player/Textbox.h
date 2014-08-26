@@ -9,7 +9,7 @@
 /// klasa narzędziowa
 /// do tworzenia pól tekstowych
 
-/* narazie klasa jest pozbawiona następujących funkcjonalnoźci:
+/* narazie klasa Textbox jest pozbawiona następujących funkcjonalnoźci:
  - praca z tekstem w jednej linijce (nie reaguje na ENTER)
  - praca z tekstem szerszym niż textbox
  - zmiana działania strzałek w połączeniu z klawiszami shift i ctrl

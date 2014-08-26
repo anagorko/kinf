@@ -11,7 +11,6 @@
 #include <syslog.h>
 
 #include "libwebsockets.h"
-
 #include <atomic>
 using namespace std;
 

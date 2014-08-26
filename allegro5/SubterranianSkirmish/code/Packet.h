@@ -7,7 +7,7 @@
 #include "Data.h"
 #include "WebsocketsClient.h"
 
-#include <sstream>
+#include <string>
 using namespace std;
 
 class Packet
@@ -25,7 +25,7 @@ public:
     Packet() {}
 
     Types type;
-    stringstream args;
+    string args;
 
     static bool receivePacketTemplate(WebsocketsClient* web_client, Packet &payload) throw(Error);
     static void sendCommandTemplate(WebsocketsClient* web_client, Data::Commands command, string args = "") throw(Error);

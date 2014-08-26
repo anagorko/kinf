@@ -23,6 +23,9 @@ public:
     // uruchamia główną pętlę programu
     void mainLoop();
 
+    // obsuguje Error
+    void handleError(const Error& err);
+
 private:
 
     // kopia wskaźnika this
@@ -41,6 +44,9 @@ private:
     static void update(); // aktalizuje plansze, wysyła i odbiera paczki, reaguje na działanie gracza (mysz, klawisze, itp)
     static void draw(); // rysuje bierzącą sytuację w oknie
 
+    // metoda odbiera wszystkie przychodzące paczki i je obsługuje
+    void handleIncomingPackets();
+
     // funkcja uruchamia się w momencie zamknięcia okna z przyczyn zewnętrznych
     // np. Alt+f4 lub kliknięcie (x) w rogu okna
     // funkcja nie powinna się blokować!
@@ -51,22 +57,27 @@ private:
     friend void setGameColor(const Color& color);
     friend Color getGameColor();
 
-    // status gry
-    enum GameStatus {WAITING, RUNNING, PAUZE};
-    GameStatus status;
-
     // pokoje
     WaitingRoom* waiting_room;
     GameRoom game_room;
 
     // sceny
-    enum Scene { MAIN_MENU, CREATING_THE_GAME, ATTACHING_TO_GAME, CONNECTION_FAILED, LEAVING_THE_GAME };
+    enum Scene
+    {
+        MAIN_MENU,
+        CREATING_THE_GAME,
+        ATTACHING_TO_GAME,
+        CONNECTION_FAILED,
+        LEAVING_THE_GAME,
+        ERROR_WINDOW
+    };
     Scene scene;
     GroupOfButtons* main_menu;
     GroupOfButtons* attaching_to_game;
     GroupOfButtons* creating_the_game;
     GroupOfButtons* connection_failed;
     GroupOfButtons* leaving_the_game;
+    GroupOfButtons* error_window;
     bool escWasPressed;
 
     // metoda łącząca z dadnym serverem i wyświetlająca okno w przypadku niepowodzenia

@@ -19,13 +19,15 @@ class Client
 {
 public:
 
-    Client() : web_client(NULL) {}
-    virtual ~Client() {}
+    Client();
+    virtual ~Client();
     virtual void mainLoop() = 0;
 
     friend const ClientData& getData() throw(Error);
 
 protected:
+
+    short myID;
 
     WebsocketsClient* web_client;
 

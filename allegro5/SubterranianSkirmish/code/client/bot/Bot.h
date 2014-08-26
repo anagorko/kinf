@@ -8,12 +8,12 @@ class Bot : public Client
 public:
 
     Bot(string _server);
-    virtual ~Bot() = 0;
+    virtual ~Bot();
     virtual void mainLoop() = 0;
 
 protected:
 
-    const string server;
+    const string server_adress;
 
     bool receivePacket(Packet &payload) throw(Error);
     void sendCommand(Data::Commands command, string args = "") throw(Error);

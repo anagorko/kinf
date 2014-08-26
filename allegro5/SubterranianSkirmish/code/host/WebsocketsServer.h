@@ -14,7 +14,7 @@ public:
     void start();
     void stop();
 
-    static const int MAX_MESSAGE_QUEUE = 1024;
+    static const int MAX_MESSAGE_QUEUE = 1000000;
 
 private:
 

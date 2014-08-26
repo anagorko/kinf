@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Host::Host() : is_running(false), client("127.0.0.1")
+Host::Host() : is_running(false)
 {
     //
 }
@@ -15,12 +15,12 @@ Host::~Host()
 void Host::start()
 {
     if (is_running.load()) return;
-
     is_running.store(true);
-    void (Host::*method)() = &Host::mainLoop;
-    host_thread = async(launch::async, [=]{(this->*method)();});
 
     server.start();
+    this_thread::yield();
+    void (Host::*method)() = &Host::mainLoop;
+    host_thread = async(launch::async, [=]{(this->*method)();});
 }
 
 void Host::stop()
@@ -36,6 +36,8 @@ void Host::stop()
 void Host::mainLoop()
 {
     while (is_running.load()) {
-        //
+        data.update();
+        data.distribute();
+        this_thread::yield();
     }
 }

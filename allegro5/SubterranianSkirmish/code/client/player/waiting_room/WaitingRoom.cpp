@@ -11,11 +11,11 @@ WaitingRoom::WaitingRoom(void(*_whenClosed)())
     #define ADD_BUTTON(name,txt,fn,color) \
     x -= font_size*3 + al_get_text_width(font(font_size), txt); \
     name = new Button(txt, fn, Area(Area::XYWH, x, font_size, al_get_text_width(font(font_size), txt) + font_size*2, font_size*3), Color::color()-135);
-    ADD_BUTTON(buttonClose, "Zamknij grę", []{whenClosed();}, red)
-    ADD_BUTTON(buttonAddBot, "Dodaj bota", []{;}, blue)
-    ADD_BUTTON(buttonStart, "Rozpocznij grę", []{;}, green)
+    ADD_BUTTON(buttonClose, "Zamknij grę", []{ whenClosed(); }, red)
+    ADD_BUTTON(buttonAddBot, "Dodaj bota", []{ sendCommand(Data::COM_ADD_BOT); }, blue)
+    ADD_BUTTON(buttonStart, "Rozpocznij grę", []{ sendCommand(Data::COM_START_THE_GAME); }, green)
     x = screen().x2();
-    ADD_BUTTON(buttonLeave, "Opuść grę", []{whenClosed();}, red)
+    ADD_BUTTON(buttonLeave, "Opuść grę", []{ whenClosed(); }, red)
     #undef ADD_BUTTON
 }
 
@@ -30,7 +30,11 @@ WaitingRoom::~WaitingRoom()
 void WaitingRoom::update()
 {
     if (getServer() == "127.0.0.1") {
-        buttonStart->update();
+        try {
+            if (getData().players.size() >= 2) buttonStart->update();
+        } catch (const Error& err) {
+            //
+        }
         buttonAddBot->update();
         buttonClose->update();
     } else {
@@ -49,7 +53,11 @@ void WaitingRoom::draw()
     al_draw_text(font(font_size*2), Color::black(), screen().cx(), screen().cy(), ALLEGRO_ALIGN_CENTER, "Tu pojawi się lista graczy");
 
     if (getServer() == "127.0.0.1") {
-        buttonStart->draw();
+        try {
+            if (getData().players.size() >= 2) buttonStart->draw();
+        } catch (const Error& err) {
+            //
+        }
         buttonAddBot->draw();
         buttonClose->draw();
     } else {
