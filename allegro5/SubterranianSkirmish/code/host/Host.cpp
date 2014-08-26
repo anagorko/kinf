@@ -19,6 +19,7 @@ void Host::start()
 
     server.start();
     this_thread::yield();
+
     void (Host::*method)() = &Host::mainLoop;
     host_thread = async(launch::async, [=]{(this->*method)();});
 }
