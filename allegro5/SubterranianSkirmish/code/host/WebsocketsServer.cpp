@@ -27,6 +27,7 @@ using namespace std;
 namespace KinfServer
 {
 
+    atomic<bool> have_to_run(false); /// nowy obiekt
     atomic<bool> is_running(false); /// nowy obiekt
 
     /*
@@ -244,7 +245,7 @@ namespace KinfServer
 
     int main()
     {
-        int argc = 1; char **argv = NULL; /// linijka dodana na potrzeby funkcji async
+        int argc = 1; char** argv = NULL; /// linijka dodana na potrzeby funkcji async
 
         int n = 0;
         int use_ssl = 0;
@@ -364,14 +365,18 @@ namespace KinfServer
         n = 0;
         while (n >= 0 && !force_exit) {
 
-            if(!is_running.load()) break;
+            if(!have_to_run.load()) break; /// dodane
 
             struct timeval tv;
 
             gettimeofday(&tv, NULL);
 
             n = libwebsocket_service(context, 50);
+
+            is_running.store(true); /// dodane
         }
+
+        is_running.store(false);
 
         libwebsocket_context_destroy(context);
 
@@ -387,7 +392,8 @@ namespace KinfServer
 
 WebsocketsServer::WebsocketsServer()
 {
-    //
+    KinfServer::is_running.store(false);
+    KinfServer::have_to_run.store(false);
 }
 
 WebsocketsServer::~WebsocketsServer()
@@ -395,19 +401,24 @@ WebsocketsServer::~WebsocketsServer()
     stop();
 }
 
+bool WebsocketsServer::isRunning()
+{
+    return KinfServer::is_running.load();
+}
+
 void WebsocketsServer::start()
 {
-    if (KinfServer::is_running.load()) return;
+    if (KinfServer::have_to_run.load()) return;
 
-    KinfServer::is_running.store(true);
+    KinfServer::have_to_run.store(true);
     server_thread = async(launch::async, KinfServer::main);
 }
 
 void WebsocketsServer::stop()
 {
-    if (!KinfServer::is_running.load()) return;
+    if (!KinfServer::have_to_run.load()) return;
 
-    KinfServer::is_running.store(false);
+    KinfServer::have_to_run.store(false);
     int result = server_thread.get();
     if (result != 0) {
         throw Error(__FILE__, __LINE__, string("Funkcja KinfServer::main() zwróciła " + result));

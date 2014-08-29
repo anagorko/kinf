@@ -12,15 +12,18 @@ public:
     HostData();
     ~HostData();
 
+    // łączy się z serverem 127.0.0.1
+    void connect() throw(Error);
+
     // dwie główne metody wywoływane w pętli nieskończonej
-    void distribute(bool is_the_last_distribute = false); // rozsyła dane do clientów
-    void update(); // aktualizuje grę
+    void distribute(bool is_the_last_distribute = false) throw(Error); // rozsyła dane do clientów
+    void update() throw(Error); // aktualizuje grę
 
 private:
 
-    WebsocketsClient web_client;
+    WebsocketsClient* web_client;
 
-    void receiveCommands();
+    void executeCommands() throw(Error);
 };
 
 #endif // __HOSTDATA_H__

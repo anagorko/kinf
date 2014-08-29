@@ -166,7 +166,7 @@ namespace KinfClient
         payload = incoming_packets.front();
         incoming_packets.pop_front();
 
-        //cout << "Received: " << payload << endl;
+        // cout << "Received: " << payload << endl;
 
         return true;
     }

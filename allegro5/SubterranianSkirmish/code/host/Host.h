@@ -27,7 +27,7 @@ public:
 
 private:
 
-    atomic<bool> is_running;
+    atomic<bool> have_to_run;
     future<void> host_thread;
 
     WebsocketsServer server;

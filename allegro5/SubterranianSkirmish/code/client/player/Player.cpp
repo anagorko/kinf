@@ -7,7 +7,7 @@ Color getGameColor() { return Player::this_copy->gameColor; }
 
 bool receivePacket(Packet &payload) throw(Error)
 {
-    Packet::receivePacketTemplate(Player::this_copy->web_client, payload);
+    return Packet::receivePacketTemplate(Player::this_copy->web_client, payload);
 }
 
 void sendCommand(Data::Commands command, string args) throw(Error)

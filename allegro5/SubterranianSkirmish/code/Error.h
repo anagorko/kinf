@@ -12,7 +12,7 @@ public:
 
     virtual ~Error() {}
 
-    Error(string _file, int _line, string _statement = "lack")
+    Error(string _file, int _line, string _statement = "Nieopisany błąd")
         : file(_file), line(_line), statement(_statement)
     {
         cerr << "ERROR: " << file << ":" << line << " " << statement << endl;

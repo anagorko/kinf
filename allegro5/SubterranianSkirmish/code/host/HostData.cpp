@@ -2,25 +2,36 @@
 
 #include "../Packet.h"
 
-HostData::HostData() : web_client("127.0.0.1")
+HostData::HostData()
+    : web_client(NULL)
 {
     //
 }
 
 HostData::~HostData()
 {
-    distribute(true);
+    //
 }
 
-void HostData::distribute(const bool is_the_last_distribute)
+void HostData::connect() throw(Error)
 {
+    delete web_client;
+    web_client = new WebsocketsClient("127.0.0.1");
+}
+
+void HostData::distribute(const bool is_the_last_distribute) throw(Error)
+{
+    if (!web_client) {
+        throw Error(__FILE__, __LINE__, "Host::data.web_client == NULL");
+    }
+
     stringstream ss;
 
     ss << "SS " << Packet::DATA;
 
     ss << " " << is_the_last_distribute;
 
-    ss << players.size();
+    ss << " " << players.size();
     for (auto p: players) {
         ss << " " << p.ID;
         ss << " " << p.is_bot;
@@ -29,21 +40,30 @@ void HostData::distribute(const bool is_the_last_distribute)
     }
 
     // zawsze na końcu
-    web_client.sendPacket(ss.str());
+    web_client->sendPacket(ss.str());
     while (1) {
         try {
-            web_client.serviceWebsockets();
+            web_client->serviceWebsockets();
         } catch (const Error& err) {
             continue;
         }
         break;
     }
+
+    if (is_the_last_distribute) {
+        delete web_client;
+        web_client = NULL;
+    }
 }
 
-void HostData::receiveCommands()
+void HostData::executeCommands() throw(Error)
 {
+    if (!web_client) {
+        throw Error(__FILE__, __LINE__, "Host::data.web_client == NULL");
+    }
+
     string packet;
-    while (web_client.receivePacket(packet)) {
+    while (web_client->receivePacket(packet)) {
 
         stringstream ss;
         ss << packet;
@@ -105,9 +125,9 @@ void HostData::receiveCommands()
     }
 }
 
-void HostData::update()
+void HostData::update() throw(Error)
 {
-    receiveCommands();
+    executeCommands();
 
     /// ...
 }

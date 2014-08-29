@@ -14,6 +14,8 @@ public:
     void start();
     void stop();
 
+    bool isRunning();
+
     static const int MAX_MESSAGE_QUEUE = 1000000;
 
 private:
