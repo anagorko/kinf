@@ -1,5 +1,5 @@
-#ifndef Error_H
-#define Error_H
+#ifndef __ERROR_H__
+#define __ERROR_H__
 
 #include <string>
 #include <iostream>
@@ -12,8 +12,8 @@ public:
 
     virtual ~Error() {}
 
-    Error(string _file, int _line, string _statement = "lack")
-    : file(_file), line(_line), statement(_statement)
+    Error(string _file, int _line, string _statement = "Nieopisany błąd")
+        : file(_file), line(_line), statement(_statement)
     {
         cerr << "ERROR: " << file << ":" << line << " " << statement << endl;
     }
@@ -23,4 +23,4 @@ public:
     const string statement;
 };
 
-#endif // Error_H
+#endif // __ERROR_H__

@@ -20,7 +20,7 @@ ALLEGRO_FONT* Font::operator()(int n) throw(Error)
             v.push_back(NULL);
         }
 
-        /** rozwiązanie chwilowe: */ v[n-MINIMAL] = al_load_ttf_font("/home/bkula/kinf/zajecia/bkula/no-name/load/arial.ttf", n, 0);
+        /** rozwiązanie chwilowe: */ v[n-MINIMAL] = al_load_ttf_font("/home/bkula/kinf/allegro5/SubterranianSkirmish/load/arial.ttf", n, 0);
 
         //v[n-MINIMAL] = al_load_ttf_font([=]{return "../../../load/" + font_name;}().c_str(), n, 0);
         if (!v[n-MINIMAL]) {
