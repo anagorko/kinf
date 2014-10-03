@@ -4,12 +4,22 @@ int main(int argc, char** argv)
 {
     srandom(time(NULL)+getpid());
 
+    Player player;
+
     try {
-        Player player;
+
         player.mainLoop();
+
+    } catch (const Error& err) {
+
+        player.handleError(err);
+
     } catch (...) {
-        Error e(__FILE__, __LINE__, "Niezłapany wyjątek");
+
+        player.handleError(Error(__FILE__, __LINE__, "Niezłapany wyjątek typu innego niż Error"));
     }
+
+    player.mainLoop();
 
     return 0;
 }

@@ -8,6 +8,8 @@ using namespace std;
 
 #include "../Error.h"
 #include "../WebsocketsClient.h"
+#include "../Packet.h"
+#include "ClientData.h"
 
 /* Client to klasa bazowa dla Player i Bot
    definiuje system komunikacji klienta gry z hostem oraz jego kompetencje
@@ -17,16 +19,19 @@ class Client
 {
 public:
 
-    Client() : web_client(NULL) {}
-    virtual ~Client() {}
+    Client();
+    virtual ~Client();
     virtual void mainLoop() = 0;
+
+    friend const ClientData& getData() throw(Error);
 
 protected:
 
+    short myID;
+
     WebsocketsClient* web_client;
 
-    string nick;
-    ALLEGRO_COLOR flag_color;
+    const ClientData* data;
 };
 
 #endif // __CLIENT_H__
