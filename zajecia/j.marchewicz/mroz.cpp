@@ -1,17 +1,20 @@
+// (C) Jan Marchewicz
 #include <iostream>
 using namespace std;
 
 int main ()
 {
-int i;
-cout << "Podaj temperature na zewnątrz: ";
-cin>> i;
-if (i<=0)
-	{cout<< "Jest mróz"<<endl;
+	int i;
+	cout << "Podaj temperaturę na zewnątrz: ";
+	cin>> i;
+	if (i<=0)
+	{
+		cout<< "Mróz jest"<<endl;
 	}
 else 
-	{ cout << "Mrozu nie ma!"<<endl;
+	{ 
+		cout << "Nie ma mrozu."<<endl;
 	}
 
-return 0;
+
 }
