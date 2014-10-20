@@ -9,9 +9,26 @@ cout << "Morzesz ułorzyć trójkąt:";
 
 }
 if (a==b && a==c){
-cout << "rónoboczny"
+cout << "rónoboczny, ";
 }
-
+if (a==b){
+cout << "równoramienny, ";
+}
+else if (a==c){
+cout << "równoramienny, ";
+}
+else if (b==c){
+cout << "równoramienny, ";
+}
+if ((a*a)+(b*b)==(c*c)){
+cout << "prostokątny, ";
+}
+else if ((a*a)+(c*c)==(b*b)){
+cout << "prostokątny, ";
+}
+if ((c*c)+(b*b)==(a*a)){
+cout << "prostokątny, ";
+}
 }
 
 
