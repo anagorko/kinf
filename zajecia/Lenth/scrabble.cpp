@@ -5,8 +5,8 @@ int main()
     string s;
     cin >> s;
     int n;
-    n = s.length() + 1;
-    int a = 1, b = n;
+    n = s.length();
+    int a = 0, b = n-1;
     while (a <= b)
     {
         cout << s[a];
@@ -14,8 +14,9 @@ int main()
         {
             cout << s[b];
         }
-        a = a-1;
+        a = a+1;
         b = b-1;
     }
+    cout << "\n";
     return 0;
 }
