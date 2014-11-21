@@ -2,11 +2,11 @@
 using namespace std;
 
 int main(){
-int b, c, d;
-for (int a=0; a<5; a++){
-cin >> b;
-cin >> c;
-d=d+c+b;
-}
-cout << d;
+	int b, c, d=0;
+	for (int a=0; a<(20/2); a++){
+		cin >> b;
+		cin >> c;
+		d=d+c+b;
+	}
+	cout << d;
 }
