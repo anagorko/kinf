@@ -1,3 +1,5 @@
+# IX OIG Etap I
+
 drukarka - 0 pkt
 drukarka2 - ???
 karty - 40 pkt
