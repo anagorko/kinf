@@ -18,36 +18,24 @@ using namespace std;
 // liczby N i K
 // są względnie pierwsze
 
-bool pierwsza(int x)
+typedef long long LL;
+
+LL NWD(LL a, LL b)
 {
-    for (int i = 2; i <= sqrt(x); i++)
-    {
-        if ((x % i) == 0) return 0;
-    }
-    return 1;
-}
-
-bool f(int n, int k)
-{
-    int l = min(n,k);
-
-    for (int i = 2; i <= l; i++)
-    {
-        if (pierwsza(i) &&
-                ((n % (i)) == 0) &&
-                ((k % (i)) == 0))
-        {
-                cout<<i<<" ";
-                return 0;
-        }
-    }
-
-    return 1;
+    return (b == 0) ? a : NWD(b, a % b);
 }
 
 int main()
 {
-    int n, k;
+    LL n, k;
     cin >> n >> k;
-    cout << (f(n, k) ? "TAK" : "NIE") << endl;
+    if (NWD(n, k) == 1)
+    {
+        cout << "TAK" << " ";
+        cout << ((k <= (n-1) / 2) ? "P" : "L") << endl;
+    }
+    else
+    {
+        cout << "NIE" << endl;
+    }
 }
