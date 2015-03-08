@@ -3,64 +3,72 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <stack>
 using namespace std;
 
 const int SIZE = 8;
 
-#define FOREACH \
-for (int i = 0; i < SIZE; i++) \
-    for (int j = 0; j < SIZE; j++)
-
-struct P
+struct Point
 {
-    int w, k;
-    char from, to;
+    int x, y;
+
+    Point(int _x, int _y)
+    : x(_x)
+    , y(_y)
+    {
+    }
 };
 
-char plansza[SIZE][SIZE];
-long long calls=0;
+bool pusta(char plansza[SIZE][SIZE])
+{
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (plansza[i][j] != '.') return false;
+        }
+    }
+
+    return true;
+}
+
 // false - brak zmian
-bool grawitacja(vector<P>& zmiany)
-{if((++calls%10)==0)cout<<calls<<endl;
-    int z_size = zmiany.size();
-if((calls%10)==0)cout<<"A"<<endl;
-    // usuwanie
+bool grawitacja(char plansza[SIZE][SIZE])
+{
+    stack<Point> to_clear;
 
     // w poziomie
     for (int i = 0; i < SIZE; i++)
     {
         for (int j = 0; j < SIZE - 2; j++)
         {
-            if (plansza[i][j] == plansza[i][j+1] == plansza[i][j+2])
+            if (plansza[i][j] != '.' && plansza[i][j] == plansza[i][j+1] && plansza[i][j+1] == plansza[i][j+2])
             {
                 for (int k = 0; k < 3; k++) {
-                    P z;
-                    z.w = i;
-                    z.k = j+k;
-                    z.from = plansza[z.w][z.k];
-                    z.to = '.';
-                    zmiany.push_back(z);
+                    to_clear.push(Point(i,j+k));
                 }
             }
         }
     }
+
     // w pionie
     for (int i = 0; i < SIZE - 2; i++)
     {
         for (int j = 0; j < SIZE; j++)
         {
-            if (plansza[i][j] == plansza[i+1][j] && plansza[i+1][j] == plansza[i+2][j])
+            if (plansza[i][j] != '.' && plansza[i][j] == plansza[i+1][j] && plansza[i+1][j] == plansza[i+2][j])
             {
                 for (int k = 0; k < 3; k++) {
-                    P z;
-                    z.w = i+k;
-                    z.k = j;
-                    z.from = plansza[z.w][z.k];
-                    z.to = '.';
-                    zmiany.push_back(z);
+                    to_clear.push(Point(i+k,j));
                 }
             }
         }
+    }
+
+    // czyszczenie
+    bool result = ! to_clear.empty();
+    while (! to_clear.empty()) {
+        Point p = to_clear.top();
+        to_clear.pop();
+        plansza[p.x][p.y] = '.';
     }
 
     // opadanie
@@ -72,83 +80,61 @@ if((calls%10)==0)cout<<"A"<<endl;
             if (plansza[w][kol] == '.') puste++;
             else if (puste > 0) {
 
-                P z1;
-                z1.w = w;
-                z1.k = kol + puste;
-                z1.from = plansza[w][kol + puste];
-                z1.to = plansza[w][kol];
-                zmiany.push_back(z1);
+                plansza[w + puste][kol] = plansza[w][kol];
+                plansza[w][kol] = '.';
 
-                P z2;
-                z2.w = w;
-                z2.k = kol;
-                z2.from = plansza[w][kol];
-                z2.to = '.';
-                zmiany.push_back(z2);
+                result = true;
             }
         }
     }
-if((calls%10)==0)cout<<"B"<<endl;
-    if (z_size == zmiany.size()) return false;
-if((calls%10)==0)cout <<"E"<<endl;
-    grawitacja(zmiany);
-if((calls%10)==0)cout << "grav: true\n";
-if((calls%10)==0)cout<<"D"<<endl;
+
+    if (! result) return false;
+
+    grawitacja(plansza);
+
     return true;
 }
 
-void f(int x1, int y1, int x2, int y2, int ruch, string output)
-{if((calls%10)==0)cout<<"C"<<endl;
-    if (plansza[x1][y1] == plansza[x2][y2]) return;
-    if (plansza[x1][y1] == '.' || plansza[x2][y2] == '.') return;
+void f(int x1, int y1, int x2, int y2, int ruch, string output, char p[SIZE][SIZE])
+{
+    if (p[x1][y1] == p[x2][y2]) return;
+    if (p[x1][y1] == '.' || p[x2][y2] == '.') return;
 
-    vector<P> zmiany;
-
-    // swap
-
-    P z1;
-    z1.w = x1;
-    z1.k = y1;
-    z1.from = plansza[x1][y1];
-    z1.to = plansza[x2][y2];
-    zmiany.push_back(z1);
-
-    P z2;
-    z2.w = x2;
-    z2.k = y2;
-    z2.from = plansza[x2][y2];
-    z2.to = plansza[x1][y1];
-    zmiany.push_back(z2);
-
-    for (int i = 0; i < zmiany.size(); i++)
-    {
-        //cout << "["<<zmiany[i].w<<"]["<<zmiany[i].k <<"] from " << plansza[zmiany[i].w][zmiany[i].k] << " ";
-        plansza[zmiany[i].w][zmiany[i].k] = zmiany[i].to;
-        //if (zmiany[i].to != '.') cout << "to " << plansza[zmiany[i].w][zmiany[i].k] << "\n";
-    }
-
-    /*for (int i = 0; i < SIZE; i++)
-    {
-        for (int j = 0; j < SIZE; j++) cout << plansza[i][j] << " ";
-        cout << endl;
-    }
-    cout << endl;*/
-
-    if (grawitacja(zmiany)) // jedziemy głębiej
-    {if((calls%10)==0)cout<<"OK!\n";
-        stringstream ss;
-        ss << output << x1 << " " << y1 << " " << x2 << " " << y2 << "\n";
-
-        // zastosuj zmiany
-        for (int i = 0; i < zmiany.size(); i++)
-        {
-            plansza[zmiany[i].w][zmiany[i].k] = zmiany[i].to;
+    // kopiowanie planszy
+    char plansza[SIZE][SIZE];
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            plansza[i][j] = p[i][j];
         }
+    }
 
-        if (ruch == SIZE - 1) {
+    // zamiana
+    char pom = plansza[x1][y1];
+    plansza[x1][y1] = plansza[x2][y2];
+    plansza[x2][y2] = pom;
 
-            cout << ss.str();
-            exit(0);
+    if (grawitacja(plansza)) // jedziemy głębiej
+    {
+        cout << "ruch: " << ruch << endl;
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                cout << plansza[i][j];
+            }
+            cout << endl;
+        }
+        cout << endl;
+
+        stringstream ss;
+        ss << output << x1 + 1 << " " << y1 + 1 << " " << x2 + 1 << " " << y2 + 1 << "\n";
+
+        if (pusta(plansza)) {
+
+                cout << ruch + 1 << "\n" << ss.str();
+                exit(0);
+
+        } else if (ruch == SIZE - 1) {
+
+            return;
 
         } else {
 
@@ -156,28 +142,24 @@ void f(int x1, int y1, int x2, int y2, int ruch, string output)
             {
                 for (int j = 0; j < SIZE - 1; j++)
                 {
-                    f(i, j, i, j+1, ruch + 1, ss.str());
+                    f(i, j, i, j+1, ruch + 1, ss.str(), plansza);
                 }
             }
             for (int i = 0; i < SIZE - 1; i++)
             {
                 for (int j = 0; j < SIZE; j++)
                 {
-                    f(i, j, i+1, j, ruch + 1, ss.str());
+                    f(i, j, i+1, j, ruch + 1, ss.str(), plansza);
                 }
             }
         }
     }
-
-    // odwróc zmiany
-    for (int i = zmiany.size() - 1; i >= 0; i--)
-    {
-        plansza[zmiany[i].w][zmiany[i].k] = zmiany[i].from;
-    }if((calls%10)==0)cout<<"D"<<endl;
 }
 
 int main()
 {
+    char plansza[SIZE][SIZE];
+
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             cin >> plansza[i][j];
@@ -188,14 +170,14 @@ int main()
     {
         for (int j = 0; j < SIZE - 1; j++)
         {
-            f(i, j, i, j+1, 0, "");
+            f(i, j, i, j+1, 0, "", plansza);
         }
     }
     for (int i = 0; i < SIZE - 1; i++)
     {
         for (int j = 0; j < SIZE; j++)
         {
-            f(i, j, i+1, j, 0, "");
+            f(i, j, i+1, j, 0, "", plansza);
         }
     }
 }
