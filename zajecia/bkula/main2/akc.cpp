@@ -16,9 +16,11 @@ USE_STL = 1: 0.56s/2.00s
 */
 
 #define USE_STL 1
+#define SORT_INPUT 0 // nieudana optymalizacja
 
 #include <iostream>
 #include <algorithm>
+#include <sstream>
 using namespace std;
 
 struct BSR // Binary Search Result
@@ -72,7 +74,7 @@ BSR binarySearch(int l, int* tab, int from, int to)
 
 int main()
 {
-    ios_base::sync_with_stdio(1);
+    ios_base::sync_with_stdio(0);
 
     int n;
     cin >> n;
@@ -80,12 +82,31 @@ int main()
     for (int i = 0; i < n; i++) {
         cin >> tab[i];
     }
+
+    #if SORT_INPUT
+    sort(tab, tab + n);
+    int last_s;
+    stringstream last_output;
+    #endif // SORT_INPUT
+
     int q;
     cin >> q;
     for (int i = 0; i < q; i++) {
 
         int s;
         cin >> s;
+
+        #if SORT_INPUT
+        bool cont = false;
+        if (i > 0 && last_s == s) cont = true;
+        last_s = s;
+        if (cont) {
+            cout << last_output.str();
+            continue;
+        }
+        stringstream ss;
+        #define cout ss
+        #endif // SORT_INPUT
 
         #if USE_STL
 
@@ -106,5 +127,13 @@ int main()
         }
 
         #endif // USE_STL
+
+        #if SORT_INPUT
+        #undef cout
+        cout << ss.str();
+        last_output.clear();
+        last_output.str("");
+        last_output << ss.str();
+        #endif // SORT_INPUT
     }
 }
