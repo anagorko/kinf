@@ -17,6 +17,8 @@ Wydaje się, że można już instalować z pakietu. Starsze instrukcje można zn
 W większości przypadków projekty można skompilować za pomocą polecenia "make". Przykład
 
 >$ cd dynablaster/
+
 >$ make
+
 >$ ./dynablaster
 
