@@ -1,0 +1,23 @@
+#include <iostream>
+#include <string>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+    string text,konwerter="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    cin >> text;
+    int out=0;
+    for(int i=0; i<text.length(); i++)
+    {
+        for(int j=0; j<konwerter.length(); j++)
+        {
+            if(konwerter[j]==text[i])
+            {
+                out+=j+1;
+                break;
+            }
+        }
+    }
+    cout << out;
+}
