@@ -1,0 +1,15 @@
+#include <iostream>
+#include <string>
+using namespace std;
+ 
+int main()
+{
+    int ilosc;
+    string wyraz,wyj;
+    cin >> ilosc >> wyraz;
+    for(int i=1; i<wyraz.length(); i=i+2)
+    {
+        wyj += wyraz[i];
+    }
+    cout << wyj;
+}

@@ -67,9 +67,11 @@ public:
 
     const static int bok = 100;
 
-    int init(int a, int b) {
+    bool init(int a, int b) {
         x = a;
         y = b;
+        
+        return true;
     }
 
     long long w; // wartość
@@ -429,7 +431,7 @@ class GRA {
 
         al_start_timer(timer);
 
-        return 0;
+        return true;
     }
 
 public:
@@ -439,7 +441,6 @@ public:
     }
 
     void run() {
-
         if (!init()) wyjdz = true;
 
         bool przerysuj = true;

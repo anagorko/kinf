@@ -1,0 +1,78 @@
+#include <iostream>
+#include <string>
+#include <math.h>
+using namespace std;
+
+int main(){
+    int px,py,pamiec,x,y,kx,ky,kroki=0;
+    cin >> x >> y;
+    char qwer[x][y];
+    int tab[x][y];
+    for(int i=0; i<x; i++){
+        for(int j=0; j<y; j++){
+            cin >> qwer[i][j];
+            switch(qwer[i][j]){
+                case '#':
+                tab[i][j]=-1;
+                //cout<<"tablica"<<i<<j<<"="<<tab[i][j]<<endl;
+                continue;
+                
+                case '.':
+                tab[i][j]=0;
+                //cout<<"tablica"<<i<<j<<"="<<tab[i][j]<<endl;
+                continue;
+                
+                case 'P':
+                tab[i][j]=1;
+                //cout<<"tablica"<<i<<j<<"="<<tab[i][j]<<endl;
+                px=i;
+                py=j;
+                continue;
+                
+                case 'K':
+                tab[i][j]=0;
+                kx=i;
+                ky=j;
+                //cout<<"tablica"<<i<<j<<"="<<tab[i][j]<<endl;
+                continue;
+            }
+        }
+    }
+for(int i=0; i<x; i++,kroki++){
+    for(int j=0; j<y;){
+        if (
+          cout<<kroki<<endl;
+                if(tab[i][j]==0){
+                    kroki--;
+                    continue;
+                    
+                }
+                if(tab[i][j]==kroki){
+                 if (tab[i][j+1]==0){
+                    tab[i][j+1]=kroki+1;
+                    cout<<"tablica"<<i<<j<<"="<<tab[i][j]<<endl;
+                 }
+                 if (tab[i][j-1]==0){
+                    tab[i][j-1]=kroki+1;
+                    cout<<"tablica"<<i<<j<<"="<<tab[i][j]<<endl;
+                 }
+                 if (tab[i+1][j]==0){
+                  tab[i+1][j]=kroki+1;
+                  cout<<"tablica"<<i<<j<<"="<<tab[i][j]<<endl;
+                 }
+                 if (tab[i-1][j]==0){
+                  tab[i-1][j]=kroki+1;
+                  cout<<"tablica"<<i<<j<<"="<<tab[i][j]<<endl;
+                 }
+                 }
+                if(tab[i][j]==tab[kx][ky]){
+                 cout<<tab[i][j];
+                }
+            }
+        }
+    }
+
+
+    
+
+

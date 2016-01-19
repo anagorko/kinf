@@ -1,0 +1,25 @@
+#include <iostream>
+#include <string>
+#include <math.h>
+using namespace std;
+
+const int ftar=16;
+const int m=2;
+
+int main()
+{
+    int f,v;
+    cin >> f;
+    cin >> v;
+    float s;
+    // f-ftar
+    if(f-ftar <= 0)
+    {
+        cout << 0;
+    }
+    else
+    {
+        s=(round(((m*pow(v,2))/(2*f-ftar))*1000))/1000;
+        cout << s;
+    }
+}

@@ -1,0 +1,16 @@
+#include <iostream>
+#include <string>
+using namespace std;
+ 
+int main()
+{
+    int wyj=0,b;
+    string text;
+    cin >> text;
+    for(int i=0; i<text.length(); i++)
+    {
+        b=text[i]-64;
+        wyj=wyj+b;
+    }
+    cout << wyj;
+}
