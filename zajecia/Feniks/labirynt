@@ -5,7 +5,8 @@ using namespace std;
 
 int main()
 {
-    int x,y,kx,ky,kroki=0,end=1;
+    int x,y,kx,ky,kroki=0;
+    bool end=true;
     cin >> x >> y;
     char qwer[x][y];
     int tab[x][y];
@@ -62,9 +63,9 @@ int main()
                     tab[i][j-1]=kroki+1;
                 }
             }
-            if(i==kx && j==ky)
+            if(tab[kx][ky]!=0)
             {
-                end=0;
+                end=false;
             }
         }
     }
