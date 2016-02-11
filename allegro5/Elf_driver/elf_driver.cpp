@@ -15,7 +15,7 @@ const int screen_w = 1024;
 const int screen_h = 768;
 
 int zero = 0;
-int function = 1;
+int func = 1;
 int train = 1, scenery = 1;
 
 float scene_x;
@@ -210,7 +210,7 @@ void start()
 	if(velocity > 0){velocity -= hamowanie;}
 	scene_x -= velocity;
 
-	if(key[ALLEGRO_KEY_ESCAPE]){function = 1;}
+	if(key[ALLEGRO_KEY_ESCAPE]){func = 1;}
 	if(key[ALLEGRO_KEY_UP] && acc < 0.003 && !door){acc+=0.00005;}
 	if(key[ALLEGRO_KEY_DOWN] && acc > 0){acc-=0.00005;}
 	if(key[ALLEGRO_KEY_SPACE] && hamowanie < 0.01 && acc < 0.0001){hamowanie+=0.0002;}
@@ -292,7 +292,7 @@ void start_1()
 
 void opcje()
 {
-	if(key[ALLEGRO_KEY_ESCAPE]){function = 1;}
+	if(key[ALLEGRO_KEY_ESCAPE]){func = 1;}
 	if(key[ALLEGRO_KEY_UP] && button > 0 && !key_pressed){button--; key_pressed = true; if(button == 3){button--;}}
 	if(key[ALLEGRO_KEY_DOWN] && button < 5 && !key_pressed){button++; key_pressed = true; if(button == 3){button++;}}
 	if(!key[ALLEGRO_KEY_UP] && !key[ALLEGRO_KEY_DOWN]){key_pressed  = false;}
@@ -345,9 +345,9 @@ void menu()
 	if(key[ALLEGRO_KEY_DOWN] && button < 2 && !key_pressed){button++; key_pressed = true;}
 	if(!key[ALLEGRO_KEY_UP] && !key[ALLEGRO_KEY_DOWN]){ key_pressed = false;}
 	if(key[ALLEGRO_KEY_ENTER]){
-		if(button == 0){function = 2;prepare_start();}
-		if(button == 1){function = 3;}
-		if(button == 2){function = 4;}
+		if(button == 0){func = 2;prepare_start();}
+		if(button == 1){func = 3;}
+		if(button == 2){func = 4;}
 	}
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_draw_bitmap(tlo_menu, zero, 0, 0);
@@ -385,7 +385,7 @@ int main(int argc, char ** argv){
 	usleep(1000000);
 	prepare_menu();
 	prepare_start();
-	function = 1;
+	func = 1;
 
 	while(!wyjdz){
 
@@ -395,7 +395,7 @@ int main(int argc, char ** argv){
 		if(ev.type == ALLEGRO_EVENT_TIMER) {
 			tak = true;
 
-			if(function == 2){start();}
+			if(func == 2){start();}
 		}
 		else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
 			key[ev.keyboard.keycode] = true;
@@ -410,10 +410,10 @@ int main(int argc, char ** argv){
 		if(tak && al_is_event_queue_empty(event_queue)) {
 			tak = false;
 
-			if(function == 1){menu();}
-			if(function == 2){start_1();}
-			if(function == 3){opcje();}
-			if(function == 4){break;}
+			if(func == 1){menu();}
+			if(func == 2){start_1();}
+			if(func == 3){opcje();}
+			if(func == 4){break;}
 
 			al_flip_display();
 		}

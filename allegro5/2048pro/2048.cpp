@@ -805,6 +805,11 @@ int init()
 	 al_get_display_mode(0, &disp_data);
         screen_w = disp_data.width;
         screen_h = disp_data.height;
+        
+        
+        screen_w = 800;
+        screen_h = 600;
+        
 	square_size = screen_h * 3/4;	
 	square_x = (screen_w - square_size)/2;
 	square_y = screen_h/8;
