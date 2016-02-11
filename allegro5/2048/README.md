@@ -1,9 +1,11 @@
-Program napisany przez B. Kulę.
+# Projekt "2048"
 
-Kompilacja:
+Autor: Benedykt Kula
+
+Klon gry [2048](https://en.wikipedia.org/wiki/2048_(video_game)).
+
+## Kompilacja i uruchomienie
 
 >$ make
-
-Uruchomienie:
 
 >$ ./2048
