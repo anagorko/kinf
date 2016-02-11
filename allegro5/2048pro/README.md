@@ -1,9 +1,11 @@
-Rozwinięcie projektu 2048 napisane przez M. Szcząchora.
+# Projekt "2048 Pro"
 
-Kompilacja:
+Autor: Marcin Szcząchor.
+
+Rozwinięcie projektu 2048.
+
+## Kompilacja i uruchomienie
 
 >$ make
-
-Uruchomienie:
 
 >$ ./2048
