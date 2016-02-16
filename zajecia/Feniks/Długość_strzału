@@ -1,0 +1,23 @@
+#include <iostream>
+#include <string>
+#include <math.h>
+using namespace std;
+
+int main()
+{
+    float a,F,m,x;
+    while(1)
+    {
+        cout << "Wpisz miare kata wystrzalu w stopniach:" << endl;
+        cin >> a;
+        cout << "Wpisz sile wystrzalu w niutonach:" << endl;
+        cin >> F;
+        cout << "Wpisz mase pocisku w kilogramach:" << endl;
+        cin >> m;
+        cout << "Wpisz dlugosc lufy w metrach:" << endl;
+        cin >> x;
+        cout << "Pocisk uderzy w ziemie " << (4 * x * F * sin((a * M_PI)/ 180) * sin(((90 - a)* M_PI)/ 180)) / (m * 9.81) << " metrow od miejsca wystzalu." << endl << endl;
+        cout << "===========================================================================================================================================================================" << endl;
+        cout << endl;
+    }
+}
