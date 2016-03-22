@@ -1,0 +1,32 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+ 
+int main()
+{
+long long int x,i = 2,e;
+cin >> x;
+long long int u=pow(x,0.5);
+unsigned int t[u][1];
+e = (int)sqrt((double)x);
+while (i <= e){
+while (x%i == 0){
+if(t[i][1] == i){
+x /= i;
+e = (int)sqrt((double)x);
+continue;
+}
+else;{
+t[i][1]=i;
+cout << i<<" ";
+x /= i;
+e = (int)sqrt((double)x);
+}
+}
+i++;
+}
+if (x > 1)
+cout << x;
+cout << endl;
+return 0;
+}
