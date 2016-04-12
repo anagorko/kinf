@@ -3,17 +3,16 @@
 using namespace std;
 
 int main (){
-float r, p, o;
+double r, p, o;
 cin >>r;
-p= 3.14;
+p= 3.1415926535;
 o= 2*(p*r);
+double c;
+c= p*(r*r);
+cout << fixed << setprecision(3) << c << endl;
+
+
 
 cout << fixed << setprecision(3) << o << endl;
-
-float c;
-
-c= p*(r*r);
-
-cout << fixed << setprecision(3) << c << endl;
 
 }
