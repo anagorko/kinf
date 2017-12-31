@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include<ctime>
+
 #include <iostream>
 using namespace std;
 
@@ -18,8 +20,11 @@ using namespace std;
 // Konfiguracja gry
 //
 
-const int screen_w = 1366;   // szerokość ekranu (screen width)
-const int screen_h = 768;   // wysokość ekranu (screen height)
+const int size_x = 125;
+const int size_y = 350;
+
+const int screen_w = 1280;   // szerokość ekranu (screen width)
+const int screen_h = 800;   // wysokość ekranu (screen height)
 
 ALLEGRO_FONT * font = NULL;
 
@@ -28,12 +33,66 @@ ALLEGRO_FONT * font = NULL;
  ****************************************/
  
 //
-// Struktury danych
+// Zmienne czasu
 //
 
-//
-// Zmienne
-//
+string int_to_string(int n)
+{
+    string s = "";
+    if ( n < 10 )
+    {
+        s =  "0";
+        s = s + ((char) (n + ((int) '0') ));
+    }
+    else
+    {
+        s = ((char) (n / 10 + ((int) '0') ) );
+        s = s + ((char) (n % 10 + ((int) '0') ) );
+    }
+
+    return s;
+}
+
+
+string odliczenie()
+{
+    struct tm nowyrok;
+
+    int s,m,g;
+
+    nowyrok.tm_hour = 0;
+    nowyrok.tm_min = 0;
+    nowyrok.tm_sec = 0;
+    nowyrok.tm_year = 118; //1900 + tm_year = numer nadzchodzącego roku
+    nowyrok.tm_mon = 0;
+    nowyrok.tm_mday = 1;
+
+    time_t teraz, nowy_rok;
+
+    time(&teraz);
+
+    nowy_rok = mktime(&nowyrok);
+
+    s = difftime(nowy_rok, teraz);
+    g = s/3600 + 1;
+    m = ( s / 60 ) % 60;
+    s = s % 60;
+
+    string time;
+
+    cout << g << ":" << m << ":" << s << endl;
+
+    if( g == 0 )
+    {
+        time = int_to_string(m) + ":" + int_to_string(s);
+    }
+    else
+    {
+        time = int_to_string(g) + ":" + int_to_string(m);
+    }
+
+    return time;
+}
 
 //
 // Rysowanie planszy
@@ -42,9 +101,9 @@ ALLEGRO_FONT * font = NULL;
 void rysuj_plansze()
 {
     al_clear_to_color(al_map_rgb(0,0,0));
-    string tekst = "siema eniu";
-    double px = screen_w/2 - ( tekst.length() * 20 ) ;
-    double py = screen_h/2 - ( 30 );
+    string tekst = odliczenie();
+    double px = screen_w/2 - (( tekst.length() * size_x )) + 100 ;
+    double py = screen_h/2 - ( size_y );
     al_draw_text(font, al_map_rgb(255,255,255), px, py,0, tekst.c_str());
 }
 
@@ -54,16 +113,7 @@ void rysuj_plansze()
 
 void aktualizuj_plansze()
 {
-    
-
-//
-// Reakcja na akcje graczy
-//
-
-void co_robia_gracze()
-{
 }
-
 /****************************************
  * Kod poniżej jest w miarę generyczny  *
  ****************************************/
@@ -120,7 +170,7 @@ int init()
     al_init_font_addon();
     al_init_ttf_addon();
 
-    font = al_load_ttf_font("FreeMono.ttf", 60, 12);
+    font = al_load_ttf_font("FreeMono.ttf", size_y, size_x);
   
     al_register_event_source(event_queue, al_get_display_event_source(display));  
     al_register_event_source(event_queue, al_get_timer_event_source(timer));  
@@ -156,9 +206,7 @@ int main(int argc, char ** argv)
             //
             // minęła 1/60 (1/FPS) część sekundy
             //
-            przerysuj = true;
-
-            co_robia_gracze();
+            przerysuj = true; 
 
             aktualizuj_plansze();
 
